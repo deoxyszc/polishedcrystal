@@ -121,21 +121,18 @@ The complete resource inventory retains non-PNG assets separately.
 
 ## Static browser editor
 
-Open `tools/i18n/editor.html` directly in a browser. No server, installation or
-network connection is required. Open the localization package folder using the
-page's folder picker. Browsers supporting directory write access can save directly;
-otherwise import the folder and export the edited CSV and new PNG files. Put exported
-PNGs in the package's `replacements/` directory. CSV export includes unsaved drafts.
+Open `tools/i18n/editor.html` directly in a browser with directory write support.
+No server or network is required. Open the resource folder once; saves write the
+CSV and replacement PNGs directly to it. There is no export/import mode. The folder
+handle is remembered locally for refresh, with its identifier and name in the URL.
+The browser may require a click to renew access. Save drafts before closing.
 
-The main workspace is a two-column original/translation table. Text and image are
-built-in tags; custom tags support navigation and filtering. Resource paths, notes
-and translation decisions live in a separate details drawer. Tags and decisions
-are shared across languages. Edits survive page and language switches in memory;
-export or save before closing. Existing categories appear as tags for migration.
-
-PNG originals and replacements appear directly in table rows. Upload through the
-file picker, drop or paste area. This is asset replacement, not a drawing editor.
-Runtime validation remains the responsibility of the select/apply/build workflow.
+The original/translation table loads additional rows while scrolling. Tags filter
+by resource type, language-specific translation status, image text-review state
+and custom categories. Multiple tags match their intersection. Metadata appears
+in a separate drawer. Click images to zoom; image replacement remains optional.
+Tags and review decisions are shared across languages and do not change build
+fallback behavior. Image-to-ROM compilation and visual equivalence are unverified.
 
 ## Start translating this repository
 
