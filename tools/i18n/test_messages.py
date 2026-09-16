@@ -16,4 +16,6 @@ with tempfile.TemporaryDirectory() as t:
  (root/'maps/Test.asm').write_text('Dynamic:\n\ttext_ram wName\n\ttext " used a tool."\n\tdone\n')
  rows,*_=messages.build(root,'normal');assert rows[0]['commands'][0]['op']=='text_ram'
  assert any(t.get('args')=='wName' for t in rows[0]['tokens'])
+ (root/'maps/Test.asm').write_text('Unknown:\nif DEF(SOME_SOURCE_CONSTANT)\n\ttext "Yes"\n\tdone\nelse\n\ttext "No"\n\tdone\nendc\n')
+ rows,*_=messages.build(root,'normal');assert len(rows)==2 and all(r['translation_status']=='requires_review' for r in rows)
 print('PASS explicit normal/faithful selection, whole message across conditions/assert, immutable source mapping, interpolation token and ASM handoff')
