@@ -44,3 +44,21 @@ An explicit --mode literal-edit experiment permits quoted literal changes only i
 The parser recognizes selected RGBDS text macros, literal tables and far-text references. It does not evaluate conditional assembly or expand macros, infer complete runtime consumers, extract lettering from images, or support arbitrary assembly transformations. Conditions and uncertain boundaries are retained for review. Consumer supported=false and auto_admit=false mean discovery has not approved that record for runtime translation.
 
 Source spans and hashes preserve exact UTF-8 text, including internal blank lines and comments; display_text is a separate interpretation. Neither tool modifies the inspected source tree. Do not treat catalog text or command arguments from untrusted sources as safe to assemble without review.
+
+## Export profile-selected messages
+
+```bash
+python3 tools/i18n/messages.py --source . --profile normal --out ../messages --old-catalog ../source-catalog/catalog.jsonl --old-diagnostics ../source-catalog/diagnostics.jsonl
+```
+
+Profiles select documented normal, faithful or debug build conditions; unknown conditions remain review items. Use translation-ready.jsonl and its ordered translation_segments/translation_view, not display_text alone: dynamic RAM values, controls and symbolic format arguments must remain visible to translators. Original source spans and selected source segments retain their locations and hashes. Shared-label tails include explicit continuation references.
+
+The full messages file also retains runtime-code handoffs, references and macro templates separately. Readiness means the message is suitable as translation input, not that every runtime consumer can accept a translation. Diagnostic dispositions explain old records individually; inactive build alternatives are retained in conditions.jsonl.
+
+## Inventory non-ASM resources
+
+```bash
+python3 tools/i18n/resources.py --source . --out ../resources
+```
+
+Resources are not automatically extracted text. The report separates visually confirmed lettering, candidates, nontext data and assets requiring manual review, with hashes and assembly references. No OCR or automatic image replacement is performed.
