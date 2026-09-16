@@ -3,6 +3,7 @@
 import argparse,collections,json,re,tempfile
 from pathlib import Path
 import catalog
+import worksheet
 
 PROFILES={'normal':set(),'faithful':{'FAITHFUL'},'debug':{'DEBUG'}}
 # Explicit build flags from this target's Makefile, not arbitrary source symbols.
@@ -106,12 +107,16 @@ def build(source,profile,old_catalog=None,old_diagnostics=None):
  return rows,conditions,dispositions,metadata
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--profile',choices=PROFILES,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--old-catalog',type=Path);ap.add_argument('--old-diagnostics',type=Path);a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--profile',choices=PROFILES,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--old-catalog',type=Path);ap.add_argument('--old-diagnostics',type=Path);ap.add_argument('--languages',nargs='+',default=['zh-Hans','zh-Hant']);a=ap.parse_args()
  if a.out.resolve().is_relative_to(a.source.resolve()):raise ValueError('external output required')
  rows,conditions,dispositions,metadata=build(a.source,a.profile,catalog.read_rows(a.old_catalog) if a.old_catalog else None,catalog.read_rows(a.old_diagnostics) if a.old_diagnostics else None)
+ if (a.out/'translations.csv').exists():raise ValueError('translations.csv already exists; preserve translator edits')
+ for tag in a.languages:worksheet.language(tag)
+ if len({tag.lower() for tag in a.languages})!=len(a.languages):raise ValueError('Duplicate languages')
  a.out.mkdir(parents=True,exist_ok=True)
  for name,data in [('messages',rows),('conditions',conditions),('diagnostic-dispositions',dispositions),('quoted-classifications',metadata)]:catalog.jsonl(a.out/(name+'.jsonl'),data)
  catalog.jsonl(a.out/'translation-ready.jsonl',[r for r in rows if r['translation_status'] in ('ready','ready_with_typed_format','ready_with_shared_tail')])
+ worksheet.export(rows,a.out/'translations.csv',a.languages)
  summary={'profile':a.profile,'messages':len(rows),'statuses':dict(collections.Counter(r['translation_status'] for r in rows)),'old_diagnostics':dict(collections.Counter(r['status'] for r in dispositions)),'quoted':dict(collections.Counter(r['classification'] for r in metadata))}
  catalog.write_json(a.out/'summary.json',summary);print(json.dumps(summary))
 if __name__=='__main__':main()

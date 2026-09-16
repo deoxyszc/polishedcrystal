@@ -62,3 +62,95 @@ python3 tools/i18n/resources.py --source . --out ../resources
 ```
 
 Resources are not automatically extracted text. The report separates visually confirmed lettering, candidates, nontext data and assets requiring manual review, with hashes and assembly references. No OCR or automatic image replacement is performed.
+
+## Multilingual CSV worksheet
+
+Message export now also writes `translations.csv` (UTF-8 with BOM for Excel).
+The default language columns are `translation_zh-Hans` and `translation_zh-Hant`.
+Use `messages.py --languages zh-Hans zh-Hant ja ...` to choose other language tags.
+CSV quoting preserves commas, quotes and embedded newlines. Keep the ID, source
+hash, profile, location and original columns unchanged. Existing worksheets are
+never overwritten by export.
+
+Export a worksheet from existing message JSONL without extracting again:
+
+```bash
+python3 tools/i18n/worksheet.py export --messages ../messages/translation-ready.jsonl --languages zh-Hans zh-Hant ja --out ../translations.csv
+```
+
+Select the exact language column for the next toolchain stage:
+
+```bash
+python3 tools/i18n/worksheet.py select --messages ../messages/translation-ready.jsonl --csv ../translations.csv --language zh-Hans --out ../selected-zh-Hans.jsonl
+```
+
+Selection rejects missing language columns, empty translations, duplicate/unknown
+IDs, missing records and changed source metadata. Explicit `--fallback original`
+uses the original text for blank cells; it never reads another language's column.
+The selected JSONL contains `language`, `translation` and `selection_status`
+alongside original message metadata. This is draft selection, not ROM insertion:
+placeholder, encoding and layout admission remain the runtime importer's responsibility.
+Use the unified package workflow below for image replacements.
+
+## Unified text and image package
+
+```bash
+python3 tools/i18n/images.py package --source . --messages ../messages/translation-ready.jsonl --out ../localization --languages zh-Hans zh-Hant
+python3 tools/i18n/worksheet.py select --messages ../localization/messages.jsonl --resources ../localization/resources.jsonl --csv ../localization/translations.csv --language zh-Hans --fallback original --out ../selected.jsonl
+python3 tools/i18n/images.py apply --source . --selected ../selected.jsonl --out ../localized-source
+```
+
+The single CSV includes `resource_kind` (`text` or `image`) and `review_status`.
+For text rows, each language column contains translated text. For image rows,
+it contains a replacement PNG path relative to the CSV directory, for example
+`replacements/zh-Hans/gfx/title/logo.png`. Originals are copied into
+`originals/gfx/...` for viewing and editing; `original` points there.
+Blank image cells always preserve the original asset, including when text
+selection uses the default strict mode. PNGs awaiting visual review are included
+as such; inclusion does not claim they contain text.
+
+Apply validates source/replacement hashes and requires identical dimensions,
+PNG color format, palette and transparency. It writes a new source directory
+only after validation; the inspected source stays unchanged. Edit copied originals
+without changing their palette or export settings. Noninterlaced PNGs are supported.
+Use a clean source tree and build the result with the repository's normal build
+process. Apply only replaces PNG source assets: it does not insert text translations,
+perform OCR, regenerate tilemaps, import raw tile binaries, or guarantee that edited
+art fits runtime tile budgets. Review and game-build verification remain necessary.
+The complete resource inventory retains non-PNG assets separately.
+
+## Static browser editor
+
+Open `tools/i18n/editor.html` directly in a browser. No server, installation or
+network connection is required. Open the localization package folder using the
+page's folder picker. Browsers supporting directory write access can save directly;
+otherwise import the folder and export the edited CSV and new PNG files. Put exported
+PNGs in the package's `replacements/` directory. CSV export includes unsaved drafts.
+
+The main workspace is a two-column original/translation table. Text and image are
+built-in tags; custom tags support navigation and filtering. Resource paths, notes
+and translation decisions live in a separate details drawer. Tags and decisions
+are shared across languages. Edits survive page and language switches in memory;
+export or save before closing. Existing categories appear as tags for migration.
+
+PNG originals and replacements appear directly in table rows. Upload through the
+file picker, drop or paste area. This is asset replacement, not a drawing editor.
+Runtime validation remains the responsibility of the select/apply/build workflow.
+
+## Start translating this repository
+
+The root `translations.csv` is the versioned translation worksheet: 12,539 text
+records and 3,180 PNG resources. Open `tools/i18n/editor.html`, then choose the
+repository root folder. Original images are read from the existing `gfx/` tree;
+no duplicate originals are committed. Commit the CSV and any new replacement PNGs
+together. Do not commit generated ROMs, temporary packages or backups.
+
+The interface language selector supports Simplified Chinese and English independently
+of the translation language. UI messages are centralized in the embedded `UI_EN`
+dictionary so the page stays standalone and works without fetching dependencies.
+Tags use stable stored values; changing interface language does not rewrite them.
+
+To validate selected repository translations, regenerate message/resource JSONL
+outside the source tree, and pass `worksheet.py select --repository-paths` along
+with those files and the root CSV. Source updates require explicit worksheet
+migration; do not overwrite a worksheet containing translator edits.
