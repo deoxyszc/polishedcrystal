@@ -74,6 +74,17 @@ def build(source,profile,old_catalog=None,old_diagnostics=None):
     known={'WildPokemonAppearedText':'LegendaryAppearedText','BattleText_WildFled':'BattleText_LegendaryFled'}
     row['translation_status']='ready_with_shared_tail' if row['source_path']=='data/text/battle.asm' and known.get(row['label'])==following['label'] and following['commands'][0]['op']=='text_ram' else 'shared_fallthrough_review'
     row['source_segments']+=following['source_segments'];row['selected_message_commands']=row['commands']+following['commands']
+ for row in rows:
+  segments=[]
+  for command in row.get('selected_message_commands',row['commands']):
+   op=command['op'];args=command['args']
+   if op.startswith('text_') and op not in ('text_start','text_end'):
+    segments.append({'kind':'dynamic' if op in ('text_ram','text_decimal','text_today') else 'command','op':op,'args':args,'display':'{'+op.upper()+(':'+args if args else '')+'}','source_line':command['line']})
+   else:
+    if op not in ('text','ctxt','db','db_w'):segments.append({'kind':'control','op':op,'args':args,'source_line':command['line']})
+    for literal in catalog.QUOTES.findall(args):segments.append({'kind':'text','value':literal,'source_line':command['line']})
+  row['translation_segments']=segments
+  row['translation_view']='\n'.join(s.get('value',s.get('display','{'+s.get('op','')+'}')) for s in segments)
  dispositions=[]
  for old in old_catalog or []:
   if not old['diagnostics']:continue
