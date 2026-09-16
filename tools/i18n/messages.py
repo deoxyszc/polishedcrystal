@@ -82,7 +82,10 @@ def build(source,profile,old_catalog=None,old_diagnostics=None):
     segments.append({'kind':'dynamic' if op in ('text_ram','text_decimal','text_today') else 'command','op':op,'args':args,'display':'{'+op.upper()+(':'+args if args else '')+'}','source_line':command['line']})
    else:
     if op not in ('text','ctxt','db','db_w'):segments.append({'kind':'control','op':op,'args':args,'source_line':command['line']})
-    for literal in catalog.QUOTES.findall(args):segments.append({'kind':'text','value':literal,'source_line':command['line']})
+    if 'STRFMT(' in args:
+     segments.append({'kind':'format','template':catalog.QUOTES.findall(args)[0],'expression':args,'display':'{FORMAT:'+args+'}','source_line':command['line']})
+    else:
+     for literal in catalog.QUOTES.findall(args):segments.append({'kind':'text','value':literal,'source_line':command['line']})
   row['translation_segments']=segments
   row['translation_view']='\n'.join(s.get('value',s.get('display','{'+s.get('op','')+'}')) for s in segments)
  dispositions=[]
