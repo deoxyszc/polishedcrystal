@@ -340,3 +340,10 @@ gfx/pokemon/%/frames.asm: gfx/pokemon/%/front.animated.tilemap gfx/pokemon/%/fro
 
 data/tilesets/%_collision.bin: data/tilesets/%_collision.asm
 	$QRGBASM=$(RGBASM) RGBLINK=$(RGBLINK) tools/collision_asm2bin.sh $< $@
+
+# Optional summary graphics are generated in isolated builds. The dependency
+# scanner also visits disabled INCLUDE blocks; empty placeholders are sufficient
+# when ZH_SUMMARY_LAYOUT is disabled. Enabled builds require generated assets.
+gfx/zh/levelup.2bpp gfx/zh/summary_labels.2bpp gfx/zh/ability_tab.2bpp gfx/zh/level_digits.2bpp:
+	@mkdir -p gfx/zh
+	@case "$(RGBASMFLAGS)" in *ZH_SUMMARY_LAYOUT*) echo "Generate summary assets with --summary-terms first"; exit 1;; *) touch $@;; esac
