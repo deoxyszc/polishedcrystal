@@ -82,7 +82,7 @@ def build(source,profile,old_catalog=None,old_diagnostics=None):
    if op.startswith('text_') and op not in ('text_start','text_end'):
     segments.append({'kind':'dynamic' if op in ('text_ram','text_decimal','text_today') else 'command','op':op,'args':args,'display':'{'+op.upper()+(':'+args if args else '')+'}','source_line':command['line']})
    else:
-    if op not in ('text','ctxt','db','db_w'):segments.append({'kind':'control','op':op,'args':args,'source_line':command['line']})
+    if op not in ('text','ctxt','db','db_w','rawchar'):segments.append({'kind':'control','op':op,'args':args,'source_line':command['line']})
     if 'STRFMT(' in args:
      segments.append({'kind':'format','template':catalog.QUOTES.findall(args)[0],'expression':args,'display':'{FORMAT:'+args+'}','source_line':command['line']})
     else:

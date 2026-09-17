@@ -556,6 +556,17 @@ DoTextUntilTerminator::
 	and a
 	ret nz
 	ld a, [hli]
+if DEF(LOCALE_ZH)
+	cp ZH_STREAM_COMMAND
+	jr nz, .legacy
+	push bc
+	ldh a, [hROMBank]
+	ld b, a
+	farcall ZhDispatchText
+	pop bc
+	ret
+.legacy
+endc
 	call CheckTerminatorChar
 	ret z
 	call .TextCommand

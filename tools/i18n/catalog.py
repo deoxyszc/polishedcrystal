@@ -8,7 +8,7 @@ LABEL=re.compile(r'^([A-Za-z_][\w#@]*|\.[\w#@]+)(::?|(?=\s*$))')
 START={'text','ctxt','text_start'}
 END={'done','prompt','text_end','text_farend','text_asm'}
 TEXT=START|END|{'line','para','cont','next','next1','page','plural','db','db_w','assert','stop_compressing_text'}
-LITERAL={'db','db_w','dbw','li','dname','def_trainer','tr_mon','song_info','password_group','next','next1','page','line','para','cont','plural'}
+LITERAL={'rawchar','db','db_w','dbw','li','dname','def_trainer','tr_mon','song_info','password_group','next','next1','page','line','para','cont','plural'}
 DIRECTIVES={'section','include','incbin','def','redef','charmap','rawchar','assert','fail','warn','load','export','purge'}
 def sha(s):return hashlib.sha256(s.encode()).hexdigest()
 def code(raw):

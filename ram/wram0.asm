@@ -1513,7 +1513,18 @@ wZhTextControl:: db
 wZhTextAfterWait:: db
 wZhMenuAttrs:: ds 30
 wZhNameBuffer:: ds 12
+wZhMoveGridActive:: db
+wZhMoveIndex:: db
+wZhMoveRow:: db
 wZhEntryStart:: dw
 wZhEntryEnd:: dw
 
+endc
+
+if DEF(LOCALE_ZH)
+wZhHudSide:: db
+wZhHudName:: dw
+wZhHudWidth:: db
+wZhPlayerHudWidth:: db
+wZhEnemyHudWidth:: db
 endc

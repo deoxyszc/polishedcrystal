@@ -193,8 +193,16 @@ ClearActorHUD:
 	jr z, ClearPlayerHUD
 	; fallthrough
 ClearEnemyHUD:
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhEnemyHudWidth],a
+endc
 	hlcoord 0, 0
+if DEF(LOCALE_ZH)
+	lb bc, 4, 11
+else
 	lb bc, 3, 11
+endc
 	jmp ClearBox
 
 BattleAnimCmd_ClearOpponentHUD:
@@ -203,6 +211,15 @@ BattleAnimCmd_ClearOpponentHUD:
 	jr z, ClearEnemyHUD
 	; fallthrough
 ClearPlayerHUD:
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhPlayerHudWidth],a
+ hlcoord 8,7
+ lb bc,2,12
+ call ClearBox
+ hlcoord 10,10
+	ld [hl], ' '
+endc
 	hlcoord 11, 7
 	lb bc, 5, 9
 	call ClearBox

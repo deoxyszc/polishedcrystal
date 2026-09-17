@@ -281,16 +281,32 @@ _CGB_FinishBattleScreenLayout:
 
 	ld a, PAL_BATTLE_BG_EXP_GENDER
 	ldcoord_a 0, 1, wAttrmap
+if DEF(LOCALE_ZH)
+	ldcoord_a 1, 2, wAttrmap
+else
 	ldcoord_a 1, 1, wAttrmap
+endc
+if DEF(LOCALE_ZH)
+	ldcoord_a 8, 2, wAttrmap
+else
 	ldcoord_a 8, 1, wAttrmap
+endc
 	ldcoord_a 18, 8, wAttrmap
 
+if DEF(LOCALE_ZH)
+	hlcoord 10, 10, wAttrmap
+else
 	hlcoord 12, 8, wAttrmap
+endc
 	lb bc, 1, 2
 	ld a, PAL_BATTLE_BG_STATUS
 	call FillBoxWithByte
 
+if DEF(LOCALE_ZH)
+	hlcoord 2, 2, wAttrmap
+else
 	hlcoord 2, 1, wAttrmap
+endc
 	lb bc, 1, 2
 	ld a, PAL_BATTLE_BG_STATUS
 	call FillBoxWithByte
@@ -314,6 +330,9 @@ _CGB_FinishBattleScreenLayout:
 	ld a, b
 	and a
 	jr z, .apply_attr_map
+if DEF(LOCALE_ZH)
+ farcall ZhBattleNameAttributes
+endc
 	bit 0, b
 	jr z, .no_player_overlay2
 	hlcoord 0, 8, wAttrmap
@@ -324,11 +343,17 @@ _CGB_FinishBattleScreenLayout:
 .no_player_overlay2
 	bit 1, b
 	jr z, .apply_attr_map
+if DEF(LOCALE_ZH)
+ farcall ZhBattleNameAttributes
+endc
 	hlcoord 9, 3, wAttrmap
 	ld b, PAL_BATTLE_BG_TEXT
 	farcall SetAbilityOverlayAttributes
 
 .apply_attr_map
+if DEF(LOCALE_ZH)
+ farcall ZhBattleNameAttributes
+endc
 	jmp ApplyAttrMap
 
 HPBarInteriorPals:

@@ -134,7 +134,11 @@ DrawEnemyHUDBorder:
 	ld a, [wBattleType]
 	cp BATTLETYPE_GHOST
 	ret z
+if DEF(LOCALE_ZH)
+	hlcoord 1, 2
+else
 	hlcoord 1, 1
+endc
 	ld [hl], '<BALL>'
 	ret
 
