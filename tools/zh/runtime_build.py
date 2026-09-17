@@ -22,6 +22,10 @@ def main():
   manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
   subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
   (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
+  import hud_names
+  hud_names.generate(source,a.language,a.font)
+  import move_names
+  move_names.generate(source,a.language,manifest)
   import import_dialogue
   imported=import_dialogue.apply(source,a.language,manifest)
   make=source/'Makefile';s=make.read_text();s=s.replace('MODIFIERS :=','MODIFIERS := -zh',1);s=s.replace('RGBASMFLAGS    =','RGBASMFLAGS    = -DLOCALE_ZH',1);make.write_text(s)

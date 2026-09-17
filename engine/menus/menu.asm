@@ -448,6 +448,17 @@ Move2DMenuCursor:
 	ld a, [wCursorOffCharacter]
 	ld [hl], a
 Place2DMenuCursor:
+if DEF(LOCALE_ZH)
+ ld a,[wZhMoveGridActive]
+ and a
+ jr z,.ordinary
+ farcall ZhMoveCursorCoord
+ push hl
+ call ApplyAttrAndTilemapInVBlank
+ pop hl
+ jr .cursor_on
+.ordinary
+endc
 	ld a, [w2DMenuCursorInitY]
 	ld b, a
 	ld a, [w2DMenuCursorInitX]
@@ -488,6 +499,7 @@ Place2DMenuCursor:
 .got_col
 	ld c, a
 	add hl, bc
+.placeCursor
 	ld a, [hl]
 	cp '▶'
 	jr z, .cursor_on

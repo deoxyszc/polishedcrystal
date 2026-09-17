@@ -21,3 +21,10 @@ DEF ZH_CTRL_PARA EQU $59
 ; charmap reserves $0a..$4c; $0a is E1, $0b/$0c select fixed D1 sources.
 DEF ZH_CTRL_PLAYER EQU $0b
 DEF ZH_CTRL_RIVAL EQU $0c
+
+; Top-level text stream descriptor, distinct from glyph escapes inside E1 data.
+DEF ZH_STREAM_COMMAND EQU $0a
+
+DEF ZH_CTRL_CONT EQU $55
+
+DEF ZH_CTRL_RAM EQU $0d

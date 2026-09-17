@@ -57,6 +57,8 @@ ZhRunText::
  and a
  jr z,.publish
  ld a,[wZhTextControl]
+ cp ZH_CTRL_RAM
+ jp z,.ram
  cp ZH_CTRL_PLAYER
  jr z,.name
  cp ZH_CTRL_RIVAL
@@ -70,6 +72,8 @@ ZhRunText::
  and a
  jp z,.end
  ld a,[wZhTextControl]
+ cp ZH_CTRL_CONT
+ jp z,.scroll
  cp $56
  jp z,.nextLine
  cp $57
@@ -82,6 +86,25 @@ ZhRunText::
  ld a,1
  ld [wZhTextAfterWait],a
  jp .next
+.ram
+ call .load
+ ld a,[hli]
+ ld b,a
+ ld a,[hli]
+ ld e,a
+ ld a,[hli]
+ ld d,a
+ ld a,l
+ ld [wZhTextCursor],a
+ ld a,h
+ ld [wZhTextCursor+1],a
+ call .advanceSpan
+ ld h,d
+ ld l,e
+ call ZhStageRAMName
+ ret c
+ jp .appendName
+
 .name
  ld a,[wZhTextAfterWait]
  and a
@@ -90,6 +113,7 @@ ZhRunText::
  sub ZH_CTRL_PLAYER
  call ZhStageEnglishName
  ret c
+.appendName
  ; HL=WRAM0 name, BC=length, convert to bounded [HL,DE).
  ld d,h
  ld e,l
@@ -114,6 +138,26 @@ ZhRunText::
  ld [wZhTextSlot],a
  call ZhComposeBegin
  jp .next
+.scroll
+ call WaitButton
+ ld hl,wZhPageBuffer + 576
+ ld de,wZhLineBuffer
+ ld bc,576
+ rst CopyBytes
+ xor a
+ call ZhUploadLine
+ ret c
+ call ZhComposeBegin
+ ld a,1
+ call ZhUploadLine
+ ret c
+ call ApplyAttrAndTilemapInVBlank
+ xor a
+ ld [wZhTextAfterWait],a
+ ld a,1
+ ld [wZhTextSlot],a
+ jp .next
+
 .page
  call WaitButton
  call ZhLeaseClearPage

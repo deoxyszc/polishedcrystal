@@ -1,19 +1,18 @@
 import csv,hashlib,re,sys
 import encode
-ADAPTERS={
- 'maps/NewBarkTown.asm::ElmsLabSignText::1':('maps/NewBarkTown.asm','ElmsLabSignText','bg_event  3,  3, BGEVENT_JUMPTEXT, ElmsLabSignText'),
- 'maps/NewBarkTown.asm::PlayersHouseSignText::1':('maps/NewBarkTown.asm','PlayersHouseSignText','bg_event 13,  5, BGEVENT_JUMPTEXT, PlayersHouseSignText'),
- 'maps/CherrygrovePokeCenter1F.asm::CherrygrovePokeCenter1FFisherText::1':('maps/CherrygrovePokeCenter1F.asm','CherrygrovePokeCenter1FFisherText','OBJECTTYPE_COMMAND, jumptextfaceplayer, CherrygrovePokeCenter1FFisherText, -1'),
-}
 def segments(text):
  result=[];width=0
  for token in re.split(r'(<PLAYER>|[{][^}]+[}])',text):
   token=token.strip(chr(10))
   if not token:continue
   if token=='<PLAYER>':result.append({'name':'player'});width+=80
+  elif token.startswith('{TEXT_RAM:') and token.endswith('}'):
+   symbol=token[len('{TEXT_RAM:'):-1].strip()
+   if symbol not in ('wStringBuffer1','wStringBuffer2','wBattleMonNickname','wEnemyMonNickname'):raise ValueError('Unsupported RAM text source')
+   result.append({'ram_name':symbol});width+=80
   elif token.startswith('{'):
    control=token[1:-1].upper()
-   if control not in ('LINE','PARA','DONE'):raise ValueError('Unsupported control: '+token)
+   if control not in ('LINE', 'PARA', 'CONT', 'NEXT', 'DONE', 'PROMPT'):raise ValueError('Unsupported control: '+token)
    result.append({'control':control});width=0
   else:result.append({'text':token});width+=sum(8 if c.isascii() else 12 for c in token)
   if width>144:raise ValueError('Line exceeds 144 pixels')
@@ -21,22 +20,37 @@ def segments(text):
 def apply(source,language,manifest):
  sys.path.insert(0,str(source/'tools/i18n'));import messages
  authority={r['id']:r for r in messages.build(source,'normal')[0]}
- glyphs=encode.load_glyphs(manifest);outputs=[];nl=chr(10)
+ glyphs=encode.load_glyphs(manifest);outputs=[];edits={};nl=chr(10);seen=set()
  with (source/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
   for row in csv.DictReader(f):
-   text=row.get('translation_'+language,'')
+   if row['id'] in seen:raise ValueError('Duplicate CSV ID')
+   seen.add(row['id']);text=row.get('translation_'+language,'')
+   if row['source_path']=='data/moves/names.asm':continue
    if row['resource_kind']!='text' or not text.strip():continue
-   if row['id'] not in ADAPTERS:raise ValueError('No scene adapter for '+row['id'])
-   original=authority[row['id']]
-   if original['source_sha256']!=row['source_sha256'] or original['translation_view']!=row['original']:raise ValueError('Source drift')
+   if row['source_path']=='data/pokemon/names.asm':continue
+   original=authority.get(row['id'])
+   if not original or original['source_sha256']!=row['source_sha256'] or original['translation_view']!=row['original']:raise ValueError('Source drift: '+row['id'])
+   commands=original['commands'];ops=[c['op'] for c in commands]
+   # This ABI is for complete, bounded dialogue streams, never raw name tables.
+   if original['translation_status']!='ready' or original.get('continuation_ids') or ops[0] not in ('text', 'ctxt', 'text_ram') or ops[-1] not in ('done', 'prompt') or set(ops)-{'text','ctxt','line','para','cont','next','done','prompt','text_ram'}:
+    raise ValueError('Unsupported dialogue stream shape: '+row['id'])
+   if len(commands)!=original['source_end_line']-original['source_line']+1:
+    raw=original['source_text'].splitlines()
+    allowed={c['line'] for c in commands}
+    if any(line.strip() and not line.lstrip().startswith(';') and original['source_line']+i not in allowed for i,line in enumerate(raw)):raise ValueError('Mixed source span')
    if re.findall(r'<PLAYER>|[{][^}]+[}]',text)!=re.findall(r'<PLAYER>|[{][^}]+[}]',row['original']):raise ValueError('Control signature changed')
-   path,label,needle=ADAPTERS[row['id']];entry='ZhCSV_'+hashlib.sha256(row['id'].encode()).hexdigest()[:12];event=entry+'Event'
+   entry='ZhText_'+hashlib.sha256(row['id'].encode()).hexdigest()[:16]
    body=encode.encode_segments(segments(text),glyphs,'rom_dialogue')
-   outputs.append(nl.join([entry+'::',' ld hl,'+entry+'Text',' ld de,'+entry+'End',' jp ZhShowDialogue',entry+'Text:',body,entry+'End:']))
-   p=source/path;s=p.read_text()
-   replacement=needle.replace('BGEVENT_JUMPTEXT, '+label,'BGEVENT_READ, '+event).replace('OBJECTTYPE_COMMAND, jumptextfaceplayer, '+label,'OBJECTTYPE_SCRIPT, 0, '+event)
-   if s.count(needle)!=1:raise ValueError('Ambiguous scene hook')
-   s=s.replace(needle,replacement,1);s+=nl+event+':'+nl+(' faceplayer'+nl if 'Fisher' in label else '')+' opentext'+nl+' callasm '+entry+nl+' closetext'+nl+' end'+nl;p.write_text(s)
+   outputs.append(nl.join([entry+'::',body,entry+'End::']))
+   replacement=nl.join([' stop_compressing_text',' db ZH_STREAM_COMMAND',' dw '+entry+', '+entry+'End',' assert BANK('+entry+') == $80',''])
+   edits.setdefault(row['source_path'],[]).append((original['source_line']-1,original['source_end_line'],replacement))
+ # Finish validation/encoding before modifying the isolated source tree.
+ for path,changes in edits.items():
+  p=source/path;lines=p.read_text().splitlines(keepends=True);last=len(lines)
+  for start,end,replacement in sorted(changes,reverse=True):
+   if end>last:raise ValueError('Overlapping text spans')
+   lines[start:end]=[replacement];last=start
+  p.write_text(''.join(lines))
  (source/'data/zh/dialogue.asm').write_text(nl.join(outputs))
  p=source/'main.asm';s=p.read_text().replace('INCLUDE '+chr(34)+'engine/zh/dialogue.asm'+chr(34),'INCLUDE '+chr(34)+'engine/zh/dialogue.asm'+chr(34)+nl+'INCLUDE '+chr(34)+'data/zh/dialogue.asm'+chr(34));p.write_text(s)
  return len(outputs)

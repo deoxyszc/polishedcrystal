@@ -28,6 +28,8 @@ ZhReadToken::
  jr z,.end
  cp ZH_CTRL_PROMPT
  jr z,.end
+ cp ZH_CTRL_CONT
+ jr z,.control
  cp ZH_CTRL_NEXT
  jr z,.control
  cp ZH_CTRL_LINE
@@ -36,6 +38,8 @@ ZhReadToken::
  jr z,.control
  cp ZH_CTRL_WAIT
  jr z,.control
+ cp ZH_CTRL_RAM
+ jr z,.ram
  cp ZH_CTRL_PLAYER
  jr z,.control
  cp ZH_CTRL_RIVAL
@@ -48,6 +52,31 @@ ZhReadToken::
  ld a,ZH_TOKEN_LITERAL
  and a
  ret
+.ram
+ push hl
+ ld bc,4
+ add hl,bc
+ jr c,.ramError
+ ld a,h
+ cp d
+ jr c,.ramValid
+ jr nz,.ramError
+ ld a,l
+ cp e
+ jr c,.ramValid
+ jr z,.ramValid
+.ramError
+ pop hl
+ scf
+ ret
+.ramValid
+ pop hl
+ inc hl
+ ld bc,ZH_CTRL_RAM
+ ld a,ZH_TOKEN_CONTROL
+ and a
+ ret
+
 .end
  inc hl
  xor a

@@ -2021,7 +2021,11 @@ UpdateHPBar:
 	and a
 	ld a, 1
 	jr z, .ok
+if DEF(LOCALE_ZH)
+	hlcoord 1, 3
+else
 	hlcoord 1, 2
+endc
 	xor a
 .ok
 	push bc
@@ -3976,7 +3980,11 @@ DrawPlayerHUD:
 
 	; Status icon
 	farcall LoadPlayerStatusIcon
+if DEF(LOCALE_ZH)
+	hlcoord 10, 10
+else
 	hlcoord 12, 8
+endc
 	ld a, $55
 	ld [hli], a
 	ld [hl], $56
@@ -4020,7 +4028,23 @@ PrintPlayerHUD:
 	jr z, .short_name
 	dec hl ; hlcoord 10, 7
 .short_name
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhPlayerHudWidth],a
+ ld a,0
+ push hl
+ push de
+ farcall ZhDrawBattleName
+ pop de
+ pop hl
+ jr c,.legacyName
+ jr .nameDone
+.legacyName
+endc
 	rst PlaceString
+if DEF(LOCALE_ZH)
+.nameDone
+endc
 
 	push bc
 
@@ -4115,7 +4139,23 @@ DrawEnemyHUD:
 	ld de, wEnemyMonNickname
 .got_nickname
 	hlcoord 1, 0
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhEnemyHudWidth],a
+ ld a,1
+ push hl
+ push de
+ farcall ZhDrawBattleName
+ pop de
+ pop hl
+ jr c,.legacyName
+ jr .nameDone
+.legacyName
+endc
 	rst PlaceString
+if DEF(LOCALE_ZH)
+.nameDone
+endc
 	ld h, b
 	ld l, c
 	dec hl
@@ -4135,7 +4175,11 @@ endr
 	farcall CheckShininess
 	jr nc, .not_shiny
 	ld a, '<SHINY>'
+if DEF(LOCALE_ZH)
+	hlcoord 9, 2
+else
 	hlcoord 9, 1
+endc
 	ld [hl], a
 
 .not_shiny
@@ -4153,10 +4197,18 @@ endr
 	inc a ; "<FEMALE>"
 
 .got_gender
+if DEF(LOCALE_ZH)
+	hlcoord 8, 2
+else
 	hlcoord 8, 1
+endc
 	ld [hl], a
 
+if DEF(LOCALE_ZH)
+	hlcoord 5, 2
+else
 	hlcoord 5, 1
+endc
 	ld a, [wEnemyMonLevel]
 	ld [wTempMonLevel], a
 	call PrintLevel
@@ -4222,11 +4274,19 @@ endr
 .draw_bar
 	xor a
 	ld [wWhichHPBar], a
+if DEF(LOCALE_ZH)
+	hlcoord 1, 3
+else
 	hlcoord 1, 2
+endc
 	call DrawBattleHPBar
 
 	farcall LoadEnemyStatusIcon
+if DEF(LOCALE_ZH)
+	hlcoord 2, 2
+else
 	hlcoord 2, 1
+endc
 	ld a, $57
 	ld [hli], a
 	ld [hl], $58
@@ -5049,6 +5109,34 @@ MoveSelectionScreen:
 	assert NO_BG_MAP_TRANSFER == 0
 	ldh [hBGMapMode], a
 
+if DEF(LOCALE_ZH)
+ ld a,[wMoveSelectionMenuType]
+ and a
+ jr nz,.legacyMoveList
+ farcall ZhCanDrawMoveGrid
+ jr c,.legacyMoveList
+ hlcoord 0,12
+ lb bc,4,18
+ call Textbox
+ ; Preserve list-count semantics used by PP, move use, reorder and wrapping.
+ ld hl,wListMoves_MoveIndicesBuffer
+ ld b,0
+.countMoves
+ ld a,[hli]
+ and a
+ jr z,.countDone
+ inc b
+ ld a,b
+ cp 4
+ jr c,.countMoves
+.countDone
+ ld a,b
+ dec a
+ ld [wNumMoves],a
+ farcall ZhDrawMoveGrid
+ jr .moveListDone
+.legacyMoveList
+endc
 	hlcoord 4, 17 - NUM_MOVES - 1
 	ld a, [wMoveSelectionMenuType]
 	dec a
@@ -5067,6 +5155,10 @@ MoveSelectionScreen:
 	ld a, SCREEN_WIDTH
 	ld [wListMovesLineSpacing], a
 	farcall ListMoves
+
+if DEF(LOCALE_ZH)
+.moveListDone
+endc
 
 	ld a, [wMoveSelectionMenuType]
 	dec a
@@ -5132,7 +5224,23 @@ MoveSelectionScreen:
 .interpret_joypad
 	ld a, TRANSFER_TILEMAP
 	ldh [hBGMapMode], a
+if DEF(LOCALE_ZH)
+ ld a,[wMoveSelectionMenuType]
+ and a
+ jr nz,.gridOff
+ farcall ZhCanDrawMoveGrid
+ jr c,.gridOff
+ ld a,1
+ ld [wZhMoveGridActive],a
+.gridOff
+endc
 	call DoMenuJoypadLoop
+if DEF(LOCALE_ZH)
+ push af
+ xor a
+ ld [wZhMoveGridActive],a
+ pop af
+endc
 	bit B_PAD_UP, a
 	jmp nz, .pressed_up
 	bit B_PAD_DOWN, a

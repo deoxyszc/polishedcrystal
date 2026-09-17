@@ -40,7 +40,7 @@ def encode_asm(text,glyphs,consumer):
     lines.append('\tzh_raw "@"')
     return '\n'.join(lines)+'\n'
 
-CONTROLS={'NEXT':0x56,'LINE':0x57,'PARA':0x59,'WAIT':0x02,
+CONTROLS={'CONT':0x55,'NEXT':0x56,'LINE':0x57,'PARA':0x59,'WAIT':0x02,
           'DONE':0x52,'PROMPT':0x54,'END':0x53}
 
 def encode_segments(segments,glyphs,consumer):
@@ -55,6 +55,9 @@ def encode_segments(segments,glyphs,consumer):
             if '\n' in segment['text']:raise ValueError('segments require explicit NEXT/LINE/PARA, not newline')
             if after_wait and segment['text']:raise ValueError('WAIT cannot resume text on the same line; use NEXT/LINE/PARA first')
             lines.extend(encode_asm(segment['text'],glyphs,consumer).splitlines()[1:-1])
+        elif set(segment)=={'ram_name'} and segment['ram_name'] in ('wStringBuffer1','wStringBuffer2','wBattleMonNickname','wEnemyMonNickname'):
+            symbol=segment['ram_name']
+            lines.extend([' db ZH_CTRL_RAM, BANK('+symbol+')',' dw '+symbol])
         elif set(segment)=={'name'} and segment['name'] in ('player','rival'):
             if after_wait:raise ValueError('WAIT cannot resume a name on the same line')
             lines.append('\tzh_raw $' + ('0b' if segment['name']=='player' else '0c'))
@@ -62,7 +65,7 @@ def encode_segments(segments,glyphs,consumer):
             ctrl=segment['control'];lines.append('\tzh_raw $' + format(CONTROLS[ctrl],'02x'))
             ended=ctrl in ('DONE','PROMPT','END')
             if ctrl=='WAIT':after_wait=True
-            elif ctrl in ('NEXT','LINE','PARA'):after_wait=False
+            elif ctrl in ('NEXT', 'LINE', 'PARA', 'CONT'):after_wait=False
         else:raise ValueError('unreviewed control or segment shape')
     if not ended:raise ValueError('explicit terminal required')
     return '\n'.join(lines)+'\n'

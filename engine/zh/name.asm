@@ -55,3 +55,40 @@ ZhStageEnglishName::
  ld b,0
  and a
  ret
+
+; HL=RAM name, B=WRAM bank; bounded to NAME_LENGTH including terminator.
+; Validated source banks and ranges are enforced by the generator.
+ZhStageRAMName::
+ ldh a,[rWBK]
+ push af
+ ld a,b
+ ldh [rWBK],a
+ ld de,wZhNameBuffer
+ ld b,NAME_LENGTH
+ ld c,0
+.loop
+ ld a,[hli]
+ cp $53
+ jr z,.done
+ cp $7f
+ jr c,.bad
+ cp $f2
+ jr nc,.bad
+ ld [de],a
+ inc de
+ inc c
+ dec b
+ jr nz,.loop
+.bad
+ pop af
+ ldh [rWBK],a
+ scf
+ ret
+.done
+ ld [de],a
+ pop af
+ ldh [rWBK],a
+ ld hl,wZhNameBuffer
+ ld b,0
+ and a
+ ret

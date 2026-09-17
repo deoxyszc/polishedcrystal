@@ -12,9 +12,18 @@ ZhShowDialogue::
  ld [wZhEntryEnd+1],a
  ldh a,[rWBK]
  push af
+ ld a,BANK(wBattleMode)
+ ldh [rWBK],a
+ ld a,[wBattleMode]
+ and a
+ ld a,1
+ jr z,.modeReady
+ xor a
+.modeReady
+ ld b,a
  ld a,BANK(wZhLineBuffer)
  ldh [rWBK],a
- ld a,1
+ ld a,b
  ld [wZhDisplayMode],a
  call ZhLeaseAcquire
  jr c,.restore
