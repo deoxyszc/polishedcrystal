@@ -741,3 +741,21 @@ INCLUDE "audio/music/printer.asm"
 SECTION "LureMenu", ROMX
 
 INCLUDE "engine/menus/lure_menu.asm"
+
+if DEF(LOCALE_ZH)
+SECTION "MBC30 runtime extent", ROMX[$7fff], BANK[$ff]
+ db $ff
+SECTION "Language runtime", ROMX, BANK[$80]
+INCLUDE "engine/zh/decode.asm"
+INCLUDE "engine/zh/stream.asm"
+INCLUDE "engine/zh/name.asm"
+INCLUDE "engine/zh/render.asm"
+INCLUDE "engine/zh/compose.asm"
+INCLUDE "engine/zh/cache.asm"
+INCLUDE "engine/zh/display.asm"
+INCLUDE "engine/zh/text.asm"
+INCLUDE "engine/zh/swap.asm"
+INCLUDE "engine/zh/dialogue.asm"
+INCLUDE "data/zh/font/font.asm"
+INCLUDE "data/zh/font/font_pages.asm"
+endc

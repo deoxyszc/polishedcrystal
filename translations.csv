@@ -37651,7 +37651,14 @@ store any number
 of #mon, and
 {line}
 it's all free.
-{done}",text,ready,,
+{done}",text,ready,"这里可以存放
+{line}
+宝可梦。
+{para}
+而且
+{line}
+完全免费！
+{done}",
 maps/CherrygrovePokeCenter1F.asm::CherrygrovePokeCenter1FGentlemanText::1,a9e88b478fff2710043b516b10312ec347e49d788758073616472987f67fabf0,normal,maps/CherrygrovePokeCenter1F.asm,73,"That PC is free
 {line}
 for any trainer
@@ -55800,9 +55807,11 @@ Winds of a New
 Beginning Blow
 {done}",text,ready,,
 maps/NewBarkTown.asm::PlayersHouseSignText::1,1acbf7799a8a1ed3f0d7cd28b9daed3838a465224e3ff74105f8b7ef8fdda4a1,normal,maps/NewBarkTown.asm,420,"<PLAYER>'s House
-{done}",text,ready,,
+{done}",text,ready,"<PLAYER>的家
+{done}",
 maps/NewBarkTown.asm::ElmsLabSignText::1,14d34a31feff304aaf53fe7419829c7447f6e947785dbe872301a0aa14afb2d7,normal,maps/NewBarkTown.asm,424,"Elm #mon Lab
-{done}",text,ready,,
+{done}",text,ready,"空木博士研究所
+{done}",
 maps/NewBarkTown.asm::LyrasHouseSignText::1,433f7f9f14e3ca8250fc2df5049e3633abc99ac56a3801494e8dbf7d6cda1dbb,normal,maps/NewBarkTown.asm,428,"Lyra's House
 {done}",text,ready,,
 maps/NoisyForest.asm::GenericTrainerBug_maniacPierre::1,774c79d2b8b19a374379c4d97113dcc8b3775e9f03002e3f7888d90813c8401a,normal,maps/NoisyForest.asm,45,"Bzzz… Bzzz…

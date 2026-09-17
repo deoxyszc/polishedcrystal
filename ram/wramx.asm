@@ -1954,3 +1954,21 @@ SECTION "Window Stack", WRAMX
 
 wWindowStack:: ds $1000 - 1
 wWindowStackBottom:: db
+
+
+if DEF(LOCALE_ZH)
+SECTION "ZH intro line scratch", WRAMX
+wZhLineBuffer:: ds 18 * 2 tiles
+wZhGlyphBuffer:: ds 4 tiles
+wZhPixelCursor:: db
+wZhComposeWidth:: db
+wZhComposeRow:: db
+wZhComposeColumn:: db
+wZhLeaseActive:: db
+wZhLeasePins:: db
+wZhLeaseValidMask:: db
+wZhDisplayMode:: db
+wZhPageBuffer:: ds 72 tiles
+wZhSuspended:: db
+
+endc

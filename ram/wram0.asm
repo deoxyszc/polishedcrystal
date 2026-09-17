@@ -1501,3 +1501,19 @@ wResolvedObjectPals:: ds NUM_OBJECT_STRUCTS
 ; Invalidate the selected map rectangle palettes across text/menu rendering.
 wPaletteSwapNeedsReload:: db
 wPaletteSwapReloadMask:: db
+
+if DEF(LOCALE_ZH)
+SECTION "ZH bounded text state", WRAM0
+wZhTextCursor:: dw
+wZhTextEnd:: dw
+wZhTextSpan:: dw
+wZhTextSlot:: db
+wZhTextType:: db
+wZhTextControl:: db
+wZhTextAfterWait:: db
+wZhMenuAttrs:: ds 30
+wZhNameBuffer:: ds 12
+wZhEntryStart:: dw
+wZhEntryEnd:: dw
+
+endc
