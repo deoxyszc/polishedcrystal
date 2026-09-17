@@ -530,6 +530,62 @@ SummaryScreen_LoadPage:
 	ldh [hOAMUpdate], a
 	ldh [hCGBPalUpdate], a
 	call .ClearBox
+if DEF(ZH_SUMMARY_LAYOUT)
+ ; Reset translated lower-panel tile-bank attributes on every page.
+ hlcoord 0,13,wAttrmap
+ ld bc,5 * SCREEN_WIDTH
+ xor a
+ rst ByteFill
+ ; Restore tab geometry before drawing each page.
+ hlcoord 1,10
+ lb bc,3,5
+ call ClearBox
+ hlcoord 1,11
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_CORNER
+ hlcoord 5,11
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_CORNER
+ hlcoord 1,12
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_INNER_CORNER
+ hlcoord 5,12
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_INNER_CORNER
+ hlcoord 2,11
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_B
+ hlcoord 3,11
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_B
+ hlcoord 4,11
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_B
+ hlcoord 1,10,wAttrmap
+ ld [hl],SUMMARY_PAL_POKEMON
+ hlcoord 2,10,wAttrmap
+ ld [hl],SUMMARY_PAL_POKEMON
+ hlcoord 3,10,wAttrmap
+ ld [hl],SUMMARY_PAL_POKEMON
+ hlcoord 4,10,wAttrmap
+ ld [hl],SUMMARY_PAL_POKEMON
+ hlcoord 5,10,wAttrmap
+ ld [hl],SUMMARY_PAL_POKEMON
+ hlcoord 1,11,wAttrmap
+ ld [hl],SUMMARY_PAL_SIDE_WINDOW
+ hlcoord 2,11,wAttrmap
+ ld [hl],OAM_YFLIP | SUMMARY_PAL_LOWER_WINDOW
+ hlcoord 3,11,wAttrmap
+ ld [hl],OAM_YFLIP | SUMMARY_PAL_LOWER_WINDOW
+ hlcoord 4,11,wAttrmap
+ ld [hl],OAM_YFLIP | SUMMARY_PAL_LOWER_WINDOW
+ hlcoord 5,11,wAttrmap
+ ld [hl],OAM_XFLIP | SUMMARY_PAL_SIDE_WINDOW
+ hlcoord 1,12,wAttrmap
+ ld [hl],SUMMARY_PAL_SIDE_WINDOW
+ hlcoord 2,12,wAttrmap
+ ld [hl],SUMMARY_PAL_LOWER_WINDOW
+ hlcoord 3,12,wAttrmap
+ ld [hl],SUMMARY_PAL_LOWER_WINDOW
+ hlcoord 4,12,wAttrmap
+ ld [hl],SUMMARY_PAL_LOWER_WINDOW
+ hlcoord 5,12,wAttrmap
+ ld [hl],OAM_XFLIP | SUMMARY_PAL_SIDE_WINDOW
+else
+endc
 	call .PlaceLevelAndGender
 	hlbgcoord 0, 0, wSummaryScreenWindowBuffer
 	ld a, 10
@@ -563,6 +619,12 @@ SummaryScreen_LoadPage:
 .frontpic_done
 	call SummaryScreen_SwitchPage
 	farcall HDMATransferTileMapToWRAMBank3
+if DEF(ZH_SUMMARY_LAYOUT)
+ farcall HDMATransferAttrMapToWRAMBank3
+ xor a
+ ldh [rVBK],a
+else
+endc
 	ld a, 7 + 64
 	ldh [hWX], a
 	ld a, 16
@@ -828,6 +890,11 @@ endr
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
 .BlueInterrupts:
+if DEF(ZH_SUMMARY_LAYOUT)
+ db 22, SUMMARY_LCD_SHOW_WINDOW
+ db 87, SUMMARY_LCD_HIDE_WINDOW
+ db -1
+else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW
 	db 35,  SUMMARY_LCD_SHOW_WINDOW
@@ -842,6 +909,7 @@ endr
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+endc
 .GreenInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW
@@ -975,6 +1043,16 @@ SummaryScreen_LoadTextboxSpaceGFX:
 
 ; a  = first tile
 SummaryScreen_UpdateTabTitle:
+if DEF(ZH_SUMMARY_LAYOUT)
+ push af
+ ld a,108
+ ld [wSummaryScreenOAMSprite36YCoord],a
+ ld [wSummaryScreenOAMSprite37YCoord],a
+ ld [wSummaryScreenOAMSprite38YCoord],a
+ ld [wSummaryScreenOAMSprite39YCoord],a
+ pop af
+else
+endc
 	ld [wSummaryScreenOAMSprite36TileID], a
 	inc a
 	ld [wSummaryScreenOAMSprite37TileID], a

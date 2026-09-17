@@ -764,3 +764,10 @@ INCLUDE "data/zh/move_names.asm"
 INCLUDE "data/zh/font/font.asm"
 INCLUDE "data/zh/font/font_pages.asm"
 endc
+
+if DEF(LOCALE_ZH) && DEF(ZH_SUMMARY_LAYOUT)
+
+SECTION "Chinese summary layout", ROMX
+INCLUDE "engine/zh/summary_layout.asm"
+INCLUDE "engine/zh/levelup_layout.asm"
+endc

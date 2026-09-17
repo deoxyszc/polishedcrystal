@@ -97,6 +97,10 @@ SummaryScreen_BluePage:
 	ld de, wSummaryScreenPals + 5 palettes
 	rst CopyBytes
 
+if DEF(ZH_SUMMARY_LAYOUT)
+ farcall ZhSummaryLabels
+else
+endc
 	ret
 
 .CheckHyper:
