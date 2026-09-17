@@ -4,7 +4,7 @@
 
 #include "parsemap.h"
 
-#define BANKS 128
+#define MAX_BANKS 256
 #define BANKSIZE 0x4000
 #define ROMSIZE (BANKS * BANKSIZE)
 
@@ -44,7 +44,12 @@ int main (int argc, char ** argv) {
     fprintf(stderr, "error: could not retrieve section data from %s\n", filename);
     return 2;
   }
-  unsigned short bank_ends[BANKS];
+  unsigned BANKS = 128;
+  for (MapSection * probe = sections; probe->type == SECTION_ROM; probe++) {
+    if (probe->bank >= MAX_BANKS) return 3;
+    if (probe->bank >= 128) BANKS = 256;
+  }
+  unsigned short bank_ends[MAX_BANKS];
   unsigned p;
   *bank_ends = 0;
   for (p = 1; p < BANKS; p ++) bank_ends[p] = BANKSIZE;
@@ -58,7 +63,7 @@ int main (int argc, char ** argv) {
       bank_ends[section -> bank] = section -> address + section -> length;
   }
   destroy_section_array(sections);
-  unsigned short free_space[BANKS * 2];
+  unsigned short free_space[MAX_BANKS * 2];
   *free_space = BANKSIZE - *bank_ends;
   free_space[1] = 0;
   for (p = 1; p < BANKS; p ++) {

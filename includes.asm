@@ -17,6 +17,11 @@ INCLUDE "macros/scripts/audio.asm"
 INCLUDE "macros/scripts/maps.asm"
 INCLUDE "macros/scripts/events.asm"
 INCLUDE "macros/scripts/text.asm"
+if DEF(LOCALE_ZH)
+INCLUDE "constants/zh_encoding.asm"
+INCLUDE "constants/zh_layout.asm"
+INCLUDE "macros/zh_text.asm"
+endc
 INCLUDE "macros/scripts/movement.asm"
 INCLUDE "macros/scripts/battle_anims.asm"
 INCLUDE "macros/scripts/trade_anims.asm"
