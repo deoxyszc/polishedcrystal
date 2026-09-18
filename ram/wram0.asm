@@ -1529,6 +1529,8 @@ wZhPlayerHudWidth:: db
 wZhEnemyHudWidth:: db
 if DEF(ZH_SUMMARY_LAYOUT)
 wZhSummaryAbility:: db
+wZhItemDescriptionActive:: db
+wZhSummaryMovesActive:: db
 wZhStatsSaved:: ds 20
 wZhStatsFlags:: db
 endc
@@ -1542,6 +1544,16 @@ wZhPartyWidths:: ds 6
 wZhPartyStatuses:: ds 6
 wZhPartyStatusTiles:: ds 32
 wZhPartyBottom:: ds 16
+UNION
 wZhPartyCancelBuffer:: ds 144
+NEXTU
+wZhMovePPText:: ds 32
+wZhMoveIds:: ds 4
+ENDU
+else
+if DEF(ZH_SUMMARY_LAYOUT)
+wZhMovePPText:: ds 32
+wZhMoveIds:: ds 4
+endc
 endc
 endc

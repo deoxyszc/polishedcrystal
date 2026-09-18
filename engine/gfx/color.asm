@@ -1174,3 +1174,13 @@ INCLUDE "data/events/paintings/palettes.asm"
 INCLUDE "engine/gfx/sgb_border.asm"
 
 INCLUDE "engine/gfx/vary_colors.asm"
+
+if DEF(ZH_SUMMARY_LAYOUT)
+ZhRestoreSummaryItemPalette::
+ ld hl,ItemIconPalettes
+ ld bc,2 colors
+ ld a,[wTempMonItem]
+ rst AddNTimes
+ ld de,wSummaryScreenPals palette SUMMARY_PAL_ITEM
+ jp LoadPalette_White_Col1_Col2_Black
+endc

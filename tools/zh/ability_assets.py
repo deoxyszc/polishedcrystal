@@ -2,6 +2,7 @@
 import csv
 import re
 from PIL import Image, ImageDraw, ImageFont
+from summary_text_layout import NAME_BASELINE, DESCRIPTION_BASELINE, DESCRIPTION_LINE_STEP
 
 def generate(source, language, font_path):
     with (source/'translations.csv').open(encoding='utf-8-sig', newline='') as f:
@@ -36,7 +37,7 @@ def generate(source, language, font_path):
             for y,line in enumerate(lines):
                 if any(c in line for c in '{}@\n\r') or font.getlength(line)>width:
                     raise ValueError('Unsupported or oversized ability text: '+row['id'])
-                draw.text((0,(10 if kind == "name" else 16)+y*13),line,font=font,fill=1,anchor='ls')
+                draw.text((0,(NAME_BASELINE if kind == "name" else DESCRIPTION_BASELINE)+y*DESCRIPTION_LINE_STEP),line,font=font,fill=1,anchor='ls')
             if kind == 'name':name_images[index]=im.copy()
             data=[]
             for ty in range(height//8):

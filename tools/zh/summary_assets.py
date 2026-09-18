@@ -33,10 +33,18 @@ def generate(source, font_path, terms_path):
     d.line((3,8,36,8),fill=3);d.point((2,9),fill=3);d.point((37,9),fill=3)
     d.line((1,10,1,19),fill=3);d.line((38,10,38,19),fill=3)
     d.line((0,20,1,20),fill=3);d.line((38,20,39,20),fill=3);d.line((2,20,37,20),fill=0)
+    tab_background=im.copy()
     for y in range(16):
         for x in range(24):
             if glyph.getpixel((x,y)):im.putpixel((x+8,y+8),3)
     (out/'ability_tab.2bpp').write_bytes(encode(im))
+    if terms.get('item'):
+        item=tab_background.copy()
+        glyph=label(terms['item'])
+        for y in range(16):
+            for x in range(24):
+                if glyph.getpixel((x,y)):item.putpixel((x+8,y+8),3)
+        (out/'item_tab.2bpp').write_bytes(encode(item))
     subprocess.run(['make', 'gfx/font/normal.1bpp'], cwd=source, check=True)
     raw=(source/'gfx/font/normal.1bpp').read_bytes();data=bytearray()
     for code in list(range(0xe0,0xea))+[0xde,0x7f]:

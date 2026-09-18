@@ -777,6 +777,13 @@ INCLUDE "engine/zh/summary_layout.asm"
 INCLUDE "engine/zh/summary_two_line.asm"
 INCLUDE "engine/zh/levelup_layout.asm"
 INCLUDE "engine/zh/abilities.asm"
+INCLUDE "data/zh/item_panel.asm"
+INCLUDE "engine/zh/item_panel.asm"
+SECTION "Chinese summary move runtime", ROMX
+INCLUDE "data/zh/summary_moves.asm"
+INCLUDE "engine/zh/summary_moves.asm"
 SECTION "Chinese ability display assets", ROMX
 INCLUDE "data/zh/abilities.asm"
+INCLUDE "data/zh/item_assets.asm"
+INCLUDE "data/zh/summary_move_assets.asm"
 endc

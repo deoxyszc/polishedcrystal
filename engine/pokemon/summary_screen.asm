@@ -820,6 +820,30 @@ SummaryScreen_SwitchPage:
 	ld h, [hl]
 	ld l, b
 .egg
+if DEF(ZH_SUMMARY_LAYOUT)
+ ld a,[wSummaryScreenFlags]
+ and SUMMARY_FLAGS_PAGE_MASK
+ cp SUMMARY_GREEN_PAGE
+ jr nz,.nativeDescriptionScroll
+ ld a,[wTempMonIsEgg]
+ bit MON_IS_EGG_F,a
+ jr nz,.nativeDescriptionScroll
+ ld a,[wZhSummaryMovesActive]
+ and a
+ jr z,.checkItemScroll
+ ld hl,.GreenMoveListInterrupts
+ ld a,[wZhItemDescriptionActive]
+ and a
+ jr z,.nativeDescriptionScroll
+ ld hl,.GreenMoveListTranslatedInterrupts
+ jr .nativeDescriptionScroll
+.checkItemScroll
+ ld a,[wZhItemDescriptionActive]
+ and a
+ jr z,.nativeDescriptionScroll
+ ld hl,.GreenTranslatedInterrupts
+.nativeDescriptionScroll
+endc
 	ld de, wSummaryScreenInterrupts
 	ld bc, 16 * 2
 	rst CopyBytes
@@ -921,6 +945,27 @@ endc
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+if DEF(ZH_SUMMARY_LAYOUT)
+.GreenMoveListInterrupts:
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 91,SUMMARY_LCD_HIDE_WINDOW
+ db 127,SUMMARY_LCD_SCROLL_BACKGROUND
+ db -1
+.GreenMoveListTranslatedInterrupts:
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 91,SUMMARY_LCD_HIDE_WINDOW
+ db -1
+.GreenTranslatedInterrupts:
+ db 22, SUMMARY_LCD_SHOW_WINDOW
+ db 31, SUMMARY_LCD_HIDE_WINDOW
+ db 35, SUMMARY_LCD_SHOW_WINDOW
+ db 51, SUMMARY_LCD_HIDE_WINDOW
+ db 55, SUMMARY_LCD_SHOW_WINDOW
+ db 71, SUMMARY_LCD_HIDE_WINDOW
+ db 75, SUMMARY_LCD_SHOW_WINDOW
+ db 91, SUMMARY_LCD_HIDE_WINDOW
+ db -1
+endc
 .OrangeInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
