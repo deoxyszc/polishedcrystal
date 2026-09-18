@@ -4,9 +4,10 @@ import argparse,csv,hashlib,json,shutil,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);p.add_argument('--summary-terms',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);p.add_argument('--summary-terms',type=Path);p.add_argument('--party-preview-terms',type=Path);a=p.parse_args()
  out=a.out.resolve()
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
+ if a.party_preview_terms and a.language=='en':p.error('Party preview requires a Chinese runtime build')
  chinese=a.language!='en'
  if chinese and (not a.font or not a.licenses):p.error('Chinese builds require --font and --licenses')
  chars=set(a.characters) if chinese else set()
@@ -25,6 +26,9 @@ def main():
   if a.summary_terms:
    import summary_assets
    summary_assets.generate(source,a.font,a.summary_terms)
+  if a.party_preview_terms:
+   import party_preview
+   party_preview.generate(source,a.font,a.party_preview_terms)
   import hud_names
   hud_names.generate(source,a.language,a.font)
   import move_names
