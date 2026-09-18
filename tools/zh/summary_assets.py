@@ -1,5 +1,6 @@
 """Generate opt-in summary UI assets from caller-supplied terminology."""
 import json
+import subprocess
 from PIL import Image, ImageDraw, ImageFont
 
 def generate(source, font_path, terms_path):
@@ -36,6 +37,7 @@ def generate(source, font_path, terms_path):
         for x in range(24):
             if glyph.getpixel((x,y)):im.putpixel((x+8,y+8),3)
     (out/'ability_tab.2bpp').write_bytes(encode(im))
+    subprocess.run(['make', 'gfx/font/normal.1bpp'], cwd=source, check=True)
     raw=(source/'gfx/font/normal.1bpp').read_bytes();data=bytearray()
     for code in list(range(0xe0,0xea))+[0xde,0x7f]:
         rows=bytes(4)+(raw[(code-0x80)*8:(code-0x80)*8+8] if code!=0x7f else bytes(8))+bytes(4)

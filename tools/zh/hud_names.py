@@ -3,11 +3,12 @@ import csv
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
-def generate(source, language, font_path):
+def generate(source, language, font_path, *, party=False):
     font = ImageFont.truetype(str(font_path), 12)
     with (source / 'translations.csv').open(encoding='utf-8-sig', newline='') as f:
         rows = [r for r in csv.DictReader(f) if r['source_path'] == 'data/pokemon/names.asm' and r.get('translation_' + language, '').strip()]
-    lines = ['ZhBattleNameTable:']
+    table = 'ZhPartyNameTable' if party else 'ZhBattleNameTable'
+    lines = [table + ':']
     bodies = []
     for i, row in enumerate(rows):
         name = row['translation_' + language].strip().rstrip('@')
@@ -24,7 +25,7 @@ def generate(source, language, font_path):
             box = glyph.getbbox()
             if box is None or box[2] > 11 or box[3] > 16:
                 raise ValueError('Glyph does not fit 11px HUD advance: ' + char)
-            draw.text((k * 11, 12), char, font=font, fill=1, anchor='ls')
+            draw.text((k * 11, 10 if party else 12), char, font=font, fill=1, anchor='ls')
         width = (len(name) * 11 + 7) // 8
         data = bytearray()
         for ty in range(2):
@@ -39,4 +40,4 @@ def generate(source, language, font_path):
         lines.append(' dw ' + label)
         bodies += [label + ':', ' db ' + chr(34) + original + chr(34), ' db ' + str(width), ' db ' + ','.join(map(str, data))]
     lines += [' dw 0'] + bodies
-    (source / 'data/zh/battle_names.asm').write_text(chr(10).join(lines) + chr(10))
+    (source / ('data/zh/party_names.asm' if party else 'data/zh/battle_names.asm')).write_text(chr(10).join(lines) + chr(10))

@@ -1527,4 +1527,16 @@ wZhHudName:: dw
 wZhHudWidth:: db
 wZhPlayerHudWidth:: db
 wZhEnemyHudWidth:: db
+if DEF(ZH_PARTY_LAYOUT)
+wZhPartyIndex:: db
+wZhPartyWidth:: db
+wZhPartyTile:: db
+wZhPartyGender:: db
+wZhPartyLevel:: ds 3
+wZhPartyWidths:: ds 6
+wZhPartyStatuses:: ds 6
+wZhPartyStatusTiles:: ds 32
+wZhPartyBottom:: ds 16
+wZhPartyCancelBuffer:: ds 144
+endc
 endc
