@@ -710,6 +710,10 @@ _CGB_PartyMenu:
 	lb bc, 11, 1
 	ld a, $4
 	call FillBoxWithByte
+if DEF(LOCALE_ZH)
+ farcall ZhPartyAttributes
+ farcall ZhPartyFooterAttrs
+endc
 	jmp ApplyAttrMap
 
 PartyMenuBGPals:

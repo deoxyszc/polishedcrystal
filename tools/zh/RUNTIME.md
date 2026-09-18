@@ -23,3 +23,9 @@ When a move exceeds the cell width, the existing list is retained.
 No translated CSV content, generated glyph images, ROMs, saves or screenshots
 are shipped. Trial translations belong in a local copy before building.
 Build-generated name tables are display data, never save-format changes.
+
+All Chinese runtime modules use the single LOCALE_ZH build guard selected by
+--language. No per-page layout switches are required. Chinese builds require
+--font, --licenses and --ui-terms; the terms file supplies UI strings only.
+Generated resource-presence constants select translated versus original text
+when an optional translation is absent; they do not select a build variant.

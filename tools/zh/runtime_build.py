@@ -4,12 +4,12 @@ import argparse,csv,hashlib,json,shutil,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);p.add_argument('--summary-terms',type=Path);p.add_argument('--party-preview-terms',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);p.add_argument('--ui-terms',type=Path);a=p.parse_args()
  out=a.out.resolve()
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
- if a.party_preview_terms and a.language=='en':p.error('Party preview requires a Chinese runtime build')
+ if a.language=='en' and a.ui_terms:p.error('English builds do not consume Chinese UI terms')
  chinese=a.language!='en'
- if chinese and (not a.font or not a.licenses):p.error('Chinese builds require --font and --licenses')
+ if chinese and (not a.font or not a.licenses or not a.ui_terms):p.error('Chinese builds require --font, --licenses and --ui-terms resources')
  chars=set(a.characters) if chinese else set()
  if chinese:
   with (ROOT/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
@@ -23,21 +23,24 @@ def main():
   manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
   subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
   (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
-  if a.summary_terms:
-   import summary_assets
-   summary_assets.generate(source,a.font,a.summary_terms)
-  if a.party_preview_terms:
-   import party_preview
-   party_preview.generate(source,a.font,a.party_preview_terms)
+  import summary_assets
+  summary_assets.generate(source,a.font,a.ui_terms)
+  import ability_assets
+  ability_assets.generate(source,a.language,a.font)
+  import item_panel
+  item_panel.generate(source,a.language,a.font)
+  import summary_moves
+  summary_moves.generate(source,a.language,a.font)
   import hud_names
   hud_names.generate(source,a.language,a.font)
+  hud_names.generate(source,a.language,a.font,party=True)
+  import party_footer
+  party_footer.generate(source,a.language,a.font)
   import move_names
   move_names.generate(source,a.language,manifest)
   import import_dialogue
   imported=import_dialogue.apply(source,a.language,manifest)
   make=source/'Makefile';s=make.read_text();s=s.replace('MODIFIERS :=','MODIFIERS := -zh',1);s=s.replace('RGBASMFLAGS    =','RGBASMFLAGS    = -DLOCALE_ZH',1);make.write_text(s)
- if a.summary_terms and chinese:
-  make=source/'Makefile';make.write_text(make.read_text().replace('-DLOCALE_ZH','-DLOCALE_ZH -DZH_SUMMARY_LAYOUT'))
  if not chinese:
   for name in ['font.asm','font_pages.asm','count.asm']:(source/'data/zh/font'/name).write_text('; Disabled in English build'+chr(10))
  log=out/'build.log'

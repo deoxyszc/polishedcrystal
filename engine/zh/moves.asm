@@ -1,5 +1,10 @@
-; Carry set when any selected move cannot fit a 72px cell.
+; Carry set when a selected move exceeds its composed cell (72px left,
+; 56px right after the cursor and 80px column offset in a 144px line).
 ZhCanDrawMoveGrid::
+ ; Reordering uses the original list and its original swap-marker geometry.
+ ld a,[wMoveSwapBuffer]
+ and a
+ jr nz,.wide
  ld hl,wListMoves_MoveIndicesBuffer
  ld b,4
 .loop
@@ -13,9 +18,17 @@ ZhCanDrawMoveGrid::
  ld hl,ZhMoveNameWidths
  add hl,de
  ld a,[hl]
- cp 73
+ ld e,a
  pop bc
  pop hl
+ bit 0,b
+ ld a,e
+ jr nz,.right
+ cp 73
+ jr .checked
+.right
+ cp 57
+.checked
  jr nc,.wide
  dec b
  jr nz,.loop

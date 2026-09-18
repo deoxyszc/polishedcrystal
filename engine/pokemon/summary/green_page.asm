@@ -1,4 +1,8 @@
 SummaryScreen_GreenPage:
+if DEF(LOCALE_ZH)
+ ; Blue-page text temporarily uses palette 2. Restore the live item palette.
+ farcall ZhRestoreSummaryItemPalette
+endc
 	ld a, SUMMARY_TILE_OAM_ITEM_TITLE
 	call SummaryScreen_UpdateTabTitle
 	ld hl, .GreenPalettes
@@ -13,6 +17,9 @@ SummaryScreen_GreenPage:
 	call .ReplaceLevelGenderWithItemIcon
 
 	call .PrintMoves
+if DEF(LOCALE_ZH)
+ farcall ZhSummaryItem
+endc
 
 	ld a, -1
 	ld [wSummaryMoveSwap], a
@@ -92,6 +99,9 @@ INCLUDE "gfx/stats/green_page.pal"
 	db "No held item@"
 
 .PrintMoves
+if DEF(LOCALE_ZH)
+ call LoadStandardFont
+endc
 	; Clear move names
 	hlbgcoord 0, 0, wSummaryScreenWindowBuffer
 	ld de, 64 - 12
@@ -124,7 +134,11 @@ INCLUDE "gfx/stats/green_page.pal"
 for n, NUM_MOVES
 	ld a, [wTempMonMoves + n]
 	and a
-	ret z
+if DEF(LOCALE_ZH)
+ jp z,.movesReady
+else
+ ret z
+endc
 	ld a, [wSummaryScreenTypes + 2 + n]
 	ld d, (2 + n) | 8
 	lb bc, 72, 41 + n * 20
@@ -133,6 +147,10 @@ for n, NUM_MOVES
 	debgcoord 0, 1 + n * 2, wSummaryScreenWindowBuffer
 	call SummaryScreen_PlaceTypeBG
 endr
+.movesReady
+if DEF(LOCALE_ZH)
+ farcall ZhSummaryMoves
+endc
 	ret
 
 ; a = move
@@ -380,6 +398,9 @@ SummaryScreen_MoveInfoJoypad:
 	call .swap_addresses
 	farcall UpdateStorageBoxMonFromTemp
 	call SummaryScreen_GreenPage.PrintMoves
+if DEF(LOCALE_ZH)
+ call LoadStandardFont
+endc
 	call SummaryScreen_InitLayout.ApplySummaryPalettes
 	call SummaryScreen_SwitchPage
 	ld de, SFX_SWITCH_POKEMON

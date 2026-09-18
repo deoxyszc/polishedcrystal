@@ -1527,4 +1527,24 @@ wZhHudName:: dw
 wZhHudWidth:: db
 wZhPlayerHudWidth:: db
 wZhEnemyHudWidth:: db
+wZhSummaryAbility:: db
+wZhItemDescriptionActive:: db
+wZhSummaryMovesActive:: db
+wZhStatsSaved:: ds 20
+wZhStatsFlags:: db
+wZhPartyIndex:: db
+wZhPartyWidth:: db
+wZhPartyTile:: db
+wZhPartyGender:: db
+wZhPartyLevel:: ds 3
+wZhPartyWidths:: ds 6
+wZhPartyStatuses:: ds 6
+wZhPartyStatusTiles:: ds 32
+wZhPartyBottom:: ds 16
+UNION
+wZhPartyCancelBuffer:: ds 144
+NEXTU
+wZhMovePPText:: ds 32
+wZhMoveIds:: ds 4
+ENDU
 endc

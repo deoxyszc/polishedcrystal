@@ -1970,5 +1970,10 @@ wZhLeaseValidMask:: db
 wZhDisplayMode:: db
 wZhPageBuffer:: ds 72 tiles
 wZhSuspended:: db
-
+SECTION "ZH summary compositor", WRAMX
+UNION
+wZhStatsPixels:: ds 1536
+NEXTU
+wZhMovePixels:: ds 1920
+ENDU
 endc

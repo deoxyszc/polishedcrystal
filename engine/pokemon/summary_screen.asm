@@ -521,7 +521,7 @@ SummaryScreen_InitLayout:
 	db 108, 44, SUMMARY_TILE_OAM_TITLES + 3, $0
 
 SummaryScreen_LoadPage:
-	ld a, [wCurPartySpecies]
+ld a, [wCurPartySpecies]
 	ld [wTempSpecies], a
 	ld [wCurSpecies], a
 	xor a
@@ -530,7 +530,7 @@ SummaryScreen_LoadPage:
 	ldh [hOAMUpdate], a
 	ldh [hCGBPalUpdate], a
 	call .ClearBox
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  ; Reset translated lower-panel tile-bank attributes on every page.
  hlcoord 0,13,wAttrmap
  ld bc,5 * SCREEN_WIDTH
@@ -619,7 +619,7 @@ endc
 .frontpic_done
 	call SummaryScreen_SwitchPage
 	farcall HDMATransferTileMapToWRAMBank3
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall HDMATransferAttrMapToWRAMBank3
  xor a
  ldh [rVBK],a
@@ -820,6 +820,30 @@ SummaryScreen_SwitchPage:
 	ld h, [hl]
 	ld l, b
 .egg
+if DEF(LOCALE_ZH)
+ ld a,[wSummaryScreenFlags]
+ and SUMMARY_FLAGS_PAGE_MASK
+ cp SUMMARY_GREEN_PAGE
+ jr nz,.nativeDescriptionScroll
+ ld a,[wTempMonIsEgg]
+ bit MON_IS_EGG_F,a
+ jr nz,.nativeDescriptionScroll
+ ld a,[wZhSummaryMovesActive]
+ and a
+ jr z,.checkItemScroll
+ ld hl,.GreenMoveListInterrupts
+ ld a,[wZhItemDescriptionActive]
+ and a
+ jr z,.nativeDescriptionScroll
+ ld hl,.GreenMoveListTranslatedInterrupts
+ jr .nativeDescriptionScroll
+.checkItemScroll
+ ld a,[wZhItemDescriptionActive]
+ and a
+ jr z,.nativeDescriptionScroll
+ ld hl,.GreenTranslatedInterrupts
+.nativeDescriptionScroll
+endc
 	ld de, wSummaryScreenInterrupts
 	ld bc, 16 * 2
 	rst CopyBytes
@@ -890,9 +914,9 @@ endr
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
 .BlueInterrupts:
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  db 22, SUMMARY_LCD_SHOW_WINDOW
- db 87, SUMMARY_LCD_HIDE_WINDOW
+ db 95, SUMMARY_LCD_HIDE_WINDOW
  db -1
 else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
@@ -921,6 +945,27 @@ endc
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+if DEF(LOCALE_ZH)
+.GreenMoveListInterrupts:
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 91,SUMMARY_LCD_HIDE_WINDOW
+ db 127,SUMMARY_LCD_SCROLL_BACKGROUND
+ db -1
+.GreenMoveListTranslatedInterrupts:
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 91,SUMMARY_LCD_HIDE_WINDOW
+ db -1
+.GreenTranslatedInterrupts:
+ db 22, SUMMARY_LCD_SHOW_WINDOW
+ db 31, SUMMARY_LCD_HIDE_WINDOW
+ db 35, SUMMARY_LCD_SHOW_WINDOW
+ db 51, SUMMARY_LCD_HIDE_WINDOW
+ db 55, SUMMARY_LCD_SHOW_WINDOW
+ db 71, SUMMARY_LCD_HIDE_WINDOW
+ db 75, SUMMARY_LCD_SHOW_WINDOW
+ db 91, SUMMARY_LCD_HIDE_WINDOW
+ db -1
+endc
 .OrangeInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
@@ -1043,7 +1088,7 @@ SummaryScreen_LoadTextboxSpaceGFX:
 
 ; a  = first tile
 SummaryScreen_UpdateTabTitle:
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  push af
  ld a,108
  ld [wSummaryScreenOAMSprite36YCoord],a

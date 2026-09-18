@@ -1,4 +1,4 @@
-import csv,hashlib,re,sys
+import csv,hashlib,re,sys,json
 import encode
 def segments(text):
  result=[];width=0
@@ -26,6 +26,9 @@ def apply(source,language,manifest):
    if row['id'] in seen:raise ValueError('Duplicate CSV ID')
    seen.add(row['id']);text=row.get('translation_'+language,'')
    if row['source_path']=='data/moves/names.asm':continue
+   if (source/'data/zh/item_consumed.json').exists() and row['id'] in json.loads((source/'data/zh/item_consumed.json').read_text()):continue
+   if row['source_path'] in ('data/abilities/names.asm','data/abilities/descriptions.asm') and (source/'data/zh/abilities.asm').exists():continue
+   if row['id'] in ('engine/pokemon/party_menu.asm::PlacePartyNicknames.Cancel::1','engine/pokemon/party_menu.asm::ChooseAMonString::1') and (source/'data/zh/party_footer.asm').exists():continue
    if row['resource_kind']!='text' or not text.strip():continue
    if row['source_path']=='data/pokemon/names.asm':continue
    original=authority.get(row['id'])
