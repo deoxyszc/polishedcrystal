@@ -521,7 +521,7 @@ SummaryScreen_InitLayout:
 	db 108, 44, SUMMARY_TILE_OAM_TITLES + 3, $0
 
 SummaryScreen_LoadPage:
-	ld a, [wCurPartySpecies]
+ld a, [wCurPartySpecies]
 	ld [wTempSpecies], a
 	ld [wCurSpecies], a
 	xor a
@@ -892,7 +892,7 @@ endr
 .BlueInterrupts:
 if DEF(ZH_SUMMARY_LAYOUT)
  db 22, SUMMARY_LCD_SHOW_WINDOW
- db 87, SUMMARY_LCD_HIDE_WINDOW
+ db 95, SUMMARY_LCD_HIDE_WINDOW
  db -1
 else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW

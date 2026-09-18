@@ -1527,6 +1527,11 @@ wZhHudName:: dw
 wZhHudWidth:: db
 wZhPlayerHudWidth:: db
 wZhEnemyHudWidth:: db
+if DEF(ZH_SUMMARY_LAYOUT)
+wZhSummaryAbility:: db
+wZhStatsSaved:: ds 20
+wZhStatsFlags:: db
+endc
 if DEF(ZH_PARTY_LAYOUT)
 wZhPartyIndex:: db
 wZhPartyWidth:: db

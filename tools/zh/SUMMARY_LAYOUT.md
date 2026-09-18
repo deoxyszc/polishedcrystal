@@ -10,31 +10,19 @@ The layout includes two-column stats, nature colors, compact numeric spacing,
 a12px ability tab, and six-row level-up panels with aligned numeric glyphs.
 Page switches restore lower-panel attributes and tab geometry.
 
-This is opt-in because three-digit spacing and Hyper Training marker placement
-remain unvalidated, as explicitly deferred during review. Moves and other
-summary pages retain their current layout. The local Torrent translation and
-its raster test routine are excluded; ability names/descriptions retain the
-existing rendering path. No save-format changes.
+With live Hyper Training flags present, the runtime switches to three rows of
+two cells with 20px spacing: label above, original-width numeric value and
+original marker below. Without flags, the existing horizontal layout remains.
+Original formatted values and nature colors are preserved. The HP bar and
+ability-slot indicator retain the original game data. No save-format changes.
 
-## Approved visual target (runtime integration pending)
+Explicit CSV ability translations are supported as described in ABILITY_LAYOUT.md.
+No sample translations, stat values, generated tiles or ROMs are shipped.
 
-The next summary layout should retain the existing horizontal arrangement when
-no Hyper Training marker is present. When markers require the alternate layout,
-use three rows of two cells: each cell places its label above its value and
-optional original Hyper Training icon. Use 20px row spacing and place the first
-label at screen y=34, leaving the original HP bar intact. Keep the original
-digit shapes and 8px advance, right-align values within their cells, and preserve
-nature colors. Unmarked values leave the marker position blank.
-
-Ability names and descriptions should use the selected translation resources,
-with 12px text and a two-line description within the existing lower panel.
-Preserve its frame and original ability-slot indicator. Do not embed example
-translations or sample stat values in the generator or runtime.
-
-These targets have been reviewed as image mockups only. The visual matrix
-covered one-, two- and three-digit values, individual and mixed markers, all
-999 values, and neutral/nature colors. It does not establish runtime support.
-The current code still uses the earlier summary layout and original ability
-text path. Implement live-data rendering, marker placement, translation import
-and page-switch restoration before claiming these targets are available in
-generated ROMs.
+The marked three-digit layout and translated ability panel were verified in a
+local ROM after resolving tile-allocation conflicts with the portrait. Border,
+ability-name and description regions were compared against the reviewed visual
+target. The full one/two/three-digit and mixed-marker matrix was previously
+reviewed as mockups; comprehensive runtime matrix and final clean-build
+regression remain pending. Do not treat visual approval as full playability
+certification.

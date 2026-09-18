@@ -43,3 +43,29 @@ def generate(source, font_path, terms_path):
         rows=bytes(4)+(raw[(code-0x80)*8:(code-0x80)*8+8] if code!=0x7f else bytes(8))+bytes(4)
         for v in rows:data.extend((v,v))
     (out/'level_digits.2bpp').write_bytes(data)
+    # Alternate stat panel: 96x64, original-width digits below each label.
+    panel=Image.new('1',(96,64));pd=ImageDraw.Draw(panel);pd.fontmode='1'
+    for i,text in enumerate(labels[1:]):
+        pd.text(((i%2)*48,12+(i//2)*20),text,font=font,fill=1,anchor='ls')
+    (out/'summary_two_line.2bpp').write_bytes(encode(panel.convert('L').point(lambda v: 2 if v else 0)))
+    shifted=bytearray()
+    for offset in (6,2):
+        for code in range(10):
+            rows=bytes(offset)+raw[(0x60+code)*8:(0x61+code)*8]+bytes(8-offset)
+            for v in rows:shifted.extend((v,v))
+    (out/'summary_shift_digits.2bpp').write_bytes(shifted)
+    subprocess.run(['make','gfx/stats/summary.2bpp'],cwd=source,check=True)
+    marker=(source/'gfx/stats/summary.2bpp').read_bytes()[12*16:13*16]
+    panel_path=out/'summary_two_line.2bpp'
+    pixels=bytearray(panel_path.read_bytes())
+    edge=(source/'gfx/stats/summary.2bpp').read_bytes()[4*16+14:4*16+16]
+    # Original edge ink uses dedicated black color 2, never nature color 3.
+    edge=bytes((0,edge[1]))
+    for x in range(12):pixels[(7*12+x)*16+14:(7*12+x)*16+16]=edge
+    panel_path.write_bytes(pixels)
+    (out/'summary_shift_marker.2bpp').write_bytes(
+        bytes(12)+marker+bytes(4)+bytes(4)+marker+bytes(12))
+
+    corner=bytearray((source/'gfx/stats/summary.2bpp').read_bytes()[32:48])
+    # Keep the original corner unchanged.
+    (out/'summary_corner.2bpp').write_bytes(corner)

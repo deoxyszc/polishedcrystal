@@ -1,4 +1,7 @@
 ZhSummaryLabels::
+ ld a,[wTempMonHyperTraining]
+ and $fc
+ jp nz,ZhSummaryTwoLine
  hlbgcoord 8,2,wSummaryScreenWindowBuffer
  ld a,[hl]
  push af
@@ -856,7 +859,7 @@ ZhSummaryLabels::
 ZhAbilityTitle::
  ld a,1
  ldh [rVBK],a
- ld hl,$8b60
+ ld hl,$8e00
  ld de,.Tiles
  ld b,BANK(.Tiles)
  ld c,15
@@ -868,63 +871,63 @@ ZhAbilityTitle::
  ld [wSummaryScreenOAMSprite38YCoord],a
  ld [wSummaryScreenOAMSprite39YCoord],a
  hlcoord 1,10
- ld [hl],182
+ ld [hl],224
  hlcoord 1,10,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 2,10
- ld [hl],183
+ ld [hl],225
  hlcoord 2,10,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 3,10
- ld [hl],184
+ ld [hl],226
  hlcoord 3,10,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 4,10
- ld [hl],185
+ ld [hl],227
  hlcoord 4,10,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 5,10
- ld [hl],186
+ ld [hl],228
  hlcoord 5,10,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 1,11
- ld [hl],187
+ ld [hl],229
  hlcoord 1,11,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 2,11
- ld [hl],188
+ ld [hl],230
  hlcoord 2,11,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 3,11
- ld [hl],189
+ ld [hl],231
  hlcoord 3,11,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 4,11
- ld [hl],190
+ ld [hl],232
  hlcoord 4,11,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 5,11
- ld [hl],191
+ ld [hl],233
  hlcoord 5,11,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 1,12
- ld [hl],192
+ ld [hl],234
  hlcoord 1,12,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 2,12
- ld [hl],193
+ ld [hl],235
  hlcoord 2,12,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 3,12
- ld [hl],194
+ ld [hl],236
  hlcoord 3,12,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 4,12
- ld [hl],195
+ ld [hl],237
  hlcoord 4,12,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  hlcoord 5,12
- ld [hl],196
+ ld [hl],238
  hlcoord 5,12,wAttrmap
  ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
  ret

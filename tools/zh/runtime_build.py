@@ -27,6 +27,8 @@ def main():
   if a.summary_terms:
    import summary_assets
    summary_assets.generate(source,a.font,a.summary_terms)
+   import ability_assets
+   ability_assets.generate(source,a.language,a.font)
   import hud_names
   hud_names.generate(source,a.language,a.font)
   if a.party_layout:hud_names.generate(source,a.language,a.font,party=True)

@@ -42,6 +42,10 @@ SummaryScreen_BluePage:
 	ld a, [wTempMonSpecies]
 	ld c, a
 	call GetAbility
+if DEF(ZH_SUMMARY_LAYOUT)
+ ld a,b
+ ld [wZhSummaryAbility],a
+endc
 
 	push bc
 	hlcoord 1, 13
@@ -99,6 +103,7 @@ SummaryScreen_BluePage:
 
 if DEF(ZH_SUMMARY_LAYOUT)
  farcall ZhSummaryLabels
+ farcall ZhSummaryAbility
 else
 endc
 	ret

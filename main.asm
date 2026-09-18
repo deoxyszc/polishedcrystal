@@ -774,5 +774,9 @@ if DEF(LOCALE_ZH) && DEF(ZH_SUMMARY_LAYOUT)
 
 SECTION "Chinese summary layout", ROMX
 INCLUDE "engine/zh/summary_layout.asm"
+INCLUDE "engine/zh/summary_two_line.asm"
 INCLUDE "engine/zh/levelup_layout.asm"
+INCLUDE "engine/zh/abilities.asm"
+SECTION "Chinese ability display assets", ROMX
+INCLUDE "data/zh/abilities.asm"
 endc
