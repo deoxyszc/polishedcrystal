@@ -27,14 +27,21 @@ class PreviewInputs(unittest.TestCase):
             marker = source / 'unchanged'
             marker.write_bytes(b'original')
             terms = root / 'terms.json'
-            with patch.object(party_preview.ImageFont, 'truetype') as font:
+            with patch.object(party_preview.ImageFont, 'truetype') as font, patch.object(
+                    party_preview, 'validate_rows'):
                 font.return_value.getlength.side_effect = lambda text: len(text) * 12
                 for case in cases:
+                    case = dict(case, rows=[])
                     terms.write_text(json.dumps(case))
                     with self.subTest(case=case), self.assertRaises(ValueError):
                         party_preview.generate(source, 'font.ttf', terms)
                     self.assertEqual(list(source.iterdir()), [marker])
                     self.assertEqual(marker.read_bytes(), b'original')
+
+    def test_metadata_has_no_defaults(self):
+        for rows in (None, [], [{}] * 6, [{}] * 5):
+            with self.subTest(rows=rows), self.assertRaises(ValueError):
+                party_preview.validate_rows(rows)
 
 
 if __name__ == '__main__':
