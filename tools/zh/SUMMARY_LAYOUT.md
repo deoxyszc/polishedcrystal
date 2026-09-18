@@ -1,7 +1,7 @@
-# Opt-in summary and level-up layout
+# Chinese summary and level-up layout
 
-Pass --summary-terms /local/terms.json with a Chinese runtime build to enable
-the reviewed layout. Without this option the existing UI remains unchanged.
+Chinese runtime builds include this layout through LOCALE_ZH. Supply terminology
+with --ui-terms /local/terms.json; this is a resource input, not a layout switch.
 The JSON keys are hp, attack, defense, special_attack, special_defense, speed
 and ability. Labels must fit24px at12px font size. Keep hp as HP consistently.
 No terminology translations or generated graphics are shipped in this PR.

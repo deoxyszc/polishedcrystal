@@ -550,7 +550,7 @@ WritePartyMenuTilemap:
 	call PlacePartyMonLevel
 	call PlacePartyMonGender
 	call PlacePartyMonStatus
-if DEF(ZH_PARTY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall ZhPartyLayout
 endc
 
@@ -1287,7 +1287,7 @@ PlacePartyMenuText:
 	rst PlaceString
 	pop af
 	ld [wOptions1], a
-if DEF(ZH_PARTY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall ZhPartyFooter
 endc
 	ret

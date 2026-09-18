@@ -1,6 +1,6 @@
 # Live party layout
 
-Use `--party-layout` with a Chinese `runtime_build.py` build. Names come from
+Chinese `runtime_build.py` builds include the party runtime automatically. Names come from
 the selected CSV language and are matched against original default nicknames.
 HP, level, gender, status, party size and eggs remain owned by the original game.
 There is no external party-metadata input. The legacy preview generator and

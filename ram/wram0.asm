@@ -1527,14 +1527,11 @@ wZhHudName:: dw
 wZhHudWidth:: db
 wZhPlayerHudWidth:: db
 wZhEnemyHudWidth:: db
-if DEF(ZH_SUMMARY_LAYOUT)
 wZhSummaryAbility:: db
 wZhItemDescriptionActive:: db
 wZhSummaryMovesActive:: db
 wZhStatsSaved:: ds 20
 wZhStatsFlags:: db
-endc
-if DEF(ZH_PARTY_LAYOUT)
 wZhPartyIndex:: db
 wZhPartyWidth:: db
 wZhPartyTile:: db
@@ -1550,10 +1547,4 @@ NEXTU
 wZhMovePPText:: ds 32
 wZhMoveIds:: ds 4
 ENDU
-else
-if DEF(ZH_SUMMARY_LAYOUT)
-wZhMovePPText:: ds 32
-wZhMoveIds:: ds 4
-endc
-endc
 endc

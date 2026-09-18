@@ -219,14 +219,14 @@ PrintStatDifferences:
 	pop bc
 	pop de
 	call .PrintStats
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall ZhAlignLevelNumbers
 else
 endc
 	jmp WaitPressAorB_BlinkCursor
 
 .PrintStatNames:
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  hlcoord 4,0
  lb bc,12,14
  call Textbox
@@ -272,7 +272,7 @@ endc
 	call .PrintStat ; Defense
 
 	push bc
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
 	ld bc, SCREEN_WIDTH * 4
 else
 	ld bc, SCREEN_WIDTH * 2
@@ -282,7 +282,7 @@ endc
 	call .PrintStat ; Speed
 
 	push bc
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
 	ld bc, -SCREEN_WIDTH * 6
 else
 	ld bc, -SCREEN_WIDTH * 3
@@ -323,7 +323,7 @@ endc
 .mod_done
 	pop de
 	pop hl
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
 	ld bc, SCREEN_WIDTH * 2
 else
 	ld bc, SCREEN_WIDTH

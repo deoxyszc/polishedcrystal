@@ -1,6 +1,6 @@
 # Summary ability translations
 
-With `--summary-terms`, Chinese builds compile explicit translations from
+With `--ui-terms`, Chinese builds compile explicit translations from
 `data/abilities/names.asm` and `data/abilities/descriptions.asm` CSV records.
 The live summary ability ID selects the display; empty translations retain
 the original name or description independently. Other ability consumers retain

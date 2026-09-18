@@ -530,7 +530,7 @@ ld a, [wCurPartySpecies]
 	ldh [hOAMUpdate], a
 	ldh [hCGBPalUpdate], a
 	call .ClearBox
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  ; Reset translated lower-panel tile-bank attributes on every page.
  hlcoord 0,13,wAttrmap
  ld bc,5 * SCREEN_WIDTH
@@ -619,7 +619,7 @@ endc
 .frontpic_done
 	call SummaryScreen_SwitchPage
 	farcall HDMATransferTileMapToWRAMBank3
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall HDMATransferAttrMapToWRAMBank3
  xor a
  ldh [rVBK],a
@@ -820,7 +820,7 @@ SummaryScreen_SwitchPage:
 	ld h, [hl]
 	ld l, b
 .egg
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  ld a,[wSummaryScreenFlags]
  and SUMMARY_FLAGS_PAGE_MASK
  cp SUMMARY_GREEN_PAGE
@@ -914,7 +914,7 @@ endr
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
 .BlueInterrupts:
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  db 22, SUMMARY_LCD_SHOW_WINDOW
  db 95, SUMMARY_LCD_HIDE_WINDOW
  db -1
@@ -945,7 +945,7 @@ endc
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
 .GreenMoveListInterrupts:
  db 15,SUMMARY_LCD_SHOW_WINDOW
  db 91,SUMMARY_LCD_HIDE_WINDOW
@@ -1088,7 +1088,7 @@ SummaryScreen_LoadTextboxSpaceGFX:
 
 ; a  = first tile
 SummaryScreen_UpdateTabTitle:
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  push af
  ld a,108
  ld [wSummaryScreenOAMSprite36YCoord],a

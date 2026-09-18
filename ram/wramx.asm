@@ -1970,13 +1970,10 @@ wZhLeaseValidMask:: db
 wZhDisplayMode:: db
 wZhPageBuffer:: ds 72 tiles
 wZhSuspended:: db
-if DEF(ZH_SUMMARY_LAYOUT)
 SECTION "ZH summary compositor", WRAMX
 UNION
 wZhStatsPixels:: ds 1536
 NEXTU
 wZhMovePixels:: ds 1920
 ENDU
-endc
-
 endc

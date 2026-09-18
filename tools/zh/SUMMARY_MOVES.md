@@ -1,6 +1,6 @@
 # Summary move list and held-item panel
 
-Chinese builds with `--summary-terms` generate move-list names from the selected
+Chinese builds with `--ui-terms` generate move-list names from the selected
 CSV language. The list reads the current move IDs and the original formatted
 current/max PP; original type graphics follow the actual moves. The reviewed
 layout uses 19px row spacing and raises PP below each type label. The original

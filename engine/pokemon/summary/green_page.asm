@@ -1,5 +1,5 @@
 SummaryScreen_GreenPage:
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  ; Blue-page text temporarily uses palette 2. Restore the live item palette.
  farcall ZhRestoreSummaryItemPalette
 endc
@@ -17,7 +17,7 @@ endc
 	call .ReplaceLevelGenderWithItemIcon
 
 	call .PrintMoves
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall ZhSummaryItem
 endc
 
@@ -99,7 +99,7 @@ INCLUDE "gfx/stats/green_page.pal"
 	db "No held item@"
 
 .PrintMoves
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  call LoadStandardFont
 endc
 	; Clear move names
@@ -134,7 +134,7 @@ endc
 for n, NUM_MOVES
 	ld a, [wTempMonMoves + n]
 	and a
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  jp z,.movesReady
 else
  ret z
@@ -148,7 +148,7 @@ endc
 	call SummaryScreen_PlaceTypeBG
 endr
 .movesReady
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  farcall ZhSummaryMoves
 endc
 	ret
@@ -398,7 +398,7 @@ SummaryScreen_MoveInfoJoypad:
 	call .swap_addresses
 	farcall UpdateStorageBoxMonFromTemp
 	call SummaryScreen_GreenPage.PrintMoves
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
  call LoadStandardFont
 endc
 	call SummaryScreen_InitLayout.ApplySummaryPalettes

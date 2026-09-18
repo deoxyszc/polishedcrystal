@@ -1175,7 +1175,7 @@ INCLUDE "engine/gfx/sgb_border.asm"
 
 INCLUDE "engine/gfx/vary_colors.asm"
 
-if DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
 ZhRestoreSummaryItemPalette::
  ld hl,ItemIconPalettes
  ld bc,2 colors

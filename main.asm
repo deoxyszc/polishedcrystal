@@ -759,18 +759,16 @@ INCLUDE "engine/zh/dialogue.asm"
 INCLUDE "engine/zh/dispatch.asm"
 INCLUDE "engine/zh/moves.asm"
 INCLUDE "engine/zh/battle_names.asm"
-if DEF(ZH_PARTY_LAYOUT)
 INCLUDE "data/zh/party_footer.asm"
 INCLUDE "engine/zh/party.asm"
 INCLUDE "data/zh/party_names.asm"
-endc
 INCLUDE "data/zh/battle_names.asm"
 INCLUDE "data/zh/move_names.asm"
 INCLUDE "data/zh/font/font.asm"
 INCLUDE "data/zh/font/font_pages.asm"
 endc
 
-if DEF(LOCALE_ZH) && DEF(ZH_SUMMARY_LAYOUT)
+if DEF(LOCALE_ZH)
 
 SECTION "Chinese summary layout", ROMX
 INCLUDE "engine/zh/summary_layout.asm"
