@@ -2,7 +2,12 @@
 
 Add `--party-preview-terms /path/to/terms.json` to a Chinese
 `tools/zh/runtime_build.py` build to reproduce the reviewed six-member layout.
-The JSON must contain three nonempty strings: `name`, `cancel`, and `prompt`.
+The JSON requires nonempty `name`, `cancel`, and `prompt` strings plus a `rows`
+array of exactly six objects. Each row must explicitly supply `hp` (0–999),
+`max_hp` (1–999 and at least hp), `level` (1–100), `gender` (male, female, none),
+`shiny` (boolean), and `status` (none, poison, paralysis, sleep, burn, freeze).
+No row, value or sample configuration is supplied by the tool. Older three-key
+inputs are rejected rather than silently filling in fixture values.
 Supply your own font and terminology; no translations, font files, screenshots,
 ROMs or generated graphics are included. Pillow and the normal ROM build tools
 are required, as with the other Chinese asset generators.
@@ -16,12 +21,13 @@ routine; the cancel label preserves both the sixth name's shared tile and
 the original frame-1 top-border pixels. Cancel and prompt labels are limited
 to 24px and 144px respectively. Use frame 1 for this preview.
 
-This is explicitly a **visual stress fixture**: all six displayed names use
-the supplied sample, HP is 999/999, level is 100, gender is male, and the five
-status examples are fixed. It does not change party data or save formats and
-does not implement dynamic names, HP, gender, status, or action-specific
-prompts. Cursor/menu transitions still follow the original game. Do not use
-the preview ROM for gameplay or describe it as a completed live party menu.
+This is an external-input layout preview, not a live party-data renderer.
+All six names use the explicitly supplied name; each row uses the caller's
+metadata. HP bar length follows the supplied HP ratio. Status occupies the
+shiny slot when present. Inputs are validated before staged files are changed.
+No party data or save formats are changed. Live names, HP, gender, status and
+action-specific prompts still require a runtime adapter. Cursor/menu transitions
+follow the original game. Do not use preview ROMs for gameplay.
 The option is off by default; normal builds do not install these hooks.
 
 The reviewed local visual test covered the full six-member screen and the
