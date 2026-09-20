@@ -780,6 +780,9 @@ INCLUDE "engine/zh/item_panel.asm"
 SECTION "Chinese pink summary", ROMX
 INCLUDE "data/zh/pink.asm"
 INCLUDE "engine/zh/pink.asm"
+SECTION "Chinese orange summary", ROMX
+INCLUDE "data/zh/orange.asm"
+INCLUDE "engine/zh/orange.asm"
 SECTION "Chinese summary move runtime", ROMX
 INCLUDE "data/zh/summary_moves.asm"
 INCLUDE "engine/zh/summary_moves.asm"

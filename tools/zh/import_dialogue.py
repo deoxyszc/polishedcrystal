@@ -26,6 +26,7 @@ def apply(source,language,manifest):
    if row['id'] in seen:raise ValueError('Duplicate CSV ID')
    seen.add(row['id']);text=row.get('translation_'+language,'')
    if row['source_path']=='data/moves/names.asm':continue
+   if (source/'data/zh/orange_consumed.json').exists() and row['id'] in json.loads((source/'data/zh/orange_consumed.json').read_text()):continue
    if (source/'data/zh/pink_consumed.json').exists() and row['id'] in json.loads((source/'data/zh/pink_consumed.json').read_text()):continue
    if (source/'data/zh/item_consumed.json').exists() and row['id'] in json.loads((source/'data/zh/item_consumed.json').read_text()):continue
    if row['source_path'] in ('data/abilities/names.asm','data/abilities/descriptions.asm') and (source/'data/zh/abilities.asm').exists():continue

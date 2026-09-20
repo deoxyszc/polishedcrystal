@@ -31,6 +31,8 @@ def main():
   item_panel.generate(source,a.language,a.font)
   import summary_moves
   summary_moves.generate(source,a.language,a.font)
+  import orange_assets
+  orange_assets.generate(source,a.language,a.font,a.ui_terms)
   import pink_assets
   pink_assets.generate(source,a.language,a.font,a.ui_terms)
   import hud_names

@@ -1534,6 +1534,10 @@ UNION
 wZhStatsSaved:: ds 20
 NEXTU
 wZhPinkSpecies:: ds MON_NAME_LENGTH
+NEXTU
+wZhOrangeCharacteristic:: db
+wZhOrangeActive:: db
+wZhOrangeEncounterActive:: db
 ENDU
 wZhStatsFlags:: db
 wZhPartyIndex:: db

@@ -849,6 +849,21 @@ SummaryScreen_SwitchPage:
 if DEF(LOCALE_ZH)
  ld a,[wSummaryScreenFlags]
  and SUMMARY_FLAGS_PAGE_MASK
+ cp SUMMARY_ORANGE_PAGE
+ jr nz,.checkGreenPage
+ ld a,[wTempMonIsEgg]
+ bit MON_IS_EGG_F,a
+ jr nz,.nativeDescriptionScroll
+ ld a,[wZhOrangeActive]
+ and a
+ jr z,.nativeDescriptionScroll
+ ld hl,.OrangeTranslatedInterrupts
+ ld a,[wZhOrangeEncounterActive]
+ and a
+ jr z,.nativeDescriptionScroll
+ ld hl,.OrangeFullTranslatedInterrupts
+ jr .nativeDescriptionScroll
+.checkGreenPage
  cp SUMMARY_GREEN_PAGE
  jr nz,.nativeDescriptionScroll
  ld a,[wTempMonIsEgg]
@@ -996,6 +1011,17 @@ if DEF(LOCALE_ZH)
  db 71, SUMMARY_LCD_HIDE_WINDOW
  db 75, SUMMARY_LCD_SHOW_WINDOW
  db 91, SUMMARY_LCD_HIDE_WINDOW
+ db -1
+endc
+if DEF(LOCALE_ZH)
+.OrangeFullTranslatedInterrupts:
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 87,SUMMARY_LCD_HIDE_WINDOW
+ db -1
+.OrangeTranslatedInterrupts:
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 87,SUMMARY_LCD_HIDE_WINDOW
+ db 127,SUMMARY_LCD_SCROLL_BACKGROUND
  db -1
 endc
 .OrangeInterrupts:
