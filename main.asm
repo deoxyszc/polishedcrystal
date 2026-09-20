@@ -783,6 +783,10 @@ INCLUDE "engine/zh/pink.asm"
 SECTION "Chinese orange summary", ROMX
 INCLUDE "data/zh/orange.asm"
 INCLUDE "engine/zh/orange.asm"
+ZhSummaryDigits0::
+INCBIN "gfx/zh/summary_digits.2bpp", 0, 10 tiles
+ZhSummaryDigits1::
+INCBIN "gfx/zh/summary_digits.2bpp", 10 tiles, 10 tiles
 SECTION "Chinese summary move runtime", ROMX
 INCLUDE "data/zh/summary_moves.asm"
 INCLUDE "engine/zh/summary_moves.asm"

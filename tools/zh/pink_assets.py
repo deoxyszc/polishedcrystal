@@ -45,9 +45,6 @@ def generate(source,language,font_path,terms_path):
  raw=(source/'gfx/font/normal.1bpp').read_bytes();data=[]
  for i in range(114):
   for v in bytes(5)+raw[i*8:i*8+8]+bytes(3):data.extend((v,v))
- digit_rows=[bytes(4)+raw[(0x60+i)*8:(0x61+i)*8]+bytes(4) for i in range(10)]
- for half in range(2):
-  lines+=['ZhPinkDigits'+str(half)+':', ' db '+','.join(str(v) for rows in digit_rows for v in rows[half*8:half*8+8] for _ in range(2))]
  (source/'gfx/zh/pink_ascii.2bpp').write_bytes(bytes(data))
  (source/'data/zh/pink.asm').write_text('\n'.join(lines)+'\n')
  (source/'data/zh/pink_consumed.json').write_text(json.dumps(consumed))

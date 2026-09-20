@@ -98,12 +98,12 @@ def generate(source, language, font_path, terms_path):
                     value=sum(128>>x for x in range(8) if image.getpixel((tx*8+x,ty*8+y)))
                     data.extend((value,value))
         bodies += ['ZhOrange'+kind+'Tiles:', ' db '+','.join(map(str,data))]
-    raw=(source/'gfx/font/normal.1bpp').read_bytes()
-    for half in range(2):
-        data=[]
-        for digit in range(10):
-            pixels=bytes(4)+raw[(0x60+digit)*8:(0x61+digit)*8]+bytes(4)
-            for value in pixels[half*8:half*8+8]:data.extend((value,value))
-        bodies += ['ZhOrangeDigits'+str(half)+':', ' db '+','.join(map(str,data))]
+    prefix_width=int(round(font.getlength(terms.get('met_level_prefix', ''))))
+    digit_x=(8+prefix_width+7)//8
+    if digit_x+3>=20:raise ValueError('Orange level line exceeds display area')
+    lines += ['DEF ZH_ORANGE_LEVEL_DIGIT_X EQU '+str(digit_x),
+              'DEF ZH_ORANGE_LEVEL_SUFFIX_X1 EQU '+str(digit_x+1),
+              'DEF ZH_ORANGE_LEVEL_SUFFIX_X2 EQU '+str(digit_x+2),
+              'DEF ZH_ORANGE_LEVEL_SUFFIX_X3 EQU '+str(digit_x+3)]
     (source/'data/zh/orange.asm').write_text(chr(10).join(lines+bodies)+chr(10))
     (source/'data/zh/orange_consumed.json').write_text(json.dumps(consumed))

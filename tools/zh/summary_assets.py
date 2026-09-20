@@ -63,6 +63,12 @@ def generate(source, font_path, terms_path):
         rows=bytes(4)+(raw[(code-0x80)*8:(code-0x80)*8+8] if code!=0x7f else bytes(8))+bytes(4)
         for v in rows:data.extend((v,v))
     (out/'level_digits.2bpp').write_bytes(data)
+    digits=bytearray()
+    for half in range(2):
+        for digit in range(10):
+            pixels=bytes(4)+raw[(0x60+digit)*8:(0x61+digit)*8]+bytes(4)
+            for value in pixels[half*8:half*8+8]:digits.extend((value,value))
+    (out/'summary_digits.2bpp').write_bytes(digits)
     # Alternate stat panel: 96x64, original-width digits below each label.
     panel=Image.new('1',(96,64));pd=ImageDraw.Draw(panel);pd.fontmode='1'
     for i,text in enumerate(labels[1:]):

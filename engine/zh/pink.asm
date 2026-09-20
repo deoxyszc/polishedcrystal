@@ -158,10 +158,10 @@ if ZH_PINK_OT
 .otDone
 endc
 if ZH_PINK_EXP && ZH_PINK_NEXT && ZH_PINK_TO && ZH_PINK_LEVEL
- ld de,ZhPinkDigits0
+ ld de,ZhSummaryDigits0
  ld hl,$8d60
  call .uploadLabel
- ld de,ZhPinkDigits1
+ ld de,ZhSummaryDigits1
  ld hl,$8f00
  call .uploadLabel
  hlcoord 1,13

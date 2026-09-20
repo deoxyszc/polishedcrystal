@@ -166,20 +166,20 @@ else
  ld a,$5e
  ld c,6
  call ZhOrangeLowerPlace
- ld de,ZhOrangeDigits0
+ ld de,ZhSummaryDigits0
  ld hl,$96a0
  ld c,10
  call ZhOrangeUpload
- ld de,ZhOrangeDigits1
+ ld de,ZhSummaryDigits1
  ld hl,$9740
  ld c,10
  call ZhOrangeUpload
- hlcoord 6,15
+ hlcoord ZH_ORANGE_LEVEL_DIGIT_X,15
  ld de,wTempMonCaughtLevel
  lb bc,PRINTNUM_LEFTALIGN | 1,3
  call PrintNum
  push hl
- hlcoord 6,15
+ hlcoord ZH_ORANGE_LEVEL_DIGIT_X,15
 .digit
  ld a,[hl]
  sub $e0
@@ -212,13 +212,13 @@ else
  ld c,4
  call ZhOrangeUpload
  ld a,[wTempMonCaughtLevel]
- hlcoord 7,15
+ hlcoord ZH_ORANGE_LEVEL_SUFFIX_X1,15
  cp 10
  jr c,.suffixReady
- inc hl
+ hlcoord ZH_ORANGE_LEVEL_SUFFIX_X2,15
  cp 100
  jr c,.suffixReady
- inc hl
+ hlcoord ZH_ORANGE_LEVEL_SUFFIX_X3,15
 .suffixReady
  ld a,$38
  ld c,2
