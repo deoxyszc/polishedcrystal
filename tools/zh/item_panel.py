@@ -1,7 +1,7 @@
 """Compile generic held-item display tables from source order and selected CSV."""
 import csv, json, re, sys
-from PIL import Image, ImageDraw, ImageFont
-from summary_text_layout import NAME_BASELINE, DESCRIPTION_BASELINE, DESCRIPTION_LINE_STEP
+from PIL import Image, ImageFont
+from text_layout import TextLayout, NAME, DENSE_DESCRIPTION, encode_2bpp
 EMPTY_ID='engine/pokemon/summary/green_page.asm::SummaryScreen_GreenPage.NoHeldItemString::1'
 
 def generate(source, language, font_path):
@@ -36,17 +36,15 @@ def generate(source, language, font_path):
     if not text.endswith('{done}'):raise ValueError('Item description requires {done}')
     lines=[s.strip() for s in text[:-6].split('{next}')]
    if len(lines)>(1 if kind=='Name' else 2):raise ValueError('Too many item text lines')
-   im=Image.new('1',(width,height));draw=ImageDraw.Draw(im);draw.fontmode='1'
+   im=Image.new('1',(width,height))
    if kind=='Description' and index in name_images:im.paste(name_images[index].crop((0,8,144,16)),(0,0))
+   layout=TextLayout(font,width,height,image=im,style=NAME if kind == "Name" else DENSE_DESCRIPTION)
    for y,line in enumerate(lines):
     if not line or any(c in line for c in '{}@\n\r') or font.getlength(line)>width:raise ValueError('Unsupported or oversized item text: '+record['id'])
-    draw.text((0,(NAME_BASELINE if kind=='Name' else DESCRIPTION_BASELINE)+y*DESCRIPTION_LINE_STEP),line,font=font,fill=1,anchor='ls')
+    layout.append(line)
+    layout.newline()
    if kind=='Name':name_images[index]=im.copy()
-   data=[]
-   for ty in range(height//8):
-    for tx in range(width//8):
-     for yy in range(8):
-      v=sum(128>>x for x in range(8) if im.getpixel((tx*8+x,ty*8+yy)));data.extend((v,v))
+   data=encode_2bpp(im)
    symbol='ZhItem'+kind+str(index)
    output+=[' db BANK('+symbol+')',' dw '+symbol]
    blobs+=['SECTION "Item display '+kind+' '+str(index)+'", ROMX',symbol+'::',' db '+','.join(map(str,data))]

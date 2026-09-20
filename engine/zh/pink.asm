@@ -158,12 +158,8 @@ if ZH_PINK_OT
 .otDone
 endc
 if ZH_PINK_EXP && ZH_PINK_NEXT && ZH_PINK_TO && ZH_PINK_LEVEL
- ld de,ZhSummaryDigits0
- ld hl,$8d60
- call .uploadLabel
- ld de,ZhSummaryDigits1
- ld hl,$8f00
- call .uploadLabel
+ zh_upload_tiles ZhSummaryDigits0, $8d60, 10
+ zh_upload_tiles ZhSummaryDigits1, $8f00, 10
  hlcoord 1,13
  ld bc,19
  ld a,$7f
@@ -216,7 +212,7 @@ if ZH_PINK_EXP && ZH_PINK_NEXT && ZH_PINK_TO && ZH_PINK_LEVEL
  ld hl,$8fa0
  ld c,6
  call .upload
- hlcoord 13,16
+ hlcoord 12,16
  ld a,$fa
  ld b,2
 .toRow
@@ -254,12 +250,12 @@ if ZH_PINK_EXP && ZH_PINK_NEXT && ZH_PINK_TO && ZH_PINK_LEVEL
  inc a
 .nextReady
  ld [wTextDecimalByte],a
- hlcoord 16,16
+ hlcoord 15,16
  ld de,wTextDecimalByte
  lb bc,PRINTNUM_LEFTALIGN | 1,3
  call PrintNum
  push hl
- hlcoord 16,16
+ hlcoord 15,16
  call .alignDigits
  pop hl
  ld a,$d2
@@ -469,46 +465,7 @@ ZhPinkTitle::
  ld [wSummaryScreenOAMSprite37YCoord],a
  ld [wSummaryScreenOAMSprite38YCoord],a
  ld [wSummaryScreenOAMSprite39YCoord],a
- hlcoord 1,11
- ld [hl],229
- hlcoord 1,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 2,11
- ld [hl],230
- hlcoord 2,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 3,11
- ld [hl],231
- hlcoord 3,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 4,11
- ld [hl],232
- hlcoord 4,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 5,11
- ld [hl],233
- hlcoord 5,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 1,12
- ld [hl],234
- hlcoord 1,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 2,12
- ld [hl],235
- hlcoord 2,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 3,12
- ld [hl],236
- hlcoord 3,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 4,12
- ld [hl],237
- hlcoord 4,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 5,12
- ld [hl],238
- hlcoord 5,12,wAttrmap
- ld [hl],8 | 2
+ zh_screen_tiles 1, 11, 5, 2, 229, 8 | 2
  ret
 .Tiles:
  INCBIN "gfx/zh/experience_tab.2bpp"

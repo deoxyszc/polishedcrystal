@@ -771,6 +771,7 @@ endc
 if DEF(LOCALE_ZH)
 
 SECTION "Chinese summary layout", ROMX
+INCLUDE "engine/zh/layout_macros.asm"
 INCLUDE "engine/zh/summary_layout.asm"
 INCLUDE "engine/zh/summary_two_line.asm"
 INCLUDE "engine/zh/levelup_layout.asm"

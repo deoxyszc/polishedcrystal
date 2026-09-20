@@ -1,8 +1,8 @@
 """Compile selected CSV ability translations for the summary display only."""
 import csv
 import re
-from PIL import Image, ImageDraw, ImageFont
-from summary_text_layout import NAME_BASELINE, DESCRIPTION_BASELINE, DESCRIPTION_LINE_STEP
+from PIL import Image, ImageFont
+from text_layout import TextLayout, NAME, DENSE_DESCRIPTION, encode_2bpp
 
 def generate(source, language, font_path):
     with (source/'translations.csv').open(encoding='utf-8-sig', newline='') as f:
@@ -31,20 +31,17 @@ def generate(source, language, font_path):
                 lines = [line.strip() for line in text.split('{next}')]
             if len(lines)>2 or (kind=='name' and len(lines)!=1):
                 raise ValueError('Ability text exceeds line count')
-            im=Image.new('1',(width,height));draw=ImageDraw.Draw(im);draw.fontmode='1'
+            im=Image.new('1',(width,height))
             if kind == 'description' and index in name_images:
                 im.paste(name_images[index].crop((0,8,56,16)),(0,0))
+            layout=TextLayout(font,width,height,image=im,style=NAME if kind == "name" else DENSE_DESCRIPTION)
             for y,line in enumerate(lines):
                 if any(c in line for c in '{}@\n\r') or font.getlength(line)>width:
                     raise ValueError('Unsupported or oversized ability text: '+row['id'])
-                draw.text((0,(NAME_BASELINE if kind == "name" else DESCRIPTION_BASELINE)+y*DESCRIPTION_LINE_STEP),line,font=font,fill=1,anchor='ls')
+                layout.append(line)
+                layout.newline()
             if kind == 'name':name_images[index]=im.copy()
-            data=[]
-            for ty in range(height//8):
-                for tx in range(width//8):
-                    for yy in range(8):
-                        v=sum(128>>x for x in range(8) if im.getpixel((tx*8+x,ty*8+yy)))
-                        data.extend((v,v))
+            data=encode_2bpp(im)
             symbol='ZhAbility_'+kind+'_'+str(index)
             table.append(' dw '+symbol)
             bodies += [symbol+':',' db '+','.join(map(str,data))]

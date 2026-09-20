@@ -1,6 +1,6 @@
 ; Public bounded dialogue entry. Caller must open the standard textbox first.
 ; HL=start, DE=exclusive end, both mapped in this bank; carry reports failure.
-; Restores WRAM bank and standard font. General registers are clobbered.
+; Restores WRAM bank. Overworld final text remains until its owner closes it.
 ZhShowDialogue::
  ld a,l
  ld [wZhEntryStart],a
@@ -37,17 +37,20 @@ ZhShowDialogue::
  ld d,a
  call ZhRunText
  push af
- call nc,WaitButton
+ jr c,.abort
+ ld a,[wZhDisplayMode]
+ and a
+ jr nz,.release
+ ; PROMPT already waited inside ZhRunText; DONE waits here in battle.
+ ld a,[wZhTextControl]
+ cp ZH_CTRL_PROMPT
+ call nz,WaitButton
  call ZhLeaseClearPage
- call c,ZhLeaseAbort
  call ApplyAttrAndTilemapInVBlank
- ldh a,[rVBK]
- push af
- xor a
- ldh [rVBK],a
- call LoadStandardFont
- pop af
- ldh [rVBK],a
+ jr .release
+.abort
+ call ZhLeaseAbort
+.release
  call ZhLeaseRelease
  pop af
 .restore

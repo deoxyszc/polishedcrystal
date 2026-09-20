@@ -1,5 +1,10 @@
 ; Independent name/description fallbacks, indexed by the original held-item ID.
 ZhSummaryItem::
+ ; The move canvas occupies bank0's native font. Preserve fallback text in
+ ; bank1 tiles $00..$71, separate from translated item tiles $80..$fe.
+ ld a,[wZhSummaryMovesActive]
+ and a
+ call nz,ZhItemFallbackFont
  xor a
  ld [wZhItemDescriptionActive],a
 if ZH_ITEM_TITLE
@@ -94,58 +99,52 @@ ZhItemTitle::
  ld [wSummaryScreenOAMSprite38YCoord],a
  ld [wSummaryScreenOAMSprite39YCoord],a
  ; Top tile row is blank: leave the held-item pixels below intact.
- hlcoord 1,11
- ld [hl],245
- hlcoord 1,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 2,11
- ld [hl],246
- hlcoord 2,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,11
- ld [hl],247
- hlcoord 3,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,11
- ld [hl],248
- hlcoord 4,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,11
- ld [hl],249
- hlcoord 5,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 1,12
- ld [hl],250
- hlcoord 1,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 2,12
- ld [hl],251
- hlcoord 2,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,12
- ld [hl],252
- hlcoord 3,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,12
- ld [hl],253
- hlcoord 4,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,12
- ld [hl],254
- hlcoord 5,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
+ zh_screen_tiles 1, 11, 5, 2, 245, 8 | SUMMARY_PAL_LOWER_WINDOW
  ld a,[wTempMonItem]
  and a
  jr z,.noItemPalette
- hlcoord 2,10,wAttrmap
- ld [hl],SUMMARY_PAL_ITEM
- hlcoord 3,10,wAttrmap
- ld [hl],SUMMARY_PAL_ITEM
- hlcoord 4,10,wAttrmap
- ld [hl],SUMMARY_PAL_ITEM
+ hlcoord 2,8,wAttrmap
+ lb bc,3,3
+ ld a,SUMMARY_PAL_ITEM
+ call FillBoxWithByte
 .noItemPalette
  ret
 .Tiles:
  INCBIN "gfx/zh/item_tab.2bpp"
 
 endc
+
+ZhItemFallbackFont:
+ ldh a,[rVBK]
+ push af
+ ld a,1
+ ldh [rVBK],a
+ ld de,FontNormal
+ ld hl,$9000
+ ld b,BANK(FontNormal)
+ ld c,114
+ call Get1bpp
+ pop af
+ ldh [rVBK],a
+ hlcoord 0,13
+ ld bc,5*SCREEN_WIDTH
+.loop
+ ld a,[hl]
+ sub $80
+ cp 114
+ jr nc,.next
+ ld [hl],a
+ push hl
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ ld a,[hl]
+ or 8
+ ld [hl],a
+ pop hl
+.next
+ inc hl
+ dec bc
+ ld a,b
+ or c
+ jr nz,.loop
+ ret

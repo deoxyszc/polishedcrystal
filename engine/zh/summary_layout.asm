@@ -870,66 +870,7 @@ ZhAbilityTitle::
  ld [wSummaryScreenOAMSprite37YCoord],a
  ld [wSummaryScreenOAMSprite38YCoord],a
  ld [wSummaryScreenOAMSprite39YCoord],a
- hlcoord 1,10
- ld [hl],224
- hlcoord 1,10,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 2,10
- ld [hl],225
- hlcoord 2,10,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,10
- ld [hl],226
- hlcoord 3,10,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,10
- ld [hl],227
- hlcoord 4,10,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,10
- ld [hl],228
- hlcoord 5,10,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 1,11
- ld [hl],229
- hlcoord 1,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 2,11
- ld [hl],230
- hlcoord 2,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,11
- ld [hl],231
- hlcoord 3,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,11
- ld [hl],232
- hlcoord 4,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,11
- ld [hl],233
- hlcoord 5,11,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 1,12
- ld [hl],234
- hlcoord 1,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 2,12
- ld [hl],235
- hlcoord 2,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,12
- ld [hl],236
- hlcoord 3,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,12
- ld [hl],237
- hlcoord 4,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,12
- ld [hl],238
- hlcoord 5,12,wAttrmap
- ld [hl],8 | SUMMARY_PAL_LOWER_WINDOW
+ zh_screen_tiles 1, 10, 5, 3, 224, 8 | SUMMARY_PAL_LOWER_WINDOW
  ret
 .Tiles:
  INCBIN "gfx/zh/ability_tab.2bpp"
@@ -956,12 +897,14 @@ ZhCenterSummaryStats::
  ret
 
 ZhSummaryBottomBorder::
+ ; The visible bottom belongs to the scrolling WINDOW buffer (row 9),
+ ; not the background row underneath it. Reuse the original border tile.
+ hlbgcoord 0,9,wSummaryScreenWindowBuffer
+ ld bc,12
+ ld a,SUMMARY_TILE_SIDE_WINDOW_B
+ rst ByteFill
+ hlbgcoord 16,9,wSummaryScreenWindowBuffer
+ ld bc,12
+ ld a,SUMMARY_PAL_SIDE_WINDOW
+ rst ByteFill
  ret
-
-
-
-
-
-
-
-

@@ -2,6 +2,7 @@
 import csv
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
+from text_layout import TextLayout, TextStyle, encode_2bpp
 
 def generate(source, language, font_path, *, party=False):
     font = ImageFont.truetype(str(font_path), 12)
@@ -15,9 +16,6 @@ def generate(source, language, font_path, *, party=False):
         if not 1 <= len(name) <= 5 or any(c.isascii() for c in name):
             raise ValueError('Battle names require 1–5 CJK characters: ' + row['id'])
         # One pixel less advance; validate actual ink instead of silently clipping.
-        im = Image.new('1', (56, 16))
-        draw = ImageDraw.Draw(im)
-        draw.fontmode = '1'
         for k, char in enumerate(name):
             glyph = Image.new('1', (24, 24))
             gd = ImageDraw.Draw(glyph); gd.fontmode = '1'
@@ -25,14 +23,11 @@ def generate(source, language, font_path, *, party=False):
             box = glyph.getbbox()
             if box is None or box[2] > 11 or box[3] > 16:
                 raise ValueError('Glyph does not fit 11px HUD advance: ' + char)
-            draw.text((k * 11, 10 if party else 12), char, font=font, fill=1, anchor='ls')
+        # Dense HUD: the original container cannot fit 12px advances.
+        layout=TextLayout(font,56,style=TextStyle(baseline=10 if party else 14,advance=11))
+        layout.append(name)
         width = (len(name) * 11 + 7) // 8
-        data = bytearray()
-        for ty in range(2):
-            for tx in range(width):
-                for y in range(8):
-                    v = sum(128 >> x for x in range(8) if im.getpixel((tx * 8 + x, ty * 8 + y)))
-                    data.extend((v, v))
+        data = encode_2bpp(layout.image.crop((0,0,width*8,16)))
         if len(row['original']) != 10 or any(c in row['original'] for c in (chr(34), chr(10), chr(13))):
             raise ValueError('Invalid original nickname record')
         original = row['original'][:10].ljust(10, '@')

@@ -166,14 +166,8 @@ else
  ld a,$5e
  ld c,6
  call ZhOrangeLowerPlace
- ld de,ZhSummaryDigits0
- ld hl,$96a0
- ld c,10
- call ZhOrangeUpload
- ld de,ZhSummaryDigits1
- ld hl,$9740
- ld c,10
- call ZhOrangeUpload
+ zh_upload_tiles ZhSummaryDigits0, $96a0, 10
+ zh_upload_tiles ZhSummaryDigits1, $9740, 10
  hlcoord ZH_ORANGE_LEVEL_DIGIT_X,15
  ld de,wTempMonCaughtLevel
  lb bc,PRINTNUM_LEFTALIGN | 1,3
@@ -281,46 +275,7 @@ ZhOrangeTitle::
  ld [wSummaryScreenOAMSprite37YCoord],a
  ld [wSummaryScreenOAMSprite38YCoord],a
  ld [wSummaryScreenOAMSprite39YCoord],a
- hlcoord 1,11
- ld [hl],37
- hlcoord 1,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 2,11
- ld [hl],38
- hlcoord 2,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 3,11
- ld [hl],39
- hlcoord 3,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 4,11
- ld [hl],40
- hlcoord 4,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 5,11
- ld [hl],41
- hlcoord 5,11,wAttrmap
- ld [hl],8 | 2
- hlcoord 1,12
- ld [hl],42
- hlcoord 1,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 2,12
- ld [hl],43
- hlcoord 2,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 3,12
- ld [hl],44
- hlcoord 3,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 4,12
- ld [hl],45
- hlcoord 4,12,wAttrmap
- ld [hl],8 | 2
- hlcoord 5,12
- ld [hl],46
- hlcoord 5,12,wAttrmap
- ld [hl],8 | 2
+ zh_screen_tiles 1, 11, 5, 2, 37, 8 | 2
  ret
 .Tiles:
  INCBIN "gfx/zh/encounter_tab.2bpp"

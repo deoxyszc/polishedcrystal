@@ -1,6 +1,7 @@
 """Optional translated pink-page labels and species display names."""
 import csv, json
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageFont
+from text_layout import text_image, encode_2bpp
 
 PREFIX='engine/pokemon/summary/pink_page.asm::SummaryScreen_PinkPage.'
 
@@ -9,13 +10,7 @@ def generate(source,language,font_path,terms_path):
  font=ImageFont.truetype(str(font_path),12)
  def bitmap(text,width,baseline=10):
   if any(c in text for c in '{}@\n\r') or font.getlength(text)>width:raise ValueError('Pink label exceeds display area: '+text)
-  im=Image.new('1',(width,16));draw=ImageDraw.Draw(im);draw.fontmode='1';draw.text((0,baseline),text,font=font,fill=1,anchor='ls')
-  data=[]
-  for ty in range(2):
-   for tx in range(width//8):
-    for y in range(8):
-     v=sum(128>>x for x in range(8)if im.getpixel((tx*8+x,ty*8+y)));data.extend((v,v))
-  return data
+  return encode_2bpp(text_image(font,text,width,baseline=baseline))
  lines=['DEF ZH_PINK_TAB EQU '+str(int((source/'gfx/zh/experience_tab.2bpp').exists())),'ZhPinkNameTable::'];bodies=[];consumed=[]
  for row in rows:
   if row['source_path']!='data/pokemon/names.asm':continue

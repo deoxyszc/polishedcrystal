@@ -281,16 +281,8 @@ _CGB_FinishBattleScreenLayout:
 
 	ld a, PAL_BATTLE_BG_EXP_GENDER
 	ldcoord_a 0, 1, wAttrmap
-if DEF(LOCALE_ZH)
-	ldcoord_a 1, 2, wAttrmap
-else
 	ldcoord_a 1, 1, wAttrmap
-endc
-if DEF(LOCALE_ZH)
-	ldcoord_a 8, 2, wAttrmap
-else
 	ldcoord_a 8, 1, wAttrmap
-endc
 	ldcoord_a 18, 8, wAttrmap
 
 if DEF(LOCALE_ZH)
@@ -302,11 +294,7 @@ endc
 	ld a, PAL_BATTLE_BG_STATUS
 	call FillBoxWithByte
 
-if DEF(LOCALE_ZH)
-	hlcoord 2, 2, wAttrmap
-else
 	hlcoord 2, 1, wAttrmap
-endc
 	lb bc, 1, 2
 	ld a, PAL_BATTLE_BG_STATUS
 	call FillBoxWithByte

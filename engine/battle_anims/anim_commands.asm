@@ -217,8 +217,8 @@ if DEF(LOCALE_ZH)
  hlcoord 8,7
  lb bc,2,12
  call ClearBox
- hlcoord 10,10
-	ld [hl], ' '
+ hlcoord 10,9
+ ld [hl], ' '
 endc
 	hlcoord 11, 7
 	lb bc, 5, 9

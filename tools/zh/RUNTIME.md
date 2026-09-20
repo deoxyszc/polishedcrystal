@@ -12,9 +12,13 @@ and Chinese player-name input remain outside this interface.
 Battle display is independent of saved nicknames. Translated default names are
 matched against the original 10-byte nickname, rasterized at build time, and
 displayed in dedicated VRAM tiles. Custom nicknames retain legacy rendering.
-Player names use up to five 12px glyphs at 11px advance on the same band as
-level, gender and shiny; status is left of HP numbers. Enemy names retain a
-separate metadata row. HP/EXP coordinates remain unchanged for the player.
+Player names use up to five 12px glyphs at 11px advance, with gender and
+level on the same band; status is left of HP numbers. Shiny indicators retain
+the original HP palette and sit left of each HP bar. Enemy names expand left
+as their rendered width increases. Short names are followed by gender and
+level; the widest names move gender above the level. Enemy status replaces
+level without covering the name, and the caught indicator occupies the left
+margin. Text and palette placement share the same geometry. HP/EXP coordinates remain unchanged for the player.
 Glyphs that exceed the compact advance are rejected instead of clipped.
 
 The 2×2 move grid preserves the EXP row and uses a centered two-tile cursor.
