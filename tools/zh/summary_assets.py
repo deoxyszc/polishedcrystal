@@ -45,12 +45,30 @@ def generate(source, font_path, terms_path):
             for x in range(24):
                 if glyph.getpixel((x,y)):item.putpixel((x+8,y+8),3)
         (out/'item_tab.2bpp').write_bytes(encode(item))
+    if terms.get('experience'):
+        exp=tab_background.copy();glyph=label(terms['experience'])
+        for y in range(16):
+            for x in range(24):
+                if glyph.getpixel((x,y)):exp.putpixel((x+8,y+8),3)
+        (out/'experience_tab.2bpp').write_bytes(encode(exp))
+    if terms.get('encounter'):
+        exp=tab_background.copy();glyph=label(terms['encounter'])
+        for y in range(16):
+            for x in range(24):
+                if glyph.getpixel((x,y)):exp.putpixel((x+8,y+8),3)
+        (out/'encounter_tab.2bpp').write_bytes(encode(exp))
     subprocess.run(['make', 'gfx/font/normal.1bpp'], cwd=source, check=True)
     raw=(source/'gfx/font/normal.1bpp').read_bytes();data=bytearray()
     for code in list(range(0xe0,0xea))+[0xde,0x7f]:
         rows=bytes(4)+(raw[(code-0x80)*8:(code-0x80)*8+8] if code!=0x7f else bytes(8))+bytes(4)
         for v in rows:data.extend((v,v))
     (out/'level_digits.2bpp').write_bytes(data)
+    digits=bytearray()
+    for half in range(2):
+        for digit in range(10):
+            pixels=bytes(4)+raw[(0x60+digit)*8:(0x61+digit)*8]+bytes(4)
+            for value in pixels[half*8:half*8+8]:digits.extend((value,value))
+    (out/'summary_digits.2bpp').write_bytes(digits)
     # Alternate stat panel: 96x64, original-width digits below each label.
     panel=Image.new('1',(96,64));pd=ImageDraw.Draw(panel);pd.fontmode='1'
     for i,text in enumerate(labels[1:]):

@@ -29,3 +29,16 @@ All Chinese runtime modules use the single LOCALE_ZH build guard selected by
 --font, --licenses and --ui-terms; the terms file supplies UI strings only.
 Generated resource-presence constants select translated versus original text
 when an optional translation is absent; they do not select a build variant.
+
+The pink summary reuses the CSV experience and next-level labels inline with
+live numbers. These two labels must fit 24px. Supply `level_suffix` in the UI
+terms JSON for the suffix after the live next level (up to 16px). The inline
+panel requires all three CSV labels and this suffix; otherwise it retains
+the original experience panel. Maximum-level calculation remains unchanged.
+
+Orange summary nature and characteristic translations follow the original
+table indices and require both translated headings and selected entries.
+Encounter text uses the selected time/location CSV records and UI terms
+`encounter`, `met_location` (one `{location}` placeholder), `met_level_prefix`,
+and `level_suffix`. Missing resources, rental, egg-origin, trade-origin,
+event, and unknown-location records retain the original encounter text.
