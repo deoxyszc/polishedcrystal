@@ -80,17 +80,17 @@ def generate(source, language, font_path, terms_path):
                         data.extend((v,v))
             symbol='ZhOrange'+kind+str(index)
             lines.append(' dw '+symbol);bodies += [symbol+':', ' db '+','.join(map(str,data))]
-    for kind, key, width in [
-        ('LevelPrefix', 'met_level_prefix', 48),
-        ('LevelSuffix', 'level_suffix', 16),
+    for kind, key, width, inset in [
+        ('LevelPrefix', 'met_level_prefix', 48, 0),
+        ('LevelSuffix', 'level_suffix', 16, 2),
     ]:
         text=terms.get(key, '')
         lines.append('DEF ZH_ORANGE_'+kind.upper()+' EQU '+str(int(bool(text))))
         if not text:continue
-        if any(c in text for c in '{}@\n\r') or font.getlength(text)>width-2:
+        if any(c in text for c in '{}@\n\r') or font.getlength(text)>width-inset:
             raise ValueError('Oversized orange level text: '+key)
         image=Image.new('1',(width,16));draw=ImageDraw.Draw(image);draw.fontmode='1'
-        draw.text((2,12),text,font=font,fill=1,anchor='ls')
+        draw.text((inset,12),text,font=font,fill=1,anchor='ls')
         data=[]
         for ty in range(2):
             for tx in range(width//8):
