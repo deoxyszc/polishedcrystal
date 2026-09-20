@@ -1,7 +1,8 @@
 """Compile translated summary move names indexed by the original move IDs."""
 import csv
 import subprocess
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageFont
+from text_layout import text_image, encode_2bpp
 
 def generate(source,language,font_path):
  subprocess.run(['make','gfx/font/normal.1bpp'],cwd=source,check=True)
@@ -16,13 +17,7 @@ def generate(source,language,font_path):
   text=row.get('translation_'+language,'').replace('{li}','').strip()
   if not text:table.append(' db 0,0,0');continue
   if font.getlength(text)>64 or any(c in text for c in '{}@\n\r'):raise ValueError('Summary move exceeds 64px: '+row['id'])
-  im=Image.new('1',(64,16));draw=ImageDraw.Draw(im);draw.fontmode='1'
-  draw.text((0,10),text,font=font,fill=1,anchor='ls')
-  data=[]
-  for ty in range(2):
-   for tx in range(8):
-    for y in range(8):
-     v=sum(128>>x for x in range(8) if im.getpixel((tx*8+x,ty*8+y)));data.extend((v,v))
+  data=encode_2bpp(text_image(font,text,64,baseline=10))
   label='ZhSummaryMove'+str(index)
   table+=[' db BANK('+label+')',' dw '+label]
   assets+=['SECTION "Summary move '+str(index)+'", ROMX',label+'::',' db '+','.join(map(str,data))]

@@ -2,7 +2,8 @@
 import csv
 import json
 import re
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageFont
+from text_layout import TextLayout, text_image, encode_2bpp
 
 def generate(source, language, font_path, terms_path):
     with (source/'translations.csv').open(encoding='utf-8-sig', newline='') as stream:
@@ -35,21 +36,15 @@ def generate(source, language, font_path, terms_path):
             if not title or not text:
                 lines.append(' dw 0')
                 continue
-            image = Image.new('1', (96, height))
-            draw = ImageDraw.Draw(image); draw.fontmode = '1'
+            layout = TextLayout(font, 96, height)
             parts = [p.strip() for p in text.split('{next}')]
             if len(parts) > (2 if height == 40 else 1):
                 raise ValueError('Orange panel exceeds line count: '+label)
             for x, baseline, value in [(0, 10, title)]+[(12, 24+i*12, p) for i,p in enumerate(parts)]:
                 if any(c in value for c in '{}@\n\r') or font.getlength(value)>96-x:
                     raise ValueError('Unsupported or oversized orange panel: '+label)
-                draw.text((x, baseline), value, font=font, fill=1, anchor='ls')
-            data = []
-            for ty in range(height//8):
-                for tx in range(12):
-                    for y in range(8):
-                        v = sum(128>>x for x in range(8) if image.getpixel((tx*8+x,ty*8+y)))
-                        data.extend((v,v))
+                layout.append(value, x=x, baseline=baseline)
+            data = encode_2bpp(layout.image)
             symbol = 'ZhOrange'+kind+str(index)
             lines.append(' dw '+symbol)
             bodies += [symbol+':', ' db '+','.join(map(str,data))]
@@ -70,14 +65,7 @@ def generate(source, language, font_path, terms_path):
                 continue
             if any(c in text for c in '{}@\n\r') or font.getlength(text)>width:
                 raise ValueError('Oversized encounter text: '+label)
-            im=Image.new('1',(width,16));draw=ImageDraw.Draw(im);draw.fontmode='1'
-            draw.text((0,12),text,font=font,fill=1,anchor='ls')
-            data=[]
-            for ty in range(2):
-                for tx in range(width//8):
-                    for y in range(8):
-                        v=sum(128>>x for x in range(8) if im.getpixel((tx*8+x,ty*8+y)))
-                        data.extend((v,v))
+            data=encode_2bpp(text_image(font,text,width))
             symbol='ZhOrange'+kind+str(index)
             lines.append(' dw '+symbol);bodies += [symbol+':', ' db '+','.join(map(str,data))]
     for kind, key, width, inset in [
@@ -89,14 +77,8 @@ def generate(source, language, font_path, terms_path):
         if not text:continue
         if any(c in text for c in '{}@\n\r') or font.getlength(text)>width-inset:
             raise ValueError('Oversized orange level text: '+key)
-        image=Image.new('1',(width,16));draw=ImageDraw.Draw(image);draw.fontmode='1'
-        draw.text((inset,12),text,font=font,fill=1,anchor='ls')
-        data=[]
-        for ty in range(2):
-            for tx in range(width//8):
-                for y in range(8):
-                    value=sum(128>>x for x in range(8) if image.getpixel((tx*8+x,ty*8+y)))
-                    data.extend((value,value))
+        layout=TextLayout(font,width).append(text,x=inset)
+        data=encode_2bpp(layout.image)
         bodies += ['ZhOrange'+kind+'Tiles:', ' db '+','.join(map(str,data))]
     prefix_width=int(round(font.getlength(terms.get('met_level_prefix', ''))))
     digit_x=(8+prefix_width+7)//8

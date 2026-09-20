@@ -2021,11 +2021,7 @@ UpdateHPBar:
 	and a
 	ld a, 1
 	jr z, .ok
-if DEF(LOCALE_ZH)
-	hlcoord 1, 3
-else
 	hlcoord 1, 2
-endc
 	xor a
 .ok
 	push bc
@@ -4078,11 +4074,19 @@ endr
 	pop hl
 	dec hl
 
+if DEF(LOCALE_ZH)
+ hlcoord 10,9
+ ld [hl], ' '
+endc
 	ld bc, wBattleMonShiny
 	farcall CheckShininess
 	jr nc, .not_own_shiny
 	ld a, '<SHINY>'
-	hlcoord 19, 8
+if DEF(LOCALE_ZH)
+ hlcoord 10,9
+else
+ hlcoord 19,8
+endc
 	ld [hl], a
 
 .not_own_shiny
@@ -4096,13 +4100,21 @@ endr
 	inc a ; "<FEMALE>"
 
 .got_gender_char
-	hlcoord 18, 8
-	ld [hl], a
-
-	hlcoord 15, 8
-	ld a, [wBattleMonLevel]
-	ld [wTempMonLevel], a
-	jmp PrintLevel
+if DEF(LOCALE_ZH)
+ hlcoord 16,8
+ ld [hl],a
+ hlcoord 17,8
+ ld a,[wBattleMonLevel]
+ ld [wTempMonLevel],a
+ jp PrintLevel
+else
+ hlcoord 18,8
+ ld [hl],a
+ hlcoord 15,8
+ ld a,[wBattleMonLevel]
+ ld [wTempMonLevel],a
+ jp PrintLevel
+endc
 
 UpdateEnemyHUD::
 	push hl
@@ -4176,9 +4188,9 @@ endr
 	jr nc, .not_shiny
 	ld a, '<SHINY>'
 if DEF(LOCALE_ZH)
-	hlcoord 9, 2
+ hlcoord 0,2
 else
-	hlcoord 9, 1
+ hlcoord 9,1
 endc
 	ld [hl], a
 
@@ -4194,24 +4206,25 @@ endc
 	jr c, .got_gender
 	ld a, '<MALE>'
 	jr nz, .got_gender
-	inc a ; "<FEMALE>"
-
+	inc a
 .got_gender
 if DEF(LOCALE_ZH)
-	hlcoord 8, 2
+ push af
+ farcall ZhEnemyMetadataPositions
+ hlcoord 0,0
+ add hl,bc
+ pop af
+ ld [hl],a
+ hlcoord 0,1
+ add hl,de
 else
-	hlcoord 8, 1
+ hlcoord 8,1
+ ld [hl],a
+ hlcoord 5,1
 endc
-	ld [hl], a
-
-if DEF(LOCALE_ZH)
-	hlcoord 5, 2
-else
-	hlcoord 5, 1
-endc
-	ld a, [wEnemyMonLevel]
-	ld [wTempMonLevel], a
-	call PrintLevel
+ ld a,[wEnemyMonLevel]
+ ld [wTempMonLevel],a
+ call PrintLevel
 
 	ld hl, wEnemyMonHP
 	ld a, [hli]
@@ -4274,20 +4287,28 @@ endc
 .draw_bar
 	xor a
 	ld [wWhichHPBar], a
-if DEF(LOCALE_ZH)
-	hlcoord 1, 3
-else
 	hlcoord 1, 2
-endc
 	call DrawBattleHPBar
 
 	farcall LoadEnemyStatusIcon
 if DEF(LOCALE_ZH)
-	hlcoord 2, 2
+ ld a,[wEnemyMonStatus]
+ and a
+ jp z,FinishBattleAnim
+ ; Original Chinese layout policy: status replaces level, never name pixels.
+ farcall ZhEnemyMetadataPositions
+ hlcoord 0,1
+ add hl,de
+ push hl
+ ld a,' '
+ ld [hli],a
+ ld [hli],a
+ ld [hl],a
+ pop hl
 else
-	hlcoord 2, 1
+ hlcoord 2,1
 endc
-	ld a, $57
+ ld a, $57
 	ld [hli], a
 	ld [hl], $58
 	jmp FinishBattleAnim

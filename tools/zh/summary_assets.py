@@ -2,6 +2,7 @@
 import json
 import subprocess
 from PIL import Image, ImageDraw, ImageFont
+from text_layout import TextLayout, text_image, encode_2bpp
 
 def generate(source, font_path, terms_path):
     terms=json.loads(terms_path.read_text())
@@ -10,20 +11,8 @@ def generate(source, font_path, terms_path):
     font=ImageFont.truetype(str(font_path),12)
     def label(text):
         if font.getlength(text)>24: raise ValueError('Summary label exceeds24px: '+text)
-        im=Image.new('1',(24,16));d=ImageDraw.Draw(im);d.fontmode='1'
-        d.text((0,12),text,font=font,fill=1,anchor='ls')
-        return im
-    def encode(im):
-        data=bytearray()
-        for ty in range(im.height//8):
-            for tx in range(im.width//8):
-                for y in range(8):
-                    lo=hi=0
-                    for x in range(8):
-                        v=im.getpixel((tx*8+x,ty*8+y));v=(3 if v else 0) if im.mode=='1' else v
-                        lo|=(v&1)<<(7-x);hi|=(v>>1)<<(7-x)
-                    data.extend((lo,hi))
-        return bytes(data)
+        return text_image(font,text,24)
+    encode = encode_2bpp
     out=source/'gfx/zh';out.mkdir(exist_ok=True)
     (out/'levelup.2bpp').write_bytes(b''.join(encode(label(t)) for t in labels))
     (out/'summary_labels.2bpp').write_bytes(b''.join(encode(label(t)) for t in labels[1:]))
@@ -70,9 +59,9 @@ def generate(source, font_path, terms_path):
             for value in pixels[half*8:half*8+8]:digits.extend((value,value))
     (out/'summary_digits.2bpp').write_bytes(digits)
     # Alternate stat panel: 96x64, original-width digits below each label.
-    panel=Image.new('1',(96,64));pd=ImageDraw.Draw(panel);pd.fontmode='1'
+    panel_layout=TextLayout(font,96,64);panel=panel_layout.image
     for i,text in enumerate(labels[1:]):
-        pd.text(((i%2)*48,12+(i//2)*20),text,font=font,fill=1,anchor='ls')
+        panel_layout.append(text,x=(i%2)*48,baseline=12+(i//2)*20)
     (out/'summary_two_line.2bpp').write_bytes(encode(panel.convert('L').point(lambda v: 2 if v else 0)))
     shifted=bytearray()
     for offset in (6,2):

@@ -54,10 +54,21 @@ ZhDrawBattleName::
  ldh [rVBK],a
  ld a,[wZhHudSide]
  and a
- hlcoord 8,7
+ jr nz,.enemyPosition
+ hlcoord 16,7
+ ld a,[wZhHudWidth]
+ cpl
+ inc a
+ ld e,a
+ ld d,$ff
+ add hl,de
  ld a,$ca
- jr z,.place
- hlcoord 1,0
+ jr .place
+.enemyPosition
+ ld a,[wZhHudWidth]
+ call ZhEnemyNameStart
+ hlcoord 0,0
+ add hl,de
  ld a,$de
 .place
  ld b,2
@@ -99,11 +110,63 @@ ZhDrawBattleName::
 
 ; Called after the original battle palette layout; only mark translated cells.
 ZhBattleNameAttributes::
- hlcoord 8,7,wAttrmap
+ hlcoord 16,7,wAttrmap
+ ld a,[wZhPlayerHudWidth]
+ and a
+ jr z,.enemyAttrs
+ cpl
+ inc a
+ ld e,a
+ ld d,$ff
+ add hl,de
  ld a,[wZhPlayerHudWidth]
  call .fill
- hlcoord 1,0,wAttrmap
+.enemyAttrs
  ld a,[wZhEnemyHudWidth]
+ call ZhEnemyNameStart
+ hlcoord 0,0,wAttrmap
+ add hl,de
+ ld a,[wZhEnemyHudWidth]
+ call .fill
+ hlcoord 17,8,wAttrmap
+ ld a,PAL_BATTLE_BG_TEXT
+ ld [hli],a
+ ld [hli],a
+ ld [hl],a
+ ; Explicit native bank and palette for every metadata cell, including fallback.
+ hlcoord 16,8,wAttrmap
+ ld [hl],PAL_BATTLE_BG_EXP_GENDER
+ hlcoord 10,9,wAttrmap
+ ld [hl],PAL_BATTLE_BG_PLAYER_HP
+ hlcoord 10,10,wAttrmap
+ ld a,PAL_BATTLE_BG_STATUS
+ ld [hli],a
+ ld [hl],a
+ call ZhEnemyMetadataPositions
+ hlcoord 0,1,wAttrmap
+ add hl,de
+ ld a,PAL_BATTLE_BG_TEXT
+ ld [hli],a
+ ld [hli],a
+ ld [hl],a
+ push bc
+ hlcoord 0,0,wAttrmap
+ add hl,bc
+ ld [hl],PAL_BATTLE_BG_EXP_GENDER
+ pop bc
+ hlcoord 0,2,wAttrmap
+ ld [hl],PAL_BATTLE_BG_ENEMY_HP
+ ld a,[wEnemyMonStatus]
+ and a
+ ret z
+ call ZhEnemyMetadataPositions
+ hlcoord 0,1,wAttrmap
+ add hl,de
+ ld a,PAL_BATTLE_BG_STATUS
+ ld [hli],a
+ ld [hl],a
+ ret
+
 .fill
  and a
  ret z
@@ -123,4 +186,41 @@ ZhBattleNameAttributes::
  add hl,de
  dec b
  jr nz,.row
+ ret
+
+; A=rendered width in tiles. Short names begin inward; longer names expand left.
+ZhEnemyNameStart:
+ ld de,1
+ cp 6
+ ret nc
+ inc e
+ cp 5
+ ret nc
+ inc e
+ ret
+
+; BC=gender offset from row0; DE=level/status X on row1.
+; Shared by text and attributes so palette cells track the actual placement.
+ZhEnemyMetadataPositions::
+ ld a,[wZhEnemyHudWidth]
+ and a
+ jr z,.long
+ cp 7
+ jr nc,.long
+ push af
+ call ZhEnemyNameStart
+ pop af
+ add e
+ ld c,a
+ ld b,0
+ inc a
+ ld e,a
+ ld d,0
+ ld a,c
+ add SCREEN_WIDTH
+ ld c,a
+ ret
+.long
+ ld bc,8
+ ld de,8
  ret

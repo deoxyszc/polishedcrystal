@@ -1,6 +1,7 @@
 """Compile explicit CSV footer translations; no built-in translated labels."""
 import csv
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageFont
+from text_layout import text_image, encode_2bpp
 
 IDS = {
     'cancel': 'engine/pokemon/party_menu.asm::PlacePartyNicknames.Cancel::1',
@@ -17,14 +18,6 @@ def generate(source, language, font_path):
         if '\n' in text or font.getlength(text) > width:
             raise ValueError('Party footer exceeds pixel budget: ' + key)
         lines.append('DEF ZH_PARTY_' + key.upper() + ' EQU ' + str(int(bool(text))))
-        canvas = Image.new('1', (width, height))
-        draw = ImageDraw.Draw(canvas); draw.fontmode = '1'
-        draw.text((0, baseline), text, font=font, fill=1, anchor='ls')
-        data = []
-        for ty in range(height//8):
-            for tx in range(width//8):
-                for y in range(8):
-                    v = sum(128>>x for x in range(8) if canvas.getpixel((tx*8+x,ty*8+y)))
-                    data.extend((v,v))
+        data = encode_2bpp(text_image(font,text,width,height,baseline=baseline))
         lines.extend(['ZhParty' + key.title() + 'Tiles:', ' db ' + ','.join(map(str,data))])
     (source / 'data/zh/party_footer.asm').write_text('\n'.join(lines)+'\n')
