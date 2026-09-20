@@ -59,7 +59,8 @@ with tempfile.TemporaryDirectory() as temp:
     assert "ZhOrangeNature0" in output
     assert "ZhOrangeCharacterTable::\n dw 0" in output
     assert "ZhOrangeLocation0" in output
-    assert "ZhOrangeSuffix0" in output
+    assert "ZhOrangeLevelPrefixTiles" in output
+    assert "ZhOrangeLevelSuffixTiles" in output
     assert "ZhOrangeDigits0" in output
 
 print("PASS orange separators, complete-entry admission, and encounter assets")

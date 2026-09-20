@@ -58,8 +58,6 @@ def generate(source, language, font_path, terms_path):
     for kind, path, labels, width in [
         ('Time', 'engine/rtc/timeset.asm', ['EVE_String', 'MORN_String', 'DAY_String', 'NITE_String'], 24),
         ('Location', 'data/maps/landmarks.asm', locations, 120),
-        ('Level', page, [prefix+'str_level'], 48),
-        ('Suffix', page, [prefix+'str_level'], 16),
     ]:
         lines.append('ZhOrange'+kind+'Table::')
         for index, label in enumerate(labels):
@@ -67,20 +65,13 @@ def generate(source, language, font_path, terms_path):
             if kind == 'Location':
                 template = terms.get('met_location', '')
                 text = template.replace('{location}', text) if text and template.count('{location}') == 1 else ''
-            if kind == 'Level':
-                text = terms.get('met_level_prefix', '')
-            if kind == 'Suffix':
-                text = terms.get('level_suffix', '')
             if not text:
                 lines.append(' dw 0')
                 continue
-            # Keep the line prefix on the shared 8px left edge. The suffix gets
-            # a small inset after the native-width digit cell.
-            inset = 2 if kind == 'Suffix' else 0
-            if any(c in text for c in '{}@\n\r') or font.getlength(text)>width-inset:
+            if any(c in text for c in '{}@\n\r') or font.getlength(text)>width:
                 raise ValueError('Oversized encounter text: '+label)
             im=Image.new('1',(width,16));draw=ImageDraw.Draw(im);draw.fontmode='1'
-            draw.text((inset,12),text,font=font,fill=1,anchor='ls')
+            draw.text((0,12),text,font=font,fill=1,anchor='ls')
             data=[]
             for ty in range(2):
                 for tx in range(width//8):
@@ -89,12 +80,30 @@ def generate(source, language, font_path, terms_path):
                         data.extend((v,v))
             symbol='ZhOrange'+kind+str(index)
             lines.append(' dw '+symbol);bodies += [symbol+':', ' db '+','.join(map(str,data))]
+    for kind, key, width in [
+        ('LevelPrefix', 'met_level_prefix', 48),
+        ('LevelSuffix', 'level_suffix', 16),
+    ]:
+        text=terms.get(key, '')
+        lines.append('DEF ZH_ORANGE_'+kind.upper()+' EQU '+str(int(bool(text))))
+        if not text:continue
+        if any(c in text for c in '{}@\n\r') or font.getlength(text)>width-2:
+            raise ValueError('Oversized orange level text: '+key)
+        image=Image.new('1',(width,16));draw=ImageDraw.Draw(image);draw.fontmode='1'
+        draw.text((2,12),text,font=font,fill=1,anchor='ls')
+        data=[]
+        for ty in range(2):
+            for tx in range(width//8):
+                for y in range(8):
+                    value=sum(128>>x for x in range(8) if image.getpixel((tx*8+x,ty*8+y)))
+                    data.extend((value,value))
+        bodies += ['ZhOrange'+kind+'Tiles:', ' db '+','.join(map(str,data))]
     raw=(source/'gfx/font/normal.1bpp').read_bytes()
     for half in range(2):
         data=[]
-        for i in range(10):
-            pixels=bytes(4)+raw[(0x60+i)*8:(0x61+i)*8]+bytes(4)
-            for v in pixels[half*8:half*8+8]:data.extend((v,v))
+        for digit in range(10):
+            pixels=bytes(4)+raw[(0x60+digit)*8:(0x61+digit)*8]+bytes(4)
+            for value in pixels[half*8:half*8+8]:data.extend((value,value))
         bodies += ['ZhOrangeDigits'+str(half)+':', ' db '+','.join(map(str,data))]
     (source/'data/zh/orange.asm').write_text(chr(10).join(lines+bodies)+chr(10))
     (source/'data/zh/orange_consumed.json').write_text(json.dumps(consumed))

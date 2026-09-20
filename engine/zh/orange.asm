@@ -128,14 +128,9 @@ ZhOrangeEncounter::
  ld hl,ZhOrangeTimeTable
  call ZhOrangeLookup
  ret c
- xor a
- ld hl,ZhOrangeLevelTable
- call ZhOrangeLookup
- ret c
- xor a
- ld hl,ZhOrangeSuffixTable
- call ZhOrangeLookup
- ret c
+if !ZH_ORANGE_LEVELPREFIX || !ZH_ORANGE_LEVELSUFFIX
+ ret
+else
  hlcoord 0,13
  lb bc,5,20
  call ClearBox
@@ -163,9 +158,7 @@ ZhOrangeEncounter::
  ld a,$40
  ld c,15
  call ZhOrangeLowerPlace
- xor a
- ld hl,ZhOrangeLevelTable
- call ZhOrangeLookup
+ ld de,ZhOrangeLevelPrefixTiles
  ld hl,$95e0
  ld c,12
  call ZhOrangeUpload
@@ -181,18 +174,12 @@ ZhOrangeEncounter::
  ld hl,$9740
  ld c,10
  call ZhOrangeUpload
- xor a
- ld hl,ZhOrangeSuffixTable
- call ZhOrangeLookup
- ld hl,$9380
- ld c,4
- call ZhOrangeUpload
- hlcoord 5,15
+ hlcoord 6,15
  ld de,wTempMonCaughtLevel
  lb bc,PRINTNUM_LEFTALIGN | 1,3
  call PrintNum
  push hl
- hlcoord 5,15
+ hlcoord 6,15
 .digit
  ld a,[hl]
  sub $e0
@@ -220,12 +207,26 @@ ZhOrangeEncounter::
  jr .digit
 .digitsDone
  pop hl
+ ld de,ZhOrangeLevelSuffixTiles
+ ld hl,$9380
+ ld c,4
+ call ZhOrangeUpload
+ ld a,[wTempMonCaughtLevel]
+ hlcoord 7,15
+ cp 10
+ jr c,.suffixReady
+ inc hl
+ cp 100
+ jr c,.suffixReady
+ inc hl
+.suffixReady
  ld a,$38
  ld c,2
  call ZhOrangeLowerPlace
  ld a,1
  ld [wZhOrangeEncounterActive],a
  ret
+endc
 
 ZhOrangeLowerPlace:
  ld b,2
