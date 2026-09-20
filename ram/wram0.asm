@@ -1530,7 +1530,11 @@ wZhEnemyHudWidth:: db
 wZhSummaryAbility:: db
 wZhItemDescriptionActive:: db
 wZhSummaryMovesActive:: db
+UNION
 wZhStatsSaved:: ds 20
+NEXTU
+wZhPinkSpecies:: ds MON_NAME_LENGTH
+ENDU
 wZhStatsFlags:: db
 wZhPartyIndex:: db
 wZhPartyWidth:: db

@@ -363,6 +363,10 @@ SummaryScreen_InitMon:
 	ret
 
 SummaryScreen_InitLayout:
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhSummaryMovesActive],a
+endc
 	call .PlaceHPBar
 
 	ld hl, .PageSprites
@@ -532,6 +536,21 @@ ld a, [wCurPartySpecies]
 	call .ClearBox
 if DEF(LOCALE_ZH)
  ; Reset translated lower-panel tile-bank attributes on every page.
+ ; The translated move list borrows the standard font tiles in bank 0.
+ ; Restore on departure, before any destination (including eggs) draws.
+ ld a,[wZhSummaryMovesActive]
+ and a
+ jr z,.fontReady
+ xor a
+ ld [wZhSummaryMovesActive],a
+ ldh a,[rVBK]
+ push af
+ xor a
+ ldh [rVBK],a
+ call LoadStandardFont
+ pop af
+ ldh [rVBK],a
+.fontReady
  hlcoord 0,13,wAttrmap
  ld bc,5 * SCREEN_WIDTH
  xor a
@@ -658,6 +677,13 @@ endc
 
 .PlaceLevelAndGender:
 	; Clear item tiles
+if DEF(LOCALE_ZH)
+ ; Translated tabs may use palette 2; only the item page owns that area.
+ hlcoord 2,8,wAttrmap
+ lb bc,3,3
+ ld a,SUMMARY_PAL_POKEMON
+ call FillBoxWithByte
+endc
 	hlcoord 2, 8
 	lb bc, 3, 3
 	call ClearBox
@@ -899,6 +925,11 @@ endr
 	dw .OrangeInterrupts
 
 .PinkInterrupts:
+if DEF(LOCALE_ZH)
+ db 15, SUMMARY_LCD_SHOW_WINDOW
+ db 87, SUMMARY_LCD_HIDE_WINDOW
+ db -1
+else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
 	db 31,  SUMMARY_LCD_SHOW_WINDOW
@@ -913,6 +944,7 @@ endr
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+endc
 .BlueInterrupts:
 if DEF(LOCALE_ZH)
  db 22, SUMMARY_LCD_SHOW_WINDOW

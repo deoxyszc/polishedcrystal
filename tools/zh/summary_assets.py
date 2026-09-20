@@ -45,6 +45,12 @@ def generate(source, font_path, terms_path):
             for x in range(24):
                 if glyph.getpixel((x,y)):item.putpixel((x+8,y+8),3)
         (out/'item_tab.2bpp').write_bytes(encode(item))
+    if terms.get('experience'):
+        exp=tab_background.copy();glyph=label(terms['experience'])
+        for y in range(16):
+            for x in range(24):
+                if glyph.getpixel((x,y)):exp.putpixel((x+8,y+8),3)
+        (out/'experience_tab.2bpp').write_bytes(encode(exp))
     subprocess.run(['make', 'gfx/font/normal.1bpp'], cwd=source, check=True)
     raw=(source/'gfx/font/normal.1bpp').read_bytes();data=bytearray()
     for code in list(range(0xe0,0xea))+[0xde,0x7f]:

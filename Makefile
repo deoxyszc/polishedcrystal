@@ -342,6 +342,6 @@ data/tilesets/%_collision.bin: data/tilesets/%_collision.asm
 	$QRGBASM=$(RGBASM) RGBLINK=$(RGBLINK) tools/collision_asm2bin.sh $< $@
 
 # Disabled includes still need dependency-scanner placeholders in English.
-data/zh/abilities.asm data/zh/item_assets.asm data/zh/item_panel.asm data/zh/party_footer.asm data/zh/party_names.asm data/zh/summary_move_assets.asm data/zh/summary_moves.asm gfx/zh/ability_tab.2bpp gfx/zh/item_tab.2bpp gfx/zh/level_digits.2bpp gfx/zh/levelup.2bpp gfx/zh/summary_corner.2bpp gfx/zh/summary_labels.2bpp gfx/zh/summary_pp.1bpp gfx/zh/summary_shift_digits.2bpp gfx/zh/summary_shift_marker.2bpp gfx/zh/summary_two_line.2bpp:
+data/zh/pink.asm gfx/zh/experience_tab.2bpp gfx/zh/pink_ascii.2bpp data/zh/abilities.asm data/zh/item_assets.asm data/zh/item_panel.asm data/zh/party_footer.asm data/zh/party_names.asm data/zh/summary_move_assets.asm data/zh/summary_moves.asm gfx/zh/ability_tab.2bpp gfx/zh/item_tab.2bpp gfx/zh/level_digits.2bpp gfx/zh/levelup.2bpp gfx/zh/summary_corner.2bpp gfx/zh/summary_labels.2bpp gfx/zh/summary_pp.1bpp gfx/zh/summary_shift_digits.2bpp gfx/zh/summary_shift_marker.2bpp gfx/zh/summary_two_line.2bpp:
 	@mkdir -p $(dir $@)
 	@case "$(RGBASMFLAGS)" in *LOCALE_ZH*) echo "Missing generated Chinese resource: $@; use runtime_build.py"; exit 1;; *) touch $@;; esac

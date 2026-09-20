@@ -777,6 +777,9 @@ INCLUDE "engine/zh/levelup_layout.asm"
 INCLUDE "engine/zh/abilities.asm"
 INCLUDE "data/zh/item_panel.asm"
 INCLUDE "engine/zh/item_panel.asm"
+SECTION "Chinese pink summary", ROMX
+INCLUDE "data/zh/pink.asm"
+INCLUDE "engine/zh/pink.asm"
 SECTION "Chinese summary move runtime", ROMX
 INCLUDE "data/zh/summary_moves.asm"
 INCLUDE "engine/zh/summary_moves.asm"
