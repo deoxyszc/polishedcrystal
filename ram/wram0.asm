@@ -1506,18 +1506,11 @@ if DEF(LOCALE_ZH)
 SECTION "ZH bounded text state", WRAM0
 wZhTextCursor:: dw
 wZhTextEnd:: dw
-wZhTextSpan:: dw
 wZhTextSlot:: db
-wZhTextType:: db
 wZhTextControl:: db
-wZhTextAfterWait:: db
-wZhMenuAttrs:: ds 30
 wZhNameBuffer:: ds 12
 wZhMoveGridActive:: db
 wZhMoveIndex:: db
-wZhMoveRow:: db
-wZhEntryStart:: dw
-wZhEntryEnd:: dw
 
 endc
 
@@ -1529,9 +1522,7 @@ wZhPlayerHudWidth:: db
 wZhEnemyHudWidth:: db
 wZhSummaryAbility:: db
 wZhItemDescriptionActive:: db
-wZhSummaryMovesActive:: db
 UNION
-wZhStatsSaved:: ds 20
 NEXTU
 wZhPinkSpecies:: ds MON_NAME_LENGTH
 NEXTU
@@ -1539,20 +1530,11 @@ wZhOrangeCharacteristic:: db
 wZhOrangeActive:: db
 wZhOrangeEncounterActive:: db
 ENDU
-wZhStatsFlags:: db
 wZhPartyIndex:: db
 wZhPartyWidth:: db
-wZhPartyTile:: db
 wZhPartyGender:: db
 wZhPartyLevel:: ds 3
 wZhPartyWidths:: ds 6
 wZhPartyStatuses:: ds 6
 wZhPartyStatusTiles:: ds 32
-wZhPartyBottom:: ds 16
-UNION
-wZhPartyCancelBuffer:: ds 144
-NEXTU
-wZhMovePPText:: ds 32
-wZhMoveIds:: ds 4
-ENDU
 endc

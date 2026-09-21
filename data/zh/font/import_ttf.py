@@ -32,13 +32,14 @@ def main():
   cell=im.crop((24,24,36,36));levels=set(cell.getdata())
   if not levels<={0,255}:raise ValueError('antialiased output forbidden; expected exact mono pixels')
   rasters.append(cell)
-  for ty,tx in [(0,0),(0,1),(1,0),(1,1)]:
-   for y in range(8):
-    b=0
-    for x in range(8):
-     xx=tx*8+x;yy=ty*8+y
-     if xx<12 and yy<12 and cell.getpixel((xx,yy)):b|=128>>x
-    blob.append(b)
+  # Three 4x12 strips; each byte contains two consecutive rows.
+  for strip in range(3):
+   for y in range(0,12,2):
+    packed=0
+    for row in (y,y+1):
+     for x in range(4):
+      packed=(packed<<1)|bool(cell.getpixel((strip*4+x,row)))
+    blob.append(packed)
   coverage.append({'id':g['id'],'char':ch,'font_glyph':cmap[ord(ch)],'advance_px':advance,'ink_bbox':rel})
  # Validate everything before creating output or replacing any resources.
  a.output_root.mkdir(parents=True,exist_ok=True)
@@ -46,10 +47,10 @@ def main():
   stage=pathlib.Path(scratch);(stage/'gfx/zh').mkdir(parents=True);(stage/'data/zh/font').mkdir(parents=True);meta=stage/'font-report';meta.mkdir()
   table=['ZhFontPages::'];sections=[]
   for page in range((len(glyphs)+511)//512):
-   label=f'ZhFontPage{page:02d}';name=f'page_{page:02d}.1bpp';(stage/'gfx/zh'/name).write_bytes(blob[page*16384:(page+1)*16384]);table += [f' db BANK({label})',f' dw {label}'];sections += [f'SECTION "Chinese Font Page {page}", ROMX[$4000], BANK[{130+page}]',label+'::',f' INCBIN "gfx/zh/{name}"']
+   label=f'ZhFontPage{page:02d}';name=f'page_{page:02d}.1bpp';(stage/'gfx/zh'/name).write_bytes(blob[page*9216:(page+1)*9216]);table += [f' db BANK({label})',f' dw {label}'];sections += [f'SECTION "Chinese Font Page {page}", ROMX[$4000], BANK[{130+page}]',label+'::',f' INCBIN "gfx/zh/{name}"']
   (stage/'gfx/zh/prototype.1bpp').write_bytes(blob)
   for name,lines in [('font.asm',table),('font_pages.asm',sections)]: (stage/'data/zh/font'/name).write_text('\n'.join(lines)+'\n')
-  outmanifest={'schema_version':1,'format':'four row-major 8x8 1bpp tiles;12x12','glyphs':[{'id':g['id'],'char':g['char']} for g in glyphs],'font_sha256':sha(a.font)}
+  outmanifest={'schema_version':2,'format':'three column-major 4x12 strips; high nibble first row;18 bytes per glyph','glyphs':[{'id':g['id'],'char':g['char']} for g in glyphs],'font_sha256':sha(a.font)}
   (stage/'data/zh/font/manifest.json').write_text(json.dumps(outmanifest,ensure_ascii=False,indent=2)+'\n')
   preview=Image.new('RGB',(16*40,((len(glyphs)+15)//16)*48),'white');d=ImageDraw.Draw(preview)
   for g,cell in zip(glyphs,rasters):

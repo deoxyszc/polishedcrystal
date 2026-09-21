@@ -1,0 +1,135 @@
+"""Compile fixed text into DFS strip pairs for the shared PlaceString entry."""
+PAIR_COMMAND = 0x0e
+EMPTY_STRIP = 0xffff
+
+def encode_pairs(text, glyphs, *, width_tiles, charmap=None):
+    """Resolve glyph IDs, pairing, padding and bounds before ROM assembly.
+
+    This entry accepts manifested 12px glyphs and the original 8px font. Controls and dynamic names are
+    compiled by their owning text compiler, never guessed from the string.
+    """
+    if not 1 <= width_tiles <= 20:
+        raise ValueError("Invalid text region width")
+    strips = []
+    for char in text:
+        if char == " ":
+            strips.extend((EMPTY_STRIP, EMPTY_STRIP))
+            continue
+        if charmap and char in charmap and 0x80 <= charmap[char] < 0xf2:
+            code = 0xc000 + (charmap[char] - 0x80) * 2
+            strips.extend((code, code + 1))
+            continue
+        if char not in glyphs:
+            raise ValueError(f"Unmanifested glyph: {char!r}")
+        glyph = glyphs[char]
+        if not 0 <= glyph < 16384:
+            raise ValueError("Glyph ID outside font")
+        strips.extend((glyph * 3, glyph * 3 + 1, glyph * 3 + 2))
+    tiles = (len(strips) + 1) // 2
+    if tiles > width_tiles:
+        raise ValueError("Text exceeds compile-time region")
+    if len(strips) % 2:
+        strips.append(EMPTY_STRIP)
+    result = bytearray()
+    for left, right in zip(strips[::2], strips[1::2]):
+        result.extend((PAIR_COMMAND, left >> 8, left & 255, right >> 8, right & 255))
+    return bytes(result), tiles
+
+def load_charmap(source):
+    import re
+    result = {}
+    for line in (source / "constants/charmap.asm").read_text().splitlines():
+        fields = line.split(chr(34))
+        if len(fields) >= 3 and "charmap " in fields[0] and len(fields[1]) == 1:
+            match = re.search(r"\$([0-9a-fA-F]+)", fields[2])
+            if match:
+                result[fields[1]] = int(match[1], 16)
+    return result
+
+def expand_static_ngrams(source, text):
+    """Expand source-defined fixed abbreviations before measuring fallback."""
+    import re
+    definitions = (source / "data/text/ngrams.asm").read_text()
+    fixed = {}
+    for line in definitions.splitlines():
+        if "rawchar" not in line:
+            continue
+        label = line.split(":", 1)[0].strip()
+        quoted = line.split(chr(34))
+        if len(quoted) >= 3:
+            fixed[label] = quoted[1].removesuffix("@")
+    labels = re.findall(r"^\s*dr (\.\w+)", definitions, re.M)
+    charmap_text = (source / "constants/charmap.asm").read_text()
+    for line in reversed(charmap_text.splitlines()):
+        fields = line.split(chr(34))
+        if len(fields) < 3 or "charmap " not in fields[0]:
+            continue
+        match = re.search(r"\$([0-9a-fA-F]+)", fields[2])
+        if match:
+            index = int(match[1], 16) - 0x4d
+            if 0 <= index < len(labels) and labels[index] in fixed:
+                text = text.replace(fields[1], fixed[labels[index]])
+    return text
+
+def compile_segments(segments, glyphs, charmap):
+    import encode
+    lines = []
+    width = 0
+    for segment in segments:
+        if "text" in segment:
+            data, tiles = encode_pairs(segment["text"], glyphs, width_tiles=18, charmap=charmap)
+            width += tiles
+            lines.append(" db " + ",".join("$%02x" % value for value in data + bytes((0x53,))))
+        elif "control" in segment:
+            lines.append(" db $%02x" % encode.CONTROLS[segment["control"]])
+            if segment["control"] in ("LINE", "NEXT", "PARA", "CONT"):
+                width = 0
+        elif "name" in segment:
+            width += 10
+            lines.append(" db ZH_CTRL_PLAYER" if segment["name"] == "player" else " db ZH_CTRL_RIVAL")
+        elif "ram_name" in segment:
+            width += 10
+            symbol = segment["ram_name"]
+            lines += [" db ZH_CTRL_RAM, BANK(" + symbol + ")", " dw " + symbol]
+        else:
+            raise ValueError("Unsupported compiled segment")
+        if width > 18:
+            raise ValueError("Compiled fragments exceed the dialogue region")
+    return chr(10).join(lines) + chr(10)
+
+def compile_surface(data, width, height, label):
+    """Compile tile-row-major pixels into common-cache block commands.
+
+    Adjacent 8px rows form one cache block. The final half is zero padded.
+    The caller selects line destinations; no VRAM addresses enter the asset.
+    """
+    if width % 8 or height % 8 or len(data) != width * height // 4:
+        raise ValueError("Invalid tile surface")
+    columns = width // 8
+    rows = height // 8
+    streams, assets, known = [], [], {}
+    for row in range(0, rows, 2):
+        stream = []
+        for column in range(columns):
+            offset = (row * columns + column) * 16
+            block = data[offset:offset+16]
+            offset = ((row+1) * columns + column) * 16
+            block += data[offset:offset+16] if row+1 < rows else bytes(16)
+            name = known.get(block)
+            if name is None:
+                name = label + "Block" + str(len(known))
+                known[block] = name
+                assets += [name + ":", " db " + ",".join(map(str, block))]
+            stream += [" db ZH_PAIR_COMMAND, $fe, BANK("+name+")", " bigdw " + name]
+        stream.append(" db $53")
+        streams.append(stream)
+    return streams, assets
+
+def surface_asm(data, width, height, label):
+    streams, blocks = compile_surface(data, width, height, label)
+    result = [label + ":"]
+    for i, stream in enumerate(streams):
+        result += stream[:-1]
+        if i + 1 < len(streams):
+            result.append(" db $56")
+    return result + [" db $53"] + blocks

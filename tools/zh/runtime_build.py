@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Build isolated English or modular Fusion12 runtime sources without private content."""
 import argparse,csv,hashlib,json,shutil,subprocess,sys
+from dataclasses import asdict
+from suite_layout import select as select_layout
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def main():
@@ -9,6 +11,7 @@ def main():
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
  if a.language=='en' and a.ui_terms:p.error('English builds do not consume Chinese UI terms')
  chinese=a.language!='en'
+ selected_layout=select_layout(a.language)
  if chinese and (not a.font or not a.licenses or not a.ui_terms):p.error('Chinese builds require --font, --licenses and --ui-terms resources')
  chars=set(a.characters) if chinese else set()
  if chinese:
@@ -18,28 +21,15 @@ def main():
   chars={c for c in chars if not c.isascii()}
   if not chars:p.error('At least one non-ASCII character is required')
  out.mkdir(parents=True);source=out/'source'
+ if selected_layout is not None:
+  (out/'layout.json').write_text(json.dumps({name:asdict(config) for name,config in selected_layout.items()},indent=2))
  shutil.copytree(ROOT,source,ignore=shutil.ignore_patterns('.git','__pycache__','*.pyc','*.o','*.gbc','*.sym','*.map'))
  if chinese:
   manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
   subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
   (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
-  import summary_assets
-  summary_assets.generate(source,a.font,a.ui_terms)
-  import ability_assets
-  ability_assets.generate(source,a.language,a.font)
-  import item_panel
-  item_panel.generate(source,a.language,a.font)
-  import summary_moves
-  summary_moves.generate(source,a.language,a.font)
-  import orange_assets
-  orange_assets.generate(source,a.language,a.font,a.ui_terms)
-  import pink_assets
-  pink_assets.generate(source,a.language,a.font,a.ui_terms)
-  import hud_names
-  hud_names.generate(source,a.language,a.font)
-  hud_names.generate(source,a.language,a.font,party=True)
-  import party_footer
-  party_footer.generate(source,a.language,a.font)
+  import suite
+  suite.generate(source,a.language,a.font,a.ui_terms)
   import move_names
   move_names.generate(source,a.language,manifest)
   import import_dialogue
@@ -52,6 +42,6 @@ def main():
  rom=source/('polishedcrystal'+('-zh' if chinese else '')+'-3.2.3.gbc')
  data=rom.read_bytes();expected=4 if chinese else 2
  if len(data)!=expected*1024*1024 or data[0x147]!=0x10 or data[0x149]!=3:raise ValueError('Invalid mapper header')
- report={'language':a.language,'glyph_count':len(chars),'rom':str(rom),'sha256':hashlib.sha256(data).hexdigest(),'modules':['decode','font_pages','compose','display','dialogue','names'] if chinese else ['legacy'],'text_insertion':chinese,'imported_records':imported if chinese else 0}
+ report={'language':a.language,'glyph_count':len(chars),'rom':str(rom),'sha256':hashlib.sha256(data).hexdigest(),'modules':['font_strips','glyph_cache','cache_backup','place_string','dialogue','names'] if chinese else ['legacy'],'text_insertion':chinese,'imported_records':imported if chinese else 0}
  (out/'report.json').write_text(json.dumps(report,indent=2));print(json.dumps(report))
 if __name__=='__main__':main()

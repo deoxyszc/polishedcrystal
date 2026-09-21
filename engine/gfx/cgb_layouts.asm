@@ -700,7 +700,6 @@ _CGB_PartyMenu:
 	call FillBoxWithByte
 if DEF(LOCALE_ZH)
  farcall ZhPartyAttributes
- farcall ZhPartyFooterAttrs
 endc
 	jmp ApplyAttrMap
 

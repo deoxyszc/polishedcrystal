@@ -1,7 +1,9 @@
 """Compile generic held-item display tables from source order and selected CSV."""
 import csv, json, re, sys
 from PIL import Image, ImageFont
-from text_layout import TextLayout, NAME, DENSE_DESCRIPTION, encode_2bpp
+from text_layout import encode_2bpp
+from suite_layout import region
+from cache_text import compile_surface
 EMPTY_ID='engine/pokemon/summary/green_page.asm::SummaryScreen_GreenPage.NoHeldItemString::1'
 
 def generate(source, language, font_path):
@@ -25,7 +27,9 @@ def generate(source, language, font_path):
    if row['source_sha256']!=record['source_sha256'] or row['original']!=record['translation_view']:raise ValueError('Item source drift: '+row['id'])
    consumed.append(row['id'])
   return text
- for kind,width,height in [('Name',144,16),('Description',144,32)]:
+ for kind in ('Name','Description'):
+  config=region(language, "summary.item." + kind.lower())
+  width,height=config.width,config.height
   output.append('ZhItem'+kind+'Table::')
   for index in range(len(names)):
    record=(authority.get(EMPTY_ID) if index==0 else names[index]) if kind=='Name' else (None if index==0 else descriptions.get(labels[index-1]))
@@ -35,10 +39,12 @@ def generate(source, language, font_path):
    else:
     if not text.endswith('{done}'):raise ValueError('Item description requires {done}')
     lines=[s.strip() for s in text[:-6].split('{next}')]
-   if len(lines)>(1 if kind=='Name' else 2):raise ValueError('Too many item text lines')
+   if not 1 <= len(lines) <= config.max_lines:raise ValueError('Too many item text lines')
    im=Image.new('1',(width,height))
-   if kind=='Description' and index in name_images:im.paste(name_images[index].crop((0,8,144,16)),(0,0))
-   layout=TextLayout(font,width,height,image=im,style=NAME if kind == "Name" else DENSE_DESCRIPTION)
+   if kind=='Description' and index in name_images:
+    name_config=region(language, "summary.item.name")
+    im.paste(name_images[index].crop((0,8,name_config.width,name_config.height)),(0,0))
+   layout=config.layout(font,image=im)
    for y,line in enumerate(lines):
     if not line or any(c in line for c in '{}@\n\r') or font.getlength(line)>width:raise ValueError('Unsupported or oversized item text: '+record['id'])
     layout.append(line)
@@ -47,7 +53,12 @@ def generate(source, language, font_path):
    data=encode_2bpp(im)
    symbol='ZhItem'+kind+str(index)
    output+=[' db BANK('+symbol+')',' dw '+symbol]
-   blobs+=['SECTION "Item display '+kind+' '+str(index)+'", ROMX',symbol+'::',' db '+','.join(map(str,data))]
+   streams,blocks=compile_surface(data,width,height,symbol)
+   blobs+=['SECTION "Item display '+kind+' '+str(index)+'", ROMX',symbol+'::']
+   for line,stream in enumerate(streams):
+    blobs+=stream[:-1]
+    if line+1<len(streams):blobs.append(" db $56")
+   blobs += [" db $53"] + blocks
  (source/'data/zh/item_panel.asm').write_text('\n'.join(output)+'\n')
  (source/'data/zh/item_assets.asm').write_text('\n'.join(blobs)+'\n')
  (source/'data/zh/item_consumed.json').write_text(json.dumps(sorted(set(consumed))))

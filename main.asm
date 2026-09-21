@@ -750,11 +750,15 @@ INCLUDE "engine/zh/decode.asm"
 INCLUDE "engine/zh/stream.asm"
 INCLUDE "engine/zh/name.asm"
 INCLUDE "engine/zh/render.asm"
-INCLUDE "engine/zh/compose.asm"
 INCLUDE "engine/zh/cache.asm"
-INCLUDE "engine/zh/display.asm"
+INCLUDE "engine/zh/glyph_cache.asm"
+INCLUDE "engine/zh/cache_render.asm"
+INCLUDE "engine/zh/cache_summary.asm"
+INCLUDE "engine/zh/cache_backup.asm"
+INCLUDE "engine/zh/cache_window.asm"
+INCLUDE "engine/zh/cache_temp.asm"
+INCLUDE "engine/zh/cache_text.asm"
 INCLUDE "engine/zh/text.asm"
-INCLUDE "engine/zh/swap.asm"
 INCLUDE "engine/zh/dialogue.asm"
 INCLUDE "engine/zh/dispatch.asm"
 INCLUDE "engine/zh/moves.asm"
@@ -763,7 +767,9 @@ INCLUDE "data/zh/party_footer.asm"
 INCLUDE "engine/zh/party.asm"
 INCLUDE "data/zh/party_names.asm"
 INCLUDE "data/zh/battle_names.asm"
+SECTION "Chinese compiled move names", ROMX
 INCLUDE "data/zh/move_names.asm"
+SECTION "Chinese font directory", ROMX, BANK[$80]
 INCLUDE "data/zh/font/font.asm"
 INCLUDE "data/zh/font/font_pages.asm"
 endc
@@ -771,9 +777,9 @@ endc
 if DEF(LOCALE_ZH)
 
 SECTION "Chinese summary layout", ROMX
-INCLUDE "engine/zh/layout_macros.asm"
 INCLUDE "engine/zh/summary_layout.asm"
-INCLUDE "engine/zh/summary_two_line.asm"
+INCLUDE "data/zh/stat_labels.asm"
+INCLUDE "data/zh/summary_tabs.asm"
 INCLUDE "engine/zh/levelup_layout.asm"
 INCLUDE "engine/zh/abilities.asm"
 INCLUDE "data/zh/item_panel.asm"
@@ -784,10 +790,6 @@ INCLUDE "engine/zh/pink.asm"
 SECTION "Chinese orange summary", ROMX
 INCLUDE "data/zh/orange.asm"
 INCLUDE "engine/zh/orange.asm"
-ZhSummaryDigits0::
-INCBIN "gfx/zh/summary_digits.2bpp", 0, 10 tiles
-ZhSummaryDigits1::
-INCBIN "gfx/zh/summary_digits.2bpp", 10 tiles, 10 tiles
 SECTION "Chinese summary move runtime", ROMX
 INCLUDE "data/zh/summary_moves.asm"
 INCLUDE "engine/zh/summary_moves.asm"

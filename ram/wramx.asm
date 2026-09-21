@@ -1957,23 +1957,17 @@ wWindowStackBottom:: db
 
 
 if DEF(LOCALE_ZH)
-SECTION "ZH intro line scratch", WRAMX
-wZhLineBuffer:: ds 18 * 2 tiles
-wZhGlyphBuffer:: ds 4 tiles
-wZhPixelCursor:: db
-wZhComposeWidth:: db
-wZhComposeRow:: db
-wZhComposeColumn:: db
-wZhLeaseActive:: db
-wZhLeasePins:: db
-wZhLeaseValidMask:: db
-wZhDisplayMode:: db
-wZhPageBuffer:: ds 72 tiles
-wZhSuspended:: db
-SECTION "ZH summary compositor", WRAMX
-UNION
-wZhStatsPixels:: ds 1536
-NEXTU
-wZhMovePixels:: ds 1920
-ENDU
+SECTION "ZH glyph cache", WRAMX
+wZhCacheKeys:: ds ZH_CACHE_BLOCKS * ZH_CACHE_KEY_SIZE
+wZhCacheUsed:: ds ZH_CACHE_BLOCKS
+wZhPolicy:: db
+wZhPolicyDepth:: db
+wZhPolicyStack:: ds ZH_VRAM_POLICY_DEPTH
+wZhCachePixels:: ds 2 tiles
+wZhStripPixels:: ds 6
+wZhStripHalf:: db
+wZhBackupCell:: ds 6
+wZhSummaryCacheActive:: db
+SECTION "ZH temporary map keys", WRAMX
+wZhTempKeys:: ds SCREEN_AREA * 5
 endc
