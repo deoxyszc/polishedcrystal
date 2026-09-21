@@ -11,6 +11,9 @@ _LoadStandardFont::
 	xor a
 _LoadStandardMaybeOpaqueFont:
 	push af
+if DEF(LOCALE_ZH)
+	farcall ZhFontCacheInvalidate
+endc
 	call LoadStandardFontPointer
 	ld d, h
 	ld e, l

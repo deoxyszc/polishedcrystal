@@ -3,7 +3,9 @@ import csv
 import json
 import re
 from PIL import ImageFont
-from text_layout import TextLayout, text_image, encode_2bpp
+from text_layout import encode_2bpp
+from suite_layout import region
+from cache_text import compile_surface
 
 def generate(source, language, font_path, terms_path):
     with (source/'translations.csv').open(encoding='utf-8-sig', newline='') as stream:
@@ -21,9 +23,16 @@ def generate(source, language, font_path, terms_path):
     page = 'engine/pokemon/summary/orange_page.asm'
     lines = ['DEF ZH_ORANGE_TAB EQU '+str(int((source/'gfx/zh/encounter_tab.2bpp').exists())), 'ZhOrangeTable::']
     bodies = []
-    for kind, path, root, op, heading, height in [
-        ('Nature', 'data/natures.asm', 'NatureNames', 'dr', 'NatureString', 32),
-        ('Character', 'data/characteristics.asm', 'Characteristics', 'dw', 'CharacterString', 40),
+    def surface(symbol,data,width,height):
+        streams,blocks=compile_surface(data,width,height,symbol)
+        result=[symbol+":"]
+        for i,stream in enumerate(streams):
+            result+=stream[:-1]
+            if i+1<len(streams):result.append(" db $56")
+        return result+[" db $53"]+blocks
+    for kind, path, root, op, heading in [
+        ('Nature', 'data/natures.asm', 'NatureNames', 'dr', 'NatureString'),
+        ('Character', 'data/characteristics.asm', 'Characteristics', 'dw', 'CharacterString'),
     ]:
         title = translated(page, prefix+heading)
         if title:
@@ -36,24 +45,26 @@ def generate(source, language, font_path, terms_path):
             if not title or not text:
                 lines.append(' dw 0')
                 continue
-            layout = TextLayout(font, 96, height)
+            config = region(language, "summary.orange." + kind.lower())
+            layout = config.layout(font)
             parts = [p.strip() for p in text.split('{next}')]
-            if len(parts) > (2 if height == 40 else 1):
+            if len(parts) > config.max_lines:
                 raise ValueError('Orange panel exceeds line count: '+label)
-            for x, baseline, value in [(0, 10, title)]+[(12, 24+i*12, p) for i,p in enumerate(parts)]:
-                if any(c in value for c in '{}@\n\r') or font.getlength(value)>96-x:
+            for x, baseline, value in [(0, config.baseline, title)]+[(config.inset, config.content_baseline+i*config.line_step, p) for i,p in enumerate(parts)]:
+                if any(c in value for c in '{}@\n\r') or font.getlength(value)>config.width-x:
                     raise ValueError('Unsupported or oversized orange panel: '+label)
                 layout.append(value, x=x, baseline=baseline)
             data = encode_2bpp(layout.image)
             symbol = 'ZhOrange'+kind+str(index)
             lines.append(' dw '+symbol)
-            bodies += [symbol+':', ' db '+','.join(map(str,data))]
+            bodies += surface(symbol,data,config.width,config.height)
     terms = json.loads(terms_path.read_text())
     locations = re.findall(r'^\s*landmark[^\n]*, (\w+)\s*$', (source/'data/maps/landmarks.asm').read_text(), re.M)
-    for kind, path, labels, width in [
-        ('Time', 'engine/rtc/timeset.asm', ['EVE_String', 'MORN_String', 'DAY_String', 'NITE_String'], 24),
-        ('Location', 'data/maps/landmarks.asm', locations, 120),
+    for kind, path, labels in [
+        ('Time', 'engine/rtc/timeset.asm', ['EVE_String', 'MORN_String', 'DAY_String', 'NITE_String']),
+        ('Location', 'data/maps/landmarks.asm', locations),
     ]:
+        config=region(language, "summary.orange." + kind.lower())
         lines.append('ZhOrange'+kind+'Table::')
         for index, label in enumerate(labels):
             text = translated(path, label)
@@ -63,23 +74,24 @@ def generate(source, language, font_path, terms_path):
             if not text:
                 lines.append(' dw 0')
                 continue
-            if any(c in text for c in '{}@\n\r') or font.getlength(text)>width:
+            if any(c in text for c in '{}@\n\r') or font.getlength(text)>config.width:
                 raise ValueError('Oversized encounter text: '+label)
-            data=encode_2bpp(text_image(font,text,width))
+            data=encode_2bpp(config.layout(font).append(text).image)
             symbol='ZhOrange'+kind+str(index)
-            lines.append(' dw '+symbol);bodies += [symbol+':', ' db '+','.join(map(str,data))]
-    for kind, key, width, inset in [
-        ('LevelPrefix', 'met_level_prefix', 48, 0),
-        ('LevelSuffix', 'level_suffix', 16, 2),
+            lines.append(' dw '+symbol);bodies += surface(symbol,data,config.width,config.height)
+    for kind, key, slot in [
+        ('LevelPrefix', 'met_level_prefix', "level_prefix"),
+        ('LevelSuffix', 'level_suffix', "level_suffix"),
     ]:
+        config=region(language, "summary.orange." + slot)
         text=terms.get(key, '')
         lines.append('DEF ZH_ORANGE_'+kind.upper()+' EQU '+str(int(bool(text))))
         if not text:continue
-        if any(c in text for c in '{}@\n\r') or font.getlength(text)>width-inset:
+        if any(c in text for c in '{}@\n\r') or font.getlength(text)>config.width-config.inset:
             raise ValueError('Oversized orange level text: '+key)
-        layout=TextLayout(font,width).append(text,x=inset)
+        layout=config.layout(font).append(text,x=config.inset)
         data=encode_2bpp(layout.image)
-        bodies += ['ZhOrange'+kind+'Tiles:', ' db '+','.join(map(str,data))]
+        bodies += surface('ZhOrange'+kind+'Tiles',data,config.width,config.height)
     prefix_width=int(round(font.getlength(terms.get('met_level_prefix', ''))))
     digit_x=(8+prefix_width+7)//8
     if digit_x+3>=20:raise ValueError('Orange level line exceeds display area')

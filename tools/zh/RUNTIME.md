@@ -6,12 +6,22 @@ provide a local Fusion Pixel 12px TTF and its license directory.
 
 The shared text dispatcher imports bounded dialogue spans without map-specific
 hooks. It supports validated RAM names and continuation scrolling. Unsupported
-controls or changed source hashes fail before insertion. Choice-menu retention
-and Chinese player-name input remain outside this interface.
+controls or changed source hashes fail before insertion. Window and temporary
+map backups retain strip keys and rebuild cached references on restoration.
+Chinese player-name input remains outside this interface.
+
+Fixed dialogue and battle move names compile to paired 4px strips consumed by
+PlaceString. Uploads complete before tile/attribute publication. Standard font
+reloads invalidate cache mappings. The former two-line lease and full-line
+uploader have been removed. Summary, party and HUD text consumers now use the
+same cache through PlaceString. Build-composed 8x16 blocks retain nonstandard
+baselines and compact name spacing; their ROM address is a recoverable cache
+key, not a fixed VRAM destination. This does not establish final layout or
+all-scene capacity validation.
 
 Battle display is independent of saved nicknames. Translated default names are
 matched against the original 10-byte nickname, rasterized at build time, and
-displayed in dedicated VRAM tiles. Custom nicknames retain legacy rendering.
+displayed through the shared cache. Custom nicknames retain legacy rendering.
 Player names use up to five 12px glyphs at 11px advance, with gender and
 level on the same band; status is left of HP numbers. Shiny indicators retain
 the original HP palette and sit left of each HP bar. Enemy names expand left

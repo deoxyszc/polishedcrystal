@@ -34,24 +34,7 @@ ZhDrawBattleName::
  pop bc
  ld a,[hli]
  ld [wZhHudWidth],a
- add a
- ld c,a
- ld d,h
- ld e,l
- ldh a,[rVBK]
- push af
- ld a,1
- ldh [rVBK],a
- ld a,[wZhHudSide]
- and a
- ld hl,$8ca0
- jr z,.upload
- ld hl,$8de0
-.upload
- ld b,BANK(ZhBattleNameTable)
- call Get2bpp
- pop af
- ldh [rVBK],a
+ push hl
  ld a,[wZhHudSide]
  and a
  jr nz,.enemyPosition
@@ -62,32 +45,28 @@ ZhDrawBattleName::
  ld e,a
  ld d,$ff
  add hl,de
- ld a,$ca
  jr .place
 .enemyPosition
  ld a,[wZhHudWidth]
  call ZhEnemyNameStart
  hlcoord 0,0
  add hl,de
- ld a,$de
 .place
- ld b,2
-.row
+ pop de
  push hl
- ld c,a
- ld a,[wZhHudWidth]
- ld e,a
- ld a,c
-.tile
- ld [hli],a
- inc a
- dec e
- jr nz,.tile
+ push de
+ ldh a,[rWBK]
+ push af
+ ld a,BANK(wZhCacheKeys)
+ ldh [rWBK],a
+ call ZhEnterFontText
+ call ZhGlyphCacheRecover
+ pop af
+ ldh [rWBK],a
+ pop de
  pop hl
- ld de,SCREEN_WIDTH
- add hl,de
- dec b
- jr nz,.row
+ ld a,BANK(ZhBattleNameTable)
+ call FarString
  ld a,[wZhHudSide]
  and a
  ld a,[wZhHudWidth]
@@ -171,11 +150,11 @@ ZhBattleNameAttributes::
  and a
  ret z
  ld c,a
- ld b,2
+ ld b,ZH_REGION_BATTLE_NAME_ROWS
 .row
  push hl
  push bc
- ld a,$0f
+ ld a,PAL_BATTLE_BG_TEXT
 .col
  ld [hli],a
  dec c

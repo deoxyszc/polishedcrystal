@@ -4,6 +4,8 @@ ROOT=Path(__file__).resolve().parents[3];sys.path[:0]=[str(ROOT/'tools/zh'),str(
 import import_dialogue,messages,worksheet
 with tempfile.TemporaryDirectory() as temp:
  root=Path(temp);(root/'maps').mkdir();(root/'data/zh').mkdir(parents=True)
+ (root/'constants').mkdir()
+ (root/'constants/charmap.asm').write_text((ROOT/'constants/charmap.asm').read_text())
  original='Script:'+chr(10)+' jumptext UnexpectedLabel'+chr(10)+'UnexpectedLabel:'+chr(10)+' text '+chr(34)+'Hello'+chr(34)+chr(10)+' done'+chr(10)
  (root/'maps/Fresh.asm').write_text(original);(root/'main.asm').write_text('INCLUDE '+chr(34)+'engine/zh/dialogue.asm'+chr(34)+chr(10))
  rows=messages.build(root,'normal')[0];worksheet.export(rows,root/'translations.csv',['zh-Hans'])

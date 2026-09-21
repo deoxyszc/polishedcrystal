@@ -1,5 +1,6 @@
 import csv,hashlib,re,sys,json
 import encode
+import cache_text
 def segments(text):
  result=[];width=0
  for token in re.split(r'(<PLAYER>|[{][^}]+[}])',text):
@@ -20,6 +21,7 @@ def segments(text):
 def apply(source,language,manifest):
  sys.path.insert(0,str(source/'tools/i18n'));import messages
  authority={r['id']:r for r in messages.build(source,'normal')[0]}
+ charmap=cache_text.load_charmap(source)
  glyphs=encode.load_glyphs(manifest);outputs=[];edits={};nl=chr(10);seen=set()
  with (source/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
   for row in csv.DictReader(f):
@@ -45,7 +47,7 @@ def apply(source,language,manifest):
     if any(line.strip() and not line.lstrip().startswith(';') and original['source_line']+i not in allowed for i,line in enumerate(raw)):raise ValueError('Mixed source span')
    if re.findall(r'<PLAYER>|[{][^}]+[}]',text)!=re.findall(r'<PLAYER>|[{][^}]+[}]',row['original']):raise ValueError('Control signature changed')
    entry='ZhText_'+hashlib.sha256(row['id'].encode()).hexdigest()[:16]
-   body=encode.encode_segments(segments(text),glyphs,'rom_dialogue')
+   body=cache_text.compile_segments(segments(text),glyphs,charmap)
    outputs.append(nl.join([entry+'::',body,entry+'End::']))
    replacement=nl.join([' stop_compressing_text',' db ZH_STREAM_COMMAND',' dw '+entry+', '+entry+'End',' assert BANK('+entry+') == $80',''])
    edits.setdefault(row['source_path'],[]).append((original['source_line']-1,original['source_end_line'],replacement))

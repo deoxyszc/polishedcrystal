@@ -185,6 +185,17 @@ NextChar::
 PlaceNextChar::
 	; charmap order: commands, then ngrams, then specials, then literals
 	ld a, [de]
+if DEF(LOCALE_ZH)
+	cp ZH_PAIR_COMMAND
+	jr nz, .legacy
+	ldh a, [hROMBank]
+	farcall ZhPlaceEncodedPair
+	ld a, ERR_WINDOW_OVERFLOW
+	jmp c, Crash
+	call PrintLetterDelay
+	jr PlaceNextChar
+.legacy
+endc
 	cp BATTLEEXTRA_GFX_START
 	jr nc, _PlaceLiteralChar
 	cp SPECIALS_START
@@ -272,13 +283,21 @@ HandleLineBreak:
 	pop hl
 	add hl, bc
 	push hl
+if DEF(LOCALE_ZH)
+	jp NextChar
+else
 	jr NextChar
+endc
 
 LineChar::
 	pop hl
 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
 	push hl
+if DEF(LOCALE_ZH)
+	jp NextChar
+else
 	jr NextChar
+endc
 
 ContText::
 	ld a, [wTextboxFlags]

@@ -1,14 +1,12 @@
 """Compile translated summary move names indexed by the original move IDs."""
 import csv
-import subprocess
 from PIL import ImageFont
-from text_layout import text_image, encode_2bpp
+from text_layout import encode_2bpp
+from suite_layout import region
+from cache_text import surface_asm
 
 def generate(source,language,font_path):
- subprocess.run(['make','gfx/font/normal.1bpp'],cwd=source,check=True)
- glyph=(source/'gfx/font/normal.1bpp').read_bytes()[0x57*8:0x58*8]
- middle=bytes(((v<<4)|(v>>4))&255 for v in glyph)
- (source/'gfx/zh/summary_pp.1bpp').write_bytes(bytes(v&15 for v in middle)+middle+bytes(v&240 for v in middle))
+ config=region(language, "summary.move")
  with (source/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
   rows=sorted((r for r in csv.DictReader(f) if r['source_path']=='data/moves/names.asm'),key=lambda r:int(r['id'].rsplit('::',1)[1]))
  font=ImageFont.truetype(str(font_path),12)
@@ -16,10 +14,10 @@ def generate(source,language,font_path):
  for index,row in enumerate(rows,1):
   text=row.get('translation_'+language,'').replace('{li}','').strip()
   if not text:table.append(' db 0,0,0');continue
-  if font.getlength(text)>64 or any(c in text for c in '{}@\n\r'):raise ValueError('Summary move exceeds 64px: '+row['id'])
-  data=encode_2bpp(text_image(font,text,64,baseline=10))
+  if font.getlength(text)>config.width or any(c in text for c in '{}@\n\r'):raise ValueError('Summary move exceeds configured width: '+row['id'])
+  data=encode_2bpp(config.layout(font).append(text).image)
   label='ZhSummaryMove'+str(index)
   table+=[' db BANK('+label+')',' dw '+label]
-  assets+=['SECTION "Summary move '+str(index)+'", ROMX',label+'::',' db '+','.join(map(str,data))]
+  assets+=['SECTION "Summary move '+str(index)+'", ROMX']+surface_asm(data,config.width,config.height,label)
  (source/'data/zh/summary_moves.asm').write_text('\n'.join(table)+'\n')
  (source/'data/zh/summary_move_assets.asm').write_text('\n'.join(assets)+'\n')

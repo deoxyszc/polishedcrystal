@@ -1,68 +1,51 @@
-; Public bounded dialogue entry. Caller must open the standard textbox first.
-; HL=start, DE=exclusive end, both mapped in this bank; carry reports failure.
-; Restores WRAM bank. Overworld final text remains until its owner closes it.
+; Dialogue uses bank0 font area; numbers, <LV>, symbols and borders stay static.
+; Caller opens textbox and loads its font before this entry.
 ZhShowDialogue::
- ld a,l
- ld [wZhEntryStart],a
- ld a,h
- ld [wZhEntryStart+1],a
- ld a,e
- ld [wZhEntryEnd],a
- ld a,d
- ld [wZhEntryEnd+1],a
- ldh a,[rWBK]
+ push hl
+ push de
+ call ZhHidePage
+ call ApplyAttrAndTilemapInVBlank
+ ldh a, [rWBK]
  push af
- ld a,BANK(wBattleMode)
- ldh [rWBK],a
- ld a,[wBattleMode]
- and a
- ld a,1
- jr z,.modeReady
- xor a
-.modeReady
- ld b,a
- ld a,BANK(wZhLineBuffer)
- ldh [rWBK],a
- ld a,b
- ld [wZhDisplayMode],a
- call ZhLeaseAcquire
- jr c,.restore
- ld a,[wZhEntryStart]
- ld l,a
- ld a,[wZhEntryStart+1]
- ld h,a
- ld a,[wZhEntryEnd]
- ld e,a
- ld a,[wZhEntryEnd+1]
- ld d,a
+ ld a, BANK(wZhCacheKeys)
+ ldh [rWBK], a
+ call ZhEnterFontText
+ ; Preserve other visible font cells until their owners remove them.
+ call ZhGlyphCacheRecover
+ pop af
+ ldh [rWBK], a
+ pop de
+ pop hl
  call ZhRunText
  push af
- jr c,.abort
- ld a,[wZhDisplayMode]
- and a
- jr nz,.release
- ; PROMPT already waited inside ZhRunText; DONE waits here in battle.
- ld a,[wZhTextControl]
- cp ZH_CTRL_PROMPT
- call nz,WaitButton
- call ZhLeaseClearPage
  call ApplyAttrAndTilemapInVBlank
- jr .release
-.abort
- call ZhLeaseAbort
-.release
- call ZhLeaseRelease
+ ldh a, [rWBK]
+ push af
+ ld a, BANK(wBattleMode)
+ ldh [rWBK], a
+ ld a, [wBattleMode]
+ ld b, a
  pop af
-.restore
- ld b,a
- ld c,0
- jr nc,.noError
- inc c
-.noError
- pop af
- ldh [rWBK],a
- ld a,c
+ ldh [rWBK], a
+ ld a, b
  and a
- ret z
- scf
+ jr z, .done
+ ld a, [wZhTextControl]
+ cp ZH_CTRL_PROMPT
+ call nz, WaitButton
+ call ZhHidePage
+ call ApplyAttrAndTilemapInVBlank
+.done
+ pop af
+ ret
+
+; Keep keys for surviving parent windows. Only a font reload starts a new
+; epoch; another dialogue/menu must not erase metadata for visible glyphs.
+ZhEnterFontText::
+ ld a, [wZhPolicy]
+ and a
+ ld a, ZH_VRAM_BANK0_ONLY
+ jp z, ZhGlyphCacheInit
+ ld [wZhPolicy], a
+ and a
  ret

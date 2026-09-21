@@ -26,6 +26,9 @@ SummaryScreenInit:
 	call ClearPalettes
 	call ClearTileMap
 	farcall WipeAttrMap
+if DEF(LOCALE_ZH)
+ farcall ZhSummaryCacheEnter
+endc
 
 	; "Scroll" the tilemap destination to write a 19th row of blank tiles below the generally visible area
 	; This portion is visible due to hblank rWY scrolling
@@ -104,6 +107,9 @@ SummaryScreenInit:
 	; Enter loop
 	call SummaryScreenLoop
 	; Clean up
+if DEF(LOCALE_ZH)
+ farcall ZhSummaryCacheLeave
+endc
 
 	call ClearSprites
 	call ClearBGPalettes
@@ -363,10 +369,7 @@ SummaryScreen_InitMon:
 	ret
 
 SummaryScreen_InitLayout:
-if DEF(LOCALE_ZH)
- xor a
- ld [wZhSummaryMovesActive],a
-endc
+
 	call .PlaceHPBar
 
 	ld hl, .PageSprites
@@ -535,22 +538,7 @@ ld a, [wCurPartySpecies]
 	ldh [hCGBPalUpdate], a
 	call .ClearBox
 if DEF(LOCALE_ZH)
- ; Reset translated lower-panel tile-bank attributes on every page.
- ; The translated move list borrows the standard font tiles in bank 0.
- ; Restore on departure, before any destination (including eggs) draws.
- ld a,[wZhSummaryMovesActive]
- and a
- jr z,.fontReady
- xor a
- ld [wZhSummaryMovesActive],a
- ldh a,[rVBK]
- push af
- xor a
- ldh [rVBK],a
- call LoadStandardFont
- pop af
- ldh [rVBK],a
-.fontReady
+ ; Reset lower-panel attributes before the shared text pass.
  hlcoord 0,13,wAttrmap
  ld bc,5 * SCREEN_WIDTH
  xor a
@@ -869,15 +857,7 @@ if DEF(LOCALE_ZH)
  ld a,[wTempMonIsEgg]
  bit MON_IS_EGG_F,a
  jr nz,.nativeDescriptionScroll
- ld a,[wZhSummaryMovesActive]
- and a
- jr z,.checkItemScroll
- ld hl,.GreenMoveListInterrupts
- ld a,[wZhItemDescriptionActive]
- and a
- jr z,.nativeDescriptionScroll
- ld hl,.GreenMoveListTranslatedInterrupts
- jr .nativeDescriptionScroll
+
 .checkItemScroll
  ld a,[wZhItemDescriptionActive]
  and a
@@ -993,15 +973,6 @@ endc
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
 if DEF(LOCALE_ZH)
-.GreenMoveListInterrupts:
- db 15,SUMMARY_LCD_SHOW_WINDOW
- db 91,SUMMARY_LCD_HIDE_WINDOW
- db 127,SUMMARY_LCD_SCROLL_BACKGROUND
- db -1
-.GreenMoveListTranslatedInterrupts:
- db 15,SUMMARY_LCD_SHOW_WINDOW
- db 91,SUMMARY_LCD_HIDE_WINDOW
- db -1
 .GreenTranslatedInterrupts:
  db 22, SUMMARY_LCD_SHOW_WINDOW
  db 31, SUMMARY_LCD_HIDE_WINDOW

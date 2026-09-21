@@ -60,54 +60,7 @@ ZhPartyLayout::
  pop af
  ld [hl],a
  pop hl
- ld d,h
- ld e,l
- ; Preserve the last occupied name's lower-left tile for cancel compositing.
- push hl
- push de
- ld a,[wZhPartyWidth]
- swap a
- ld e,a
- ld d,0
- add hl,de
- ld de,wZhPartyBottom
- ld bc,16
- ld a,BANK(ZhPartyNameTable)
- call FarCopyBytes
- pop de
- pop hl
- push de
- ; One independent 14-tile allocation per occupied party slot.
- ld a,[wZhPartyIndex]
- ld b,a
- add a
- add b
- add a
- add a
- add b
- add b
- add $80
- ld [wZhPartyTile],a
- ld l,a
- ld h,0
- add hl,hl
- add hl,hl
- add hl,hl
- add hl,hl
- ld bc,$8000
- add hl,bc
- pop de
- ldh a,[rVBK]
- push af
- ld a,1
- ldh [rVBK],a
- ld a,[wZhPartyWidth]
- add a
- ld c,a
- ld b,BANK(ZhPartyNameTable)
- call Get2bpp
- pop af
- ldh [rVBK],a
+ push hl ; compiled name stream
  ; Keep original HP digits at x13. Move original gender and level before
  ; clearing the name band; no reconstructed or external metadata.
  call .coord
@@ -168,32 +121,21 @@ ZhPartyLayout::
  ld [hl],a
  call ZhPartyStatus
  call .coord
- ld a,[wZhPartyTile]
- ld b,2
-.row
+ pop de
  push hl
- ld c,a
- ld a,[wZhPartyWidth]
- ld e,a
- ld a,c
-.tile
- ld [hli],a
- inc a
- dec e
- jr nz,.tile
+ push de
+ ldh a,[rWBK]
+ push af
+ ld a,BANK(wZhCacheKeys)
+ ldh [rWBK],a
+ call ZhEnterFontText
+ call ZhGlyphCacheRecover
+ pop af
+ ldh [rWBK],a
+ pop de
  pop hl
- ld de,SCREEN_WIDTH
- add hl,de
- dec b
- jr nz,.row
- call .coord
- ld bc,wAttrmap-wTilemap
- add hl,bc
- ld a,[wZhPartyWidth]
- ld c,a
- ld b,2
- ld a,8
- call FillBoxWithByte
+ ld a,BANK(ZhPartyNameTable)
+ call FarString
  call .coord
  ld bc,wAttrmap-wTilemap + 7
  add hl,bc
@@ -240,7 +182,7 @@ ZhPartyAttributes::
  push hl
  push de
  ld c,a
- ld b,2
+ ld b,ZH_REGION_PARTY_NAME_ROWS
  push bc
  hlcoord 3,1,wAttrmap
  ld a,d
@@ -248,7 +190,7 @@ ZhPartyAttributes::
  rst AddNTimes
  pop bc
  push hl
- ld a,8
+ xor a
  call FillBoxWithByte
  pop hl
  ld bc,7
@@ -276,193 +218,46 @@ ZhPartyFooter::
  ld a,[wPartyMenuActionText]
  and a
  ret nz
-if ZH_PARTY_PROMPT
- ldh a,[rVBK]
- push af
- ld a,1
- ldh [rVBK],a
- ld hl,$9000
- ld de,ZhPartyPromptTiles
- ld b,BANK(ZhPartyPromptTiles)
- ld c,36
- call Get2bpp
- pop af
- ldh [rVBK],a
  hlcoord 1,15
- xor a
- ld b,2
-.promptRow
- ld c,18
-.promptTile
- ld [hli],a
- inc a
- dec c
- jr nz,.promptTile
- inc hl
- inc hl
- dec b
- jr nz,.promptRow
-endc
-if ZH_PARTY_CANCEL
- ld a,[wPartyCount]
- and a
- jp z,.attrs
- ld hl,ZhPartyCancelTiles
- ld de,wZhPartyCancelBuffer
- ld bc,144
- rst CopyBytes
- ; If the last name is untranslated, preserve its actual legacy tile.
- ld a,[wPartyCount]
- dec a
- ld e,a
- ld d,0
- ld hl,wZhPartyWidths
- add hl,de
- ld a,[hl]
- and a
- jr nz,.translatedBottom
- call .cancelCoord
- inc hl
- inc hl
- ld a,[hl]
- cp $80
- jr c,.noName
- cp $f2
- jr nc,.noName
- sub $80
- ld l,a
- ld h,0
- add hl,hl
- add hl,hl
- add hl,hl
- ld bc,FontNormal
- add hl,bc
- ld de,wZhPartyBottom
- ld c,8
-.legacyBottom
- ld a,BANK(FontNormal)
- call GetFarByte
- inc hl
- ld [de],a
- inc de
- ld [de],a
- inc de
- dec c
- jr nz,.legacyBottom
-.translatedBottom
- ld hl,wZhPartyBottom
- ld de,wZhPartyCancelBuffer + 32
- ld b,16
-.mergeName
- ld a,[de]
- or [hl]
- inc hl
- ld [de],a
- inc de
- dec b
- jr nz,.mergeName
-.noName
- ; At six members the third tile row shares the original frame top edge.
- ld a,[wPartyCount]
- cp 6
- jr nz,.uploadCancel
- ld a,[wTextboxFrame]
- ld hl,Frames + 8
- ld bc,TEXTBOX_FRAME_TILES * 8
- rst AddNTimes
- ld de,wZhPartyCancelBuffer + 96
- ld c,3
-.frameTile
- push hl
- ld b,8
-.frameRow
- ld a,BANK(Frames)
- call GetFarByte
- inc hl
- push bc
- ld b,a
- ld a,[de]
- or b
- ld [de],a
- inc de
- ld a,[de]
- or b
- ld [de],a
- inc de
- pop bc
- dec b
- jr nz,.frameRow
- pop hl
- dec c
- jr nz,.frameTile
-.uploadCancel
- ldh a,[rVBK]
- push af
- ld a,1
- ldh [rVBK],a
- ld hl,$8d40
- ld de,wZhPartyCancelBuffer
- ld b,BANK(@)
- ld c,9
- call Get2bpp
- pop af
- ldh [rVBK],a
- call .cancelCoord
- ld bc,SCREEN_WIDTH
- add hl,bc
- push hl
- ld bc,6
- ld a,$7f
- rst ByteFill
- pop hl
- ld bc,-SCREEN_WIDTH
- add hl,bc
- ld a,$d4
- ld b,3
-.cancelRow
- ld c,3
-.cancelTile
- ld [hli],a
- inc a
- dec c
- jr nz,.cancelTile
- ld de,SCREEN_WIDTH-3
- add hl,de
- dec b
- jr nz,.cancelRow
-endc
-.attrs
- call ZhPartyFooterAttrs
- jp ApplyAttrAndTilemapInVBlank
-.cancelCoord
- hlcoord 1,0
- ld a,[wPartyCount]
- ld bc,2 * SCREEN_WIDTH
- rst AddNTimes
- ret
-
-ZhPartyFooterAttrs::
- ld a,[wPartyMenuActionText]
- and a
- ret nz
-if ZH_PARTY_PROMPT
+ lb bc,2,18
+ call ClearBox
  hlcoord 1,15,wAttrmap
  lb bc,2,18
- ld a,8
+ xor a
  call FillBoxWithByte
-endc
-if ZH_PARTY_CANCEL
+ call ApplyAttrAndTilemapInVBlank
+ ldh a,[rWBK]
+ push af
+ ld a,BANK(wZhCacheKeys)
+ ldh [rWBK],a
+ call ZhEnterFontText
+ call ZhGlyphCacheRecover
+ pop af
+ ldh [rWBK],a
+ hlcoord 1,15
+ ld de,ZhPartyPromptText
+ ld a,BANK(ZhPartyPromptText)
+ call FarString
+ hlcoord 1,1
  ld a,[wPartyCount]
- and a
- ret z
- hlcoord 1,0,wAttrmap
  ld bc,2 * SCREEN_WIDTH
  rst AddNTimes
- lb bc,3,3
- ld a,8
+ push hl
+ push hl
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ lb bc,2,6
+ xor a
  call FillBoxWithByte
-endc
- ret
+ pop hl
+ lb bc,2,6
+ call ClearBox
+ pop hl
+ ld de,ZhPartyCancelText
+ ld a,BANK(ZhPartyCancelText)
+ call FarString
+ jp ApplyAttrAndTilemapInVBlank
+
 
 ; Reuse the native battle icon and status resolver. Six slots share three
 ; palettes, with alternating slots using color 1 or color 2.

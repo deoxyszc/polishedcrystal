@@ -1,21 +1,23 @@
 """Generate opt-in summary UI assets from caller-supplied terminology."""
 import json
-import subprocess
 from PIL import Image, ImageDraw, ImageFont
-from text_layout import TextLayout, text_image, encode_2bpp
+from text_layout import encode_2bpp
+from suite_layout import region
+from cache_text import surface_asm
 
-def generate(source, font_path, terms_path):
+def generate(source, font_path, terms_path, *, language):
     terms=json.loads(terms_path.read_text())
     labels=[terms[k] for k in ('hp','attack','defense','special_attack','special_defense','speed')]
     title=terms['ability']
     font=ImageFont.truetype(str(font_path),12)
     def label(text):
-        if font.getlength(text)>24: raise ValueError('Summary label exceeds24px: '+text)
-        return text_image(font,text,24)
+        return region(language, "summary.label").layout(font).append(text).image
     encode = encode_2bpp
     out=source/'gfx/zh';out.mkdir(exist_ok=True)
-    (out/'levelup.2bpp').write_bytes(b''.join(encode(label(t)) for t in labels))
-    (out/'summary_labels.2bpp').write_bytes(b''.join(encode(label(t)) for t in labels[1:]))
+    compiled=[]
+    for index,value in enumerate(labels):
+        compiled += surface_asm(encode(label(value)),24,16,"ZhStatLabel"+str(index))
+    (source/"data/zh/stat_labels.asm").write_text(chr(10).join(compiled)+chr(10))
     glyph=label(title)
     im=Image.new('P',(40,24),1);d=ImageDraw.Draw(im)
     d.rectangle((2,9,37,19),fill=0);d.rectangle((0,21,39,23),fill=0)
@@ -27,6 +29,7 @@ def generate(source, font_path, terms_path):
         for x in range(24):
             if glyph.getpixel((x,y)):im.putpixel((x+8,y+8),3)
     (out/'ability_tab.2bpp').write_bytes(encode(im))
+    tabs=surface_asm(encode(im),40,24,"ZhAbilityTabText")
     if terms.get('item'):
         item=tab_background.copy()
         glyph=label(terms['item'])
@@ -34,53 +37,19 @@ def generate(source, font_path, terms_path):
             for x in range(24):
                 if glyph.getpixel((x,y)):item.putpixel((x+8,y+8),3)
         (out/'item_tab.2bpp').write_bytes(encode(item))
+        tabs+=surface_asm(encode(item.crop((0,8,40,24))),40,16,"ZhItemTabText")
     if terms.get('experience'):
         exp=tab_background.copy();glyph=label(terms['experience'])
         for y in range(16):
             for x in range(24):
                 if glyph.getpixel((x,y)):exp.putpixel((x+8,y+8),3)
         (out/'experience_tab.2bpp').write_bytes(encode(exp))
+        tabs+=surface_asm(encode(exp.crop((0,8,40,24))),40,16,"ZhPinkTabText")
     if terms.get('encounter'):
         exp=tab_background.copy();glyph=label(terms['encounter'])
         for y in range(16):
             for x in range(24):
                 if glyph.getpixel((x,y)):exp.putpixel((x+8,y+8),3)
         (out/'encounter_tab.2bpp').write_bytes(encode(exp))
-    subprocess.run(['make', 'gfx/font/normal.1bpp'], cwd=source, check=True)
-    raw=(source/'gfx/font/normal.1bpp').read_bytes();data=bytearray()
-    for code in list(range(0xe0,0xea))+[0xde,0x7f]:
-        rows=bytes(4)+(raw[(code-0x80)*8:(code-0x80)*8+8] if code!=0x7f else bytes(8))+bytes(4)
-        for v in rows:data.extend((v,v))
-    (out/'level_digits.2bpp').write_bytes(data)
-    digits=bytearray()
-    for half in range(2):
-        for digit in range(10):
-            pixels=bytes(4)+raw[(0x60+digit)*8:(0x61+digit)*8]+bytes(4)
-            for value in pixels[half*8:half*8+8]:digits.extend((value,value))
-    (out/'summary_digits.2bpp').write_bytes(digits)
-    # Alternate stat panel: 96x64, original-width digits below each label.
-    panel_layout=TextLayout(font,96,64);panel=panel_layout.image
-    for i,text in enumerate(labels[1:]):
-        panel_layout.append(text,x=(i%2)*48,baseline=12+(i//2)*20)
-    (out/'summary_two_line.2bpp').write_bytes(encode(panel.convert('L').point(lambda v: 2 if v else 0)))
-    shifted=bytearray()
-    for offset in (6,2):
-        for code in range(10):
-            rows=bytes(offset)+raw[(0x60+code)*8:(0x61+code)*8]+bytes(8-offset)
-            for v in rows:shifted.extend((v,v))
-    (out/'summary_shift_digits.2bpp').write_bytes(shifted)
-    subprocess.run(['make','gfx/stats/summary.2bpp'],cwd=source,check=True)
-    marker=(source/'gfx/stats/summary.2bpp').read_bytes()[12*16:13*16]
-    panel_path=out/'summary_two_line.2bpp'
-    pixels=bytearray(panel_path.read_bytes())
-    edge=(source/'gfx/stats/summary.2bpp').read_bytes()[4*16+14:4*16+16]
-    # Original edge ink uses dedicated black color 2, never nature color 3.
-    edge=bytes((0,edge[1]))
-    for x in range(12):pixels[(7*12+x)*16+14:(7*12+x)*16+16]=edge
-    panel_path.write_bytes(pixels)
-    (out/'summary_shift_marker.2bpp').write_bytes(
-        bytes(12)+marker+bytes(4)+bytes(4)+marker+bytes(12))
-
-    corner=bytearray((source/'gfx/stats/summary.2bpp').read_bytes()[32:48])
-    # Keep the original corner unchanged.
-    (out/'summary_corner.2bpp').write_bytes(corner)
+        tabs+=surface_asm(encode(exp.crop((0,8,40,24))),40,16,"ZhOrangeTabText")
+    (source/"data/zh/summary_tabs.asm").write_text(chr(10).join(tabs)+chr(10))

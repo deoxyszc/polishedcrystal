@@ -15,8 +15,6 @@ class TextStyle:
 
 
 DEFAULT = TextStyle()
-NAME = TextStyle(baseline=10)
-DENSE_DESCRIPTION = TextStyle(baseline=16, line_step=13)
 
 
 class TextLayout:

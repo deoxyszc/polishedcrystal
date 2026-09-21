@@ -546,10 +546,19 @@ _PushWindow::
 	ld h, [hl]
 	ld l, a
 	set 0, [hl]
+if DEF(LOCALE_ZH)
+	call GetTileBackupMenuBoxDims
+	farcall ZhWindowCheckSpace
+	ld a, ERR_WINDOW_OVERFLOW
+	jmp c, Crash
+	call PushWindow_MenuBoxCoordToTile
+	call .copy
+else
 	call PushWindow_MenuBoxCoordToTile
 	call .copy
 	call PushWindow_MenuBoxCoordToAttr
 	call .copy
+endc
 	jr .done
 
 .not_bit_6
@@ -594,9 +603,14 @@ _PushWindow::
 	push hl
 
 .col
+if DEF(LOCALE_ZH)
+	farcall ZhWindowBackupCell
+	inc hl
+else
 	ld a, [hli]
 	ld [de], a
 	dec de
+endc
 	dec c
 	jr nz, .col
 
@@ -632,8 +646,10 @@ PushWindow_MenuBoxCoordToAbsolute:
 
 RestoreTileBackup::
 	call PushWindow_MenuBoxCoordToTile
+if !DEF(LOCALE_ZH)
 	call .copy
 	call PushWindow_MenuBoxCoordToAttr
+endc
 	; fallthrough
 
 .copy
@@ -644,9 +660,16 @@ RestoreTileBackup::
 	push hl
 
 .col
+if DEF(LOCALE_ZH)
+	farcall ZhWindowRestoreCell
+	ld a, ERR_WINDOW_UNDERFLOW
+	jmp c, Crash
+	inc hl
+else
 	ld a, [de]
 	ld [hli], a
 	dec de
+endc
 	dec c
 	jr nz, .col
 
