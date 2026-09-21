@@ -1967,7 +1967,6 @@ wZhCachePixels:: ds 2 tiles
 wZhStripPixels:: ds 6
 wZhStripHalf:: db
 wZhBackupCell:: ds 6
-wZhSummaryCacheActive:: db
 SECTION "ZH temporary map keys", WRAMX
 wZhTempKeys:: ds SCREEN_AREA * 5
 endc

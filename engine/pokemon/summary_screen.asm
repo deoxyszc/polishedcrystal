@@ -26,9 +26,6 @@ SummaryScreenInit:
 	call ClearPalettes
 	call ClearTileMap
 	farcall WipeAttrMap
-if DEF(LOCALE_ZH)
- farcall ZhSummaryCacheEnter
-endc
 
 	; "Scroll" the tilemap destination to write a 19th row of blank tiles below the generally visible area
 	; This portion is visible due to hblank rWY scrolling
@@ -107,9 +104,6 @@ endc
 	; Enter loop
 	call SummaryScreenLoop
 	; Clean up
-if DEF(LOCALE_ZH)
- farcall ZhSummaryCacheLeave
-endc
 
 	call ClearSprites
 	call ClearBGPalettes
@@ -369,7 +363,6 @@ SummaryScreen_InitMon:
 	ret
 
 SummaryScreen_InitLayout:
-
 	call .PlaceHPBar
 
 	ld hl, .PageSprites
@@ -528,7 +521,7 @@ SummaryScreen_InitLayout:
 	db 108, 44, SUMMARY_TILE_OAM_TITLES + 3, $0
 
 SummaryScreen_LoadPage:
-ld a, [wCurPartySpecies]
+	ld a, [wCurPartySpecies]
 	ld [wTempSpecies], a
 	ld [wCurSpecies], a
 	xor a
@@ -537,62 +530,6 @@ ld a, [wCurPartySpecies]
 	ldh [hOAMUpdate], a
 	ldh [hCGBPalUpdate], a
 	call .ClearBox
-if DEF(LOCALE_ZH)
- ; Reset lower-panel attributes before the shared text pass.
- hlcoord 0,13,wAttrmap
- ld bc,5 * SCREEN_WIDTH
- xor a
- rst ByteFill
- ; Restore tab geometry before drawing each page.
- hlcoord 1,10
- lb bc,3,5
- call ClearBox
- hlcoord 1,11
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_CORNER
- hlcoord 5,11
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_CORNER
- hlcoord 1,12
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_INNER_CORNER
- hlcoord 5,12
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_INNER_CORNER
- hlcoord 2,11
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_B
- hlcoord 3,11
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_B
- hlcoord 4,11
- ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_B
- hlcoord 1,10,wAttrmap
- ld [hl],SUMMARY_PAL_POKEMON
- hlcoord 2,10,wAttrmap
- ld [hl],SUMMARY_PAL_POKEMON
- hlcoord 3,10,wAttrmap
- ld [hl],SUMMARY_PAL_POKEMON
- hlcoord 4,10,wAttrmap
- ld [hl],SUMMARY_PAL_POKEMON
- hlcoord 5,10,wAttrmap
- ld [hl],SUMMARY_PAL_POKEMON
- hlcoord 1,11,wAttrmap
- ld [hl],SUMMARY_PAL_SIDE_WINDOW
- hlcoord 2,11,wAttrmap
- ld [hl],OAM_YFLIP | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,11,wAttrmap
- ld [hl],OAM_YFLIP | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,11,wAttrmap
- ld [hl],OAM_YFLIP | SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,11,wAttrmap
- ld [hl],OAM_XFLIP | SUMMARY_PAL_SIDE_WINDOW
- hlcoord 1,12,wAttrmap
- ld [hl],SUMMARY_PAL_SIDE_WINDOW
- hlcoord 2,12,wAttrmap
- ld [hl],SUMMARY_PAL_LOWER_WINDOW
- hlcoord 3,12,wAttrmap
- ld [hl],SUMMARY_PAL_LOWER_WINDOW
- hlcoord 4,12,wAttrmap
- ld [hl],SUMMARY_PAL_LOWER_WINDOW
- hlcoord 5,12,wAttrmap
- ld [hl],OAM_XFLIP | SUMMARY_PAL_SIDE_WINDOW
-else
-endc
 	call .PlaceLevelAndGender
 	hlbgcoord 0, 0, wSummaryScreenWindowBuffer
 	ld a, 10
@@ -626,12 +563,6 @@ endc
 .frontpic_done
 	call SummaryScreen_SwitchPage
 	farcall HDMATransferTileMapToWRAMBank3
-if DEF(LOCALE_ZH)
- farcall HDMATransferAttrMapToWRAMBank3
- xor a
- ldh [rVBK],a
-else
-endc
 	ld a, 7 + 64
 	ldh [hWX], a
 	ld a, 16
@@ -665,13 +596,6 @@ endc
 
 .PlaceLevelAndGender:
 	; Clear item tiles
-if DEF(LOCALE_ZH)
- ; Translated tabs may use palette 2; only the item page owns that area.
- hlcoord 2,8,wAttrmap
- lb bc,3,3
- ld a,SUMMARY_PAL_POKEMON
- call FillBoxWithByte
-endc
 	hlcoord 2, 8
 	lb bc, 3, 3
 	call ClearBox
@@ -834,37 +758,6 @@ SummaryScreen_SwitchPage:
 	ld h, [hl]
 	ld l, b
 .egg
-if DEF(LOCALE_ZH)
- ld a,[wSummaryScreenFlags]
- and SUMMARY_FLAGS_PAGE_MASK
- cp SUMMARY_ORANGE_PAGE
- jr nz,.checkGreenPage
- ld a,[wTempMonIsEgg]
- bit MON_IS_EGG_F,a
- jr nz,.nativeDescriptionScroll
- ld a,[wZhOrangeActive]
- and a
- jr z,.nativeDescriptionScroll
- ld hl,.OrangeTranslatedInterrupts
- ld a,[wZhOrangeEncounterActive]
- and a
- jr z,.nativeDescriptionScroll
- ld hl,.OrangeFullTranslatedInterrupts
- jr .nativeDescriptionScroll
-.checkGreenPage
- cp SUMMARY_GREEN_PAGE
- jr nz,.nativeDescriptionScroll
- ld a,[wTempMonIsEgg]
- bit MON_IS_EGG_F,a
- jr nz,.nativeDescriptionScroll
-
-.checkItemScroll
- ld a,[wZhItemDescriptionActive]
- and a
- jr z,.nativeDescriptionScroll
- ld hl,.GreenTranslatedInterrupts
-.nativeDescriptionScroll
-endc
 	ld de, wSummaryScreenInterrupts
 	ld bc, 16 * 2
 	rst CopyBytes
@@ -920,11 +813,6 @@ endr
 	dw .OrangeInterrupts
 
 .PinkInterrupts:
-if DEF(LOCALE_ZH)
- db 15, SUMMARY_LCD_SHOW_WINDOW
- db 87, SUMMARY_LCD_HIDE_WINDOW
- db -1
-else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
 	db 31,  SUMMARY_LCD_SHOW_WINDOW
@@ -939,13 +827,7 @@ else
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
-endc
 .BlueInterrupts:
-if DEF(LOCALE_ZH)
- db 22, SUMMARY_LCD_SHOW_WINDOW
- db 95, SUMMARY_LCD_HIDE_WINDOW
- db -1
-else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW
 	db 35,  SUMMARY_LCD_SHOW_WINDOW
@@ -960,7 +842,6 @@ else
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
-endc
 .GreenInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW
@@ -972,29 +853,6 @@ endc
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
-if DEF(LOCALE_ZH)
-.GreenTranslatedInterrupts:
- db 22, SUMMARY_LCD_SHOW_WINDOW
- db 31, SUMMARY_LCD_HIDE_WINDOW
- db 35, SUMMARY_LCD_SHOW_WINDOW
- db 51, SUMMARY_LCD_HIDE_WINDOW
- db 55, SUMMARY_LCD_SHOW_WINDOW
- db 71, SUMMARY_LCD_HIDE_WINDOW
- db 75, SUMMARY_LCD_SHOW_WINDOW
- db 91, SUMMARY_LCD_HIDE_WINDOW
- db -1
-endc
-if DEF(LOCALE_ZH)
-.OrangeFullTranslatedInterrupts:
- db 15,SUMMARY_LCD_SHOW_WINDOW
- db 87,SUMMARY_LCD_HIDE_WINDOW
- db -1
-.OrangeTranslatedInterrupts:
- db 15,SUMMARY_LCD_SHOW_WINDOW
- db 87,SUMMARY_LCD_HIDE_WINDOW
- db 127,SUMMARY_LCD_SCROLL_BACKGROUND
- db -1
-endc
 .OrangeInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
@@ -1117,16 +975,6 @@ SummaryScreen_LoadTextboxSpaceGFX:
 
 ; a  = first tile
 SummaryScreen_UpdateTabTitle:
-if DEF(LOCALE_ZH)
- push af
- ld a,108
- ld [wSummaryScreenOAMSprite36YCoord],a
- ld [wSummaryScreenOAMSprite37YCoord],a
- ld [wSummaryScreenOAMSprite38YCoord],a
- ld [wSummaryScreenOAMSprite39YCoord],a
- pop af
-else
-endc
 	ld [wSummaryScreenOAMSprite36TileID], a
 	inc a
 	ld [wSummaryScreenOAMSprite37TileID], a

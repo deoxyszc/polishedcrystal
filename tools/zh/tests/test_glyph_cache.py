@@ -29,13 +29,11 @@ def main():
             "DEF wMenuBorderBottomCoord EQU $c901",
             "DEF wMenuBorderLeftCoord EQU $c902",
             "DEF wMenuBorderRightCoord EQU $c903",
-            "DEF wSummaryScreenWindowBuffer EQU $ca00",
             'SECTION "fill", ROM0[$28]', "ByteFill:", " jp Fill",
             'SECTION "header", ROM0[$100]', " nop", " jp Start",
             " ds $150 - @, 0", 'SECTION "code", ROM0[$150]',
             "Start:", " di", " ld sp, $dfff",
             " ld a, 1", " ldh [rWBK], a",
-            " xor a", " ld [wZhSummaryCacheActive], a",
             " ld a, ZH_VRAM_BOTH", " call ZhGlyphCacheInit",
             " ld bc, $1234", " ld de, $5678",
             " call ZhGlyphCacheAlloc", " ld [$c300], a",
@@ -59,10 +57,6 @@ def main():
             asm += [f" ld bc, {glyph_id}", f" ld hl, ${0xc400 + number * 64:04x}",
                     " call ZhRasterGlyph"]
         asm += [
-            " ld bc, $fe00", " ld de, Font", " call ZhComposeCacheBlock",
-            " ld hl, wZhCachePixels", " ld de, $c800", " ld b, 32",
-            ".compiledCopy", " ld a, [hli]", " ld [de], a", " inc de",
-            " dec b", " jr nz, .compiledCopy",
             " ld bc, 0", " ld de, 1536", " call ZhComposeCacheBlock",
             " call ZhGlyphCacheClear",
             " ld bc, 0",
@@ -106,23 +100,6 @@ def main():
             " call ZhRestoreTempMap",
             " ld a, [wTilemap]",
             " ld [$c30e], a",
-            " ld hl,wSummaryScreenWindowBuffer",
-            " ld bc,320",
-            " ld a,$7f",
-            " rst ByteFill",
-            " ld a,1",
-            " ld [wZhSummaryCacheActive],a",
-            " ld hl,wSummaryScreenWindowBuffer",
-            " ld de,PairText",
-            " xor a",
-            " call ZhPlaceEncodedPair",
-            " ld a,[wSummaryScreenWindowBuffer]",
-            " ld [$c30f],a",
-            " ld a,[wSummaryScreenWindowBuffer+32]",
-            " ld [$c310],a",
-            " call ZhGlyphCacheRecover",
-            " ld a,[wZhCacheUsed+1]",
-            " ld [$c311],a",
             " ld a, $42", " ld [$c304], a", ".halt", " jr .halt",
             "Fill:", " ld [hli], a", " dec bc", " push af",
             " ld a, b", " or c", " jr z, .done", " pop af", " jr Fill",
@@ -136,7 +113,6 @@ def main():
             'INCLUDE "engine/zh/glyph_cache.asm"',
             'INCLUDE "engine/zh/render.asm"',
             'INCLUDE "engine/zh/cache_render.asm"',
-            'INCLUDE "engine/zh/cache_summary.asm"',
             'INCLUDE "engine/zh/cache_backup.asm"',
             'INCLUDE "engine/zh/cache_text.asm"',
             'SECTION "maps", WRAM0[$c500]',
@@ -146,7 +122,6 @@ def main():
             "wZhCacheUsed: ds ZH_CACHE_BLOCKS",
             "wZhPolicy: db", "wZhPolicyDepth: db",
             "wZhPolicyStack: ds ZH_VRAM_POLICY_DEPTH",
-            "wZhSummaryCacheActive: db",
             'SECTION "pixels", WRAMX[$d300], BANK[1]',
             "wZhCachePixels: ds 32", "wZhStripPixels: ds 6", "wZhStripHalf: db",
         ]
@@ -167,15 +142,14 @@ def main():
         ):
             subprocess.run(command, cwd=out, check=True, capture_output=True)
         commands = ["write ff50 1", "cpu 150 dfff", "run 30 0",
-                    "read c300 18", "read c400 192", "read d300 32", "read c800 32", "quit"]
+                    "read c300 15", "read c400 192", "read d300 32", "quit"]
         result = subprocess.run([args.runner, str(out / "test.gb")],
                                 input=chr(10).join(commands) + chr(10),
                                 text=True, capture_output=True, check=True)
         rows = [bytes.fromhex(line) for line in result.stdout.splitlines()
                 if re.fullmatch(r"(?:[0-9a-f]{2} )+", line)]
-        assert len(rows) == 4, result.stdout
-        assert rows[3] == b"".join(glyphs)[:32], rows[3].hex()
-        assert rows[0] == bytes((0, 0, 43, 3, 0x42, 0, 1, 0, 1, 0x83, 7, 0x82, 0x83, 5, 0x83, 0x82, 0x83, 1)), rows[0].hex()
+        assert len(rows) == 3, result.stdout
+        assert rows[0] == bytes((0, 0, 43, 3, 0x42, 0, 1, 0, 1, 0x83, 7, 0x82, 0x83, 5, 0x83)), rows[0].hex()
         expected = bytearray()
         for glyph_id in (0, 511, 512):
             glyph = glyphs[glyph_id]

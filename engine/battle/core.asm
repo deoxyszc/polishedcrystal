@@ -3976,11 +3976,7 @@ DrawPlayerHUD:
 
 	; Status icon
 	farcall LoadPlayerStatusIcon
-if DEF(LOCALE_ZH)
-	hlcoord 10, 10
-else
 	hlcoord 12, 8
-endc
 	ld a, $55
 	ld [hli], a
 	ld [hl], $56
@@ -4024,23 +4020,7 @@ PrintPlayerHUD:
 	jr z, .short_name
 	dec hl ; hlcoord 10, 7
 .short_name
-if DEF(LOCALE_ZH)
- xor a
- ld [wZhPlayerHudWidth],a
- ld a,0
- push hl
- push de
- farcall ZhDrawBattleName
- pop de
- pop hl
- jr c,.legacyName
- jr .nameDone
-.legacyName
-endc
 	rst PlaceString
-if DEF(LOCALE_ZH)
-.nameDone
-endc
 
 	push bc
 
@@ -4074,19 +4054,11 @@ endr
 	pop hl
 	dec hl
 
-if DEF(LOCALE_ZH)
- hlcoord 10,9
- ld [hl], ' '
-endc
 	ld bc, wBattleMonShiny
 	farcall CheckShininess
 	jr nc, .not_own_shiny
 	ld a, '<SHINY>'
-if DEF(LOCALE_ZH)
- hlcoord 10,9
-else
- hlcoord 19,8
-endc
+	hlcoord 19, 8
 	ld [hl], a
 
 .not_own_shiny
@@ -4100,21 +4072,13 @@ endc
 	inc a ; "<FEMALE>"
 
 .got_gender_char
-if DEF(LOCALE_ZH)
- hlcoord 16,8
- ld [hl],a
- hlcoord 17,8
- ld a,[wBattleMonLevel]
- ld [wTempMonLevel],a
- jp PrintLevel
-else
- hlcoord 18,8
- ld [hl],a
- hlcoord 15,8
- ld a,[wBattleMonLevel]
- ld [wTempMonLevel],a
- jp PrintLevel
-endc
+	hlcoord 18, 8
+	ld [hl], a
+
+	hlcoord 15, 8
+	ld a, [wBattleMonLevel]
+	ld [wTempMonLevel], a
+	jmp PrintLevel
 
 UpdateEnemyHUD::
 	push hl
@@ -4151,23 +4115,7 @@ DrawEnemyHUD:
 	ld de, wEnemyMonNickname
 .got_nickname
 	hlcoord 1, 0
-if DEF(LOCALE_ZH)
- xor a
- ld [wZhEnemyHudWidth],a
- ld a,1
- push hl
- push de
- farcall ZhDrawBattleName
- pop de
- pop hl
- jr c,.legacyName
- jr .nameDone
-.legacyName
-endc
 	rst PlaceString
-if DEF(LOCALE_ZH)
-.nameDone
-endc
 	ld h, b
 	ld l, c
 	dec hl
@@ -4187,11 +4135,7 @@ endr
 	farcall CheckShininess
 	jr nc, .not_shiny
 	ld a, '<SHINY>'
-if DEF(LOCALE_ZH)
- hlcoord 0,2
-else
- hlcoord 9,1
-endc
+	hlcoord 9, 1
 	ld [hl], a
 
 .not_shiny
@@ -4206,25 +4150,16 @@ endc
 	jr c, .got_gender
 	ld a, '<MALE>'
 	jr nz, .got_gender
-	inc a
+	inc a ; "<FEMALE>"
+
 .got_gender
-if DEF(LOCALE_ZH)
- push af
- farcall ZhEnemyMetadataPositions
- hlcoord 0,0
- add hl,bc
- pop af
- ld [hl],a
- hlcoord 0,1
- add hl,de
-else
- hlcoord 8,1
- ld [hl],a
- hlcoord 5,1
-endc
- ld a,[wEnemyMonLevel]
- ld [wTempMonLevel],a
- call PrintLevel
+	hlcoord 8, 1
+	ld [hl], a
+
+	hlcoord 5, 1
+	ld a, [wEnemyMonLevel]
+	ld [wTempMonLevel], a
+	call PrintLevel
 
 	ld hl, wEnemyMonHP
 	ld a, [hli]
@@ -4291,24 +4226,8 @@ endc
 	call DrawBattleHPBar
 
 	farcall LoadEnemyStatusIcon
-if DEF(LOCALE_ZH)
- ld a,[wEnemyMonStatus]
- and a
- jp z,FinishBattleAnim
- ; Original Chinese layout policy: status replaces level, never name pixels.
- farcall ZhEnemyMetadataPositions
- hlcoord 0,1
- add hl,de
- push hl
- ld a,' '
- ld [hli],a
- ld [hli],a
- ld [hl],a
- pop hl
-else
- hlcoord 2,1
-endc
- ld a, $57
+	hlcoord 2, 1
+	ld a, $57
 	ld [hli], a
 	ld [hl], $58
 	jmp FinishBattleAnim

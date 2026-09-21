@@ -219,21 +219,9 @@ PrintStatDifferences:
 	pop bc
 	pop de
 	call .PrintStats
-if DEF(LOCALE_ZH)
- farcall ZhAlignLevelNumbers
-else
-endc
 	jmp WaitPressAorB_BlinkCursor
 
 .PrintStatNames:
-if DEF(LOCALE_ZH)
- hlcoord 4,0
- lb bc,12,14
- call Textbox
- farcall ZhLevelLabels
- hlcoord 1,1
- ret
-else
 	ld a, [wStringBuffer3 + 14]
 	push af
 	hlcoord 6, 4
@@ -261,7 +249,6 @@ else
 	pop hl
 	ret
 
-endc
 .PrintStats:
 	; Some screen movement is done because internal stat order is different
 	; from the order we want to display.
@@ -272,21 +259,13 @@ endc
 	call .PrintStat ; Defense
 
 	push bc
-if DEF(LOCALE_ZH)
-	ld bc, SCREEN_WIDTH * 4
-else
 	ld bc, SCREEN_WIDTH * 2
-endc
 	add hl, bc
 	pop bc
 	call .PrintStat ; Speed
 
 	push bc
-if DEF(LOCALE_ZH)
-	ld bc, -SCREEN_WIDTH * 6
-else
 	ld bc, -SCREEN_WIDTH * 3
-endc
 	add hl, bc
 	pop bc
 	call .PrintStat
@@ -323,11 +302,7 @@ endc
 .mod_done
 	pop de
 	pop hl
-if DEF(LOCALE_ZH)
-	ld bc, SCREEN_WIDTH * 2
-else
 	ld bc, SCREEN_WIDTH
-endc
 	add hl, bc
 	inc de
 	inc de

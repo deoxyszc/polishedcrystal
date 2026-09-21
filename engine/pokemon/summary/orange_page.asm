@@ -1,9 +1,4 @@
 SummaryScreen_OrangePage:
-if DEF(LOCALE_ZH)
- xor a
- ld [wZhOrangeActive],a
- ld [wZhOrangeEncounterActive],a
-endc
 	ld a, SUMMARY_TILE_OAM_MET_TITLE
 	call SummaryScreen_UpdateTabTitle
 	call .TN_PrintToD
@@ -21,15 +16,6 @@ endc
 	ld a, [wTempMonSpecies]
 	ld c, a
 	call GetAbility
-if DEF(LOCALE_ZH)
- ld a,[wTempMonNature]
- ld b,a
- call GetNature
- ld a,b
- farcall ZhOrangePage
- farcall ZhOrangeEncounter
- ret
-endc
 
 .PlaceNatureInfo:
 	ld de, .NatureString
@@ -207,9 +193,6 @@ INCLUDE "gfx/stats/orange_page.pal"
 	call SimpleMultiply
 	add b
 
-if DEF(LOCALE_ZH)
- ld [wZhOrangeCharacteristic],a
-endc
 	ld l, a
 	ld h, 0
 	ld bc, Characteristics
