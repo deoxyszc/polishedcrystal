@@ -285,11 +285,7 @@ _CGB_FinishBattleScreenLayout:
 	ldcoord_a 8, 1, wAttrmap
 	ldcoord_a 18, 8, wAttrmap
 
-if DEF(LOCALE_ZH)
-	hlcoord 10, 10, wAttrmap
-else
 	hlcoord 12, 8, wAttrmap
-endc
 	lb bc, 1, 2
 	ld a, PAL_BATTLE_BG_STATUS
 	call FillBoxWithByte
@@ -318,9 +314,6 @@ endc
 	ld a, b
 	and a
 	jr z, .apply_attr_map
-if DEF(LOCALE_ZH)
- farcall ZhBattleNameAttributes
-endc
 	bit 0, b
 	jr z, .no_player_overlay2
 	hlcoord 0, 8, wAttrmap
@@ -331,17 +324,11 @@ endc
 .no_player_overlay2
 	bit 1, b
 	jr z, .apply_attr_map
-if DEF(LOCALE_ZH)
- farcall ZhBattleNameAttributes
-endc
 	hlcoord 9, 3, wAttrmap
 	ld b, PAL_BATTLE_BG_TEXT
 	farcall SetAbilityOverlayAttributes
 
 .apply_attr_map
-if DEF(LOCALE_ZH)
- farcall ZhBattleNameAttributes
-endc
 	jmp ApplyAttrMap
 
 HPBarInteriorPals:
@@ -698,9 +685,6 @@ _CGB_PartyMenu:
 	lb bc, 11, 1
 	ld a, $4
 	call FillBoxWithByte
-if DEF(LOCALE_ZH)
- farcall ZhPartyAttributes
-endc
 	jmp ApplyAttrMap
 
 PartyMenuBGPals:

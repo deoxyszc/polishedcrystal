@@ -134,12 +134,7 @@ DrawEnemyHUDBorder:
 	ld a, [wBattleType]
 	cp BATTLETYPE_GHOST
 	ret z
-if DEF(LOCALE_ZH)
- ; Reserve the left margin: translated names start at x=1.
- hlcoord 0,1
-else
- hlcoord 1,1
-endc
+	hlcoord 1, 1
 	ld [hl], '<BALL>'
 	ret
 

@@ -57,17 +57,6 @@ SummaryScreen_PinkPage:
 	ld [hli], a
 	push hl
 	call GetPartyPokemonName
-if DEF(LOCALE_ZH)
- push hl
- push de
- ld h,d
- ld l,e
- ld de,wZhPinkSpecies
- ld bc,MON_NAME_LENGTH
- rst CopyBytes
- pop de
- pop hl
-endc
 	pop hl
 	rst PlaceString
 
@@ -179,12 +168,7 @@ endc
 	and CAUGHT_BALL_MASK
 	rst AddNTimes
 	ld de, wSummaryScreenPals palette SUMMARY_PAL_POKEBALL
-if DEF(LOCALE_ZH)
- farcall LoadPalette_White_Col1_Col2_Black
- farjp ZhPinkLayout
-else
- farjp LoadPalette_White_Col1_Col2_Black
-endc
+	farjp LoadPalette_White_Col1_Col2_Black
 
 .PrintNextLevel:
 	ld a, [wTempMonLevel]

@@ -572,11 +572,7 @@ EnemyPotionContinue:
 
 EnemyPotionFinish:
 	call PrintText_UsedItemOn
-if DEF(LOCALE_ZH)
-	hlcoord 1, 3
-else
 	hlcoord 1, 2
-endc
 	xor a
 	ld [wWhichHPBar], a
 	call AIUsedItemSound

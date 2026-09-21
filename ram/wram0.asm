@@ -1513,28 +1513,3 @@ wZhMoveGridActive:: db
 wZhMoveIndex:: db
 
 endc
-
-if DEF(LOCALE_ZH)
-wZhHudSide:: db
-wZhHudName:: dw
-wZhHudWidth:: db
-wZhPlayerHudWidth:: db
-wZhEnemyHudWidth:: db
-wZhSummaryAbility:: db
-wZhItemDescriptionActive:: db
-UNION
-NEXTU
-wZhPinkSpecies:: ds MON_NAME_LENGTH
-NEXTU
-wZhOrangeCharacteristic:: db
-wZhOrangeActive:: db
-wZhOrangeEncounterActive:: db
-ENDU
-wZhPartyIndex:: db
-wZhPartyWidth:: db
-wZhPartyGender:: db
-wZhPartyLevel:: ds 3
-wZhPartyWidths:: ds 6
-wZhPartyStatuses:: ds 6
-wZhPartyStatusTiles:: ds 32
-endc

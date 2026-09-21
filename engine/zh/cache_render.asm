@@ -2,9 +2,6 @@
 ; BC=left strip, DE=right strip. Output wZhCachePixels (8x16, 2bpp).
 ; Caller selects cache WRAM. Preserves BC/DE/HL, carry on invalid ID.
 ZhComposeCacheBlock::
- ld a,b
- cp $fe
- jp z,ZhReadCompiledBlock
  push bc
  push de
  push hl
@@ -74,31 +71,6 @@ ZhComposeCacheBlock::
  ld [hli], a
  dec b
  jr nz, .rightRows
- ret
-
-; Build-time composed 8x16 block, key=$fe, ROM bank, big-endian address.
-; This preserves dense/offset layouts without a page-specific uploader.
-ZhReadCompiledBlock:
- push bc
- push de
- push hl
- ld b,c
- ld h,d
- ld l,e
- ld de,wZhCachePixels
- ld c,32
-.copy
- ld a,b
- call GetFarByte
- ld [de],a
- inc de
- inc hl
- dec c
- jr nz,.copy
- pop hl
- pop de
- pop bc
- and a
  ret
 
 ; BC=strip ID. Page lookup is generated at build time: no division by 3.
@@ -315,31 +287,6 @@ ZhPlaceCacheBlock::
  jr z, .bank
  ld b, BG_BANK1
 .bank
- ld a,[wZhSummaryCacheActive]
- and a
- jr z,.screen
- ld a,h
- cp HIGH(wSummaryScreenWindowBuffer)
- jr c,.screen
- jr nz,.endCheck
- ld a,l
- cp LOW(wSummaryScreenWindowBuffer)
- jr c,.screen
-.endCheck
- ld a,h
- cp HIGH(wSummaryScreenWindowBuffer + 32 * 9)
- jr c,.window
- jr nz,.screen
- ld a,l
- cp LOW(wSummaryScreenWindowBuffer + 32 * 9)
- jr nc,.screen
-.window
- call ZhPublishSummaryBlock
- pop de
- pop bc
- and a
- ret
-.screen
  ld [hl], c
  push hl
  ld de, SCREEN_WIDTH

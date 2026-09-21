@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 """Build isolated English or modular Fusion12 runtime sources without private content."""
 import argparse,csv,hashlib,json,shutil,subprocess,sys
-from dataclasses import asdict
-from suite_layout import select as select_layout
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);p.add_argument('--ui-terms',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);a=p.parse_args()
  out=a.out.resolve()
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
- if a.language=='en' and a.ui_terms:p.error('English builds do not consume Chinese UI terms')
  chinese=a.language!='en'
- selected_layout=select_layout(a.language)
- if chinese and (not a.font or not a.licenses or not a.ui_terms):p.error('Chinese builds require --font, --licenses and --ui-terms resources')
+ if chinese and (not a.font or not a.licenses):p.error('Chinese builds require --font and --licenses resources')
  chars=set(a.characters) if chinese else set()
  if chinese:
   with (ROOT/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
@@ -21,15 +17,11 @@ def main():
   chars={c for c in chars if not c.isascii()}
   if not chars:p.error('At least one non-ASCII character is required')
  out.mkdir(parents=True);source=out/'source'
- if selected_layout is not None:
-  (out/'layout.json').write_text(json.dumps({name:asdict(config) for name,config in selected_layout.items()},indent=2))
  shutil.copytree(ROOT,source,ignore=shutil.ignore_patterns('.git','__pycache__','*.pyc','*.o','*.gbc','*.sym','*.map'))
  if chinese:
   manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
   subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
   (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
-  import suite
-  suite.generate(source,a.language,a.font,a.ui_terms)
   import move_names
   move_names.generate(source,a.language,manifest)
   import import_dialogue
