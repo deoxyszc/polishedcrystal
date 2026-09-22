@@ -20,6 +20,7 @@ INCLUDE "macros/scripts/text.asm"
 if DEF(LOCALE_ZH)
 INCLUDE "constants/zh_encoding.asm"
 INCLUDE "constants/zh_layout.asm"
+INCLUDE "data/zh/font/compiled_count.asm"
 INCLUDE "constants/zh_vram.asm"
 INCLUDE "macros/zh_text.asm"
 endc

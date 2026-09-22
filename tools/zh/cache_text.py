@@ -2,7 +2,7 @@
 PAIR_COMMAND = 0x0e
 EMPTY_STRIP = 0xffff
 
-def encode_pairs(text, glyphs, *, width_tiles, charmap=None):
+def encode_pairs(text, glyphs, *, width_tiles, charmap=None, strip_map, leading_strips=0):
     """Resolve glyph IDs, pairing, padding and bounds before ROM assembly.
 
     This entry accepts manifested 12px glyphs and the original 8px font. Controls and dynamic names are
@@ -10,21 +10,21 @@ def encode_pairs(text, glyphs, *, width_tiles, charmap=None):
     """
     if not 1 <= width_tiles <= 20:
         raise ValueError("Invalid text region width")
-    strips = []
+    strips = [EMPTY_STRIP] * leading_strips
     for char in text:
         if char == " ":
             strips.extend((EMPTY_STRIP, EMPTY_STRIP))
             continue
         if charmap and char in charmap and 0x80 <= charmap[char] < 0xf2:
-            code = 0xc000 + (charmap[char] - 0x80) * 2
-            strips.extend((code, code + 1))
+            code = (charmap[char] - 0x80) * 2
+            strips.extend(strip_map["latin"][code:code + 2])
             continue
         if char not in glyphs:
             raise ValueError(f"Unmanifested glyph: {char!r}")
         glyph = glyphs[char]
         if not 0 <= glyph < 16384:
             raise ValueError("Glyph ID outside font")
-        strips.extend((glyph * 3, glyph * 3 + 1, glyph * 3 + 2))
+        strips.extend(strip_map["glyphs"][glyph])
     tiles = (len(strips) + 1) // 2
     if tiles > width_tiles:
         raise ValueError("Text exceeds compile-time region")
@@ -71,13 +71,13 @@ def expand_static_ngrams(source, text):
                 text = text.replace(fields[1], fixed[labels[index]])
     return text
 
-def compile_segments(segments, glyphs, charmap):
+def compile_segments(segments, glyphs, charmap, *, layout, strip_map):
     import encode
     lines = []
     width = 0
     for segment in segments:
         if "text" in segment:
-            data, tiles = encode_pairs(segment["text"], glyphs, width_tiles=18, charmap=charmap)
+            data, tiles = encode_pairs(segment["text"], glyphs, width_tiles=layout.width, charmap=charmap, strip_map=strip_map)
             width += tiles
             lines.append(" db " + ",".join("$%02x" % value for value in data + bytes((0x53,))))
         elif "control" in segment:
@@ -93,6 +93,6 @@ def compile_segments(segments, glyphs, charmap):
             lines += [" db ZH_CTRL_RAM, BANK(" + symbol + ")", " dw " + symbol]
         else:
             raise ValueError("Unsupported compiled segment")
-        if width > 18:
+        if width > layout.width:
             raise ValueError("Compiled fragments exceed the dialogue region")
     return chr(10).join(lines) + chr(10)

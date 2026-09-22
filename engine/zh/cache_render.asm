@@ -1,4 +1,4 @@
-; Fixed 16-bit strip IDs: glyph*3 + column; $ffff is an empty strip.
+; Fixed 16-bit strip IDs: compiled pixel identity; $ffff is an empty strip.
 ; BC=left strip, DE=right strip. Output wZhCachePixels (8x16, 2bpp).
 ; Caller selects cache WRAM. Preserves BC/DE/HL, carry on invalid ID.
 ZhComposeCacheBlock::
@@ -14,12 +14,12 @@ ZhComposeCacheBlock::
  pop bc
  call ZhReadFontStrip
  jr c, .badLeft
- ld hl, wZhCachePixels + ZH_LAYOUT_GLYPH_Y_OFFSET * 2
+ ld hl, wZhCachePixels
  call .left
  pop bc
  call ZhReadFontStrip
- jr c, .badRight
- ld hl, wZhCachePixels + ZH_LAYOUT_GLYPH_Y_OFFSET * 2
+ jr c,.badRight
+ ld hl,wZhCachePixels
  call .right
  pop hl
  pop de
@@ -35,47 +35,62 @@ ZhComposeCacheBlock::
  scf
  ret
 .left
- ld de, wZhStripPixels
- ld b, 6
+ ld de,wZhStripPixels
+ ld b,8
 .leftRows
- ld a, [de]
+ ld a,[de]
  inc de
- ld c, a
+ ld c,a
  and $f0
- ld [hli], a
- ld [hli], a
- ld a, c
+ ld [hli],a
+ ld a,[de]
+ inc de
+ ld [wZhStripPlane],a
+ and $f0
+ ld [hli],a
+ ld a,c
  swap a
  and $f0
- ld [hli], a
- ld [hli], a
+ ld [hli],a
+ ld a,[wZhStripPlane]
+ swap a
+ and $f0
+ ld [hli],a
  dec b
- jr nz, .leftRows
+ jr nz,.leftRows
  ret
 .right
- ld de, wZhStripPixels
- ld b, 6
+ ld de,wZhStripPixels
+ ld b,8
 .rightRows
- ld a, [de]
+ ld a,[de]
  inc de
- ld c, a
+ ld c,a
  swap a
  and $0f
  or [hl]
- ld [hli], a
- ld [hli], a
- ld a, c
+ ld [hli],a
+ ld a,[de]
+ inc de
+ ld [wZhStripPlane],a
+ swap a
  and $0f
  or [hl]
- ld [hli], a
- ld [hli], a
+ ld [hli],a
+ ld a,c
+ and $0f
+ or [hl]
+ ld [hli],a
+ ld a,[wZhStripPlane]
+ and $0f
+ or [hl]
+ ld [hli],a
  dec b
- jr nz, .rightRows
+ jr nz,.rightRows
  ret
 
-; BC=strip ID. Page lookup is generated at build time: no division by 3.
-; Each page holds 1536 strips of six bytes. Destination wZhStripPixels.
-; Preserves caller BC/DE/HL; carry rejects IDs outside generated font.
+; BC=compiled 4x16 strip ID. Coordinates/vertical alignment are baked
+; into individual strips at build time; no page/style selection here.
 ZhReadFontStrip::
  push bc
  push de
@@ -83,51 +98,38 @@ ZhReadFontStrip::
  ld a, b
  and c
  inc a
- jp z, .blank
+ jr z, .blank
  ld a, b
- cp $c0
- jp z, .ascii
- ld a, b
- cp HIGH(ZH_GLYPH_COUNT * 3)
+ cp HIGH(ZH_COMPILED_STRIP_COUNT)
  jr c, .valid
- jp nz, .invalid
+ jr nz, .invalid
  ld a, c
- cp LOW(ZH_GLYPH_COUNT * 3)
- jp nc, .invalid
+ cp LOW(ZH_COMPILED_STRIP_COUNT)
+ jr nc, .invalid
 .valid
- ; Resolve division at assembly time. Index is the strip ID high byte.
  ld l, b
  ld h, 0
- push de
- ld de, .PageRemainders
+ add hl, hl
+ ld e, b
+ ld d, 0
  add hl, de
- ld a, [hl]
- ld b, a
- ld de, .PageOffsets - .PageRemainders
- add hl, de
- ld a, [hl]
- pop de
- ld l, a
- ld h, 0
- ld de, ZhFontPages
+ ld de, ZhCompiledStripPages
  add hl, de
  ld a, [hli]
  push af
  ld a, [hli]
- ld e, a
  ld d, [hl]
- ld h, b
+ ld e, a
  ld l, c
+ ld h, 0
  add hl, hl
- ld b, h
- ld c, l
  add hl, hl
- add hl, bc
+ add hl, hl
+ add hl, hl
  add hl, de
- pop af
- ld b, a
+ pop bc
  ld de, wZhStripPixels
- ld c, 6
+ ld c, 16
 .copy
  ld a, b
  call GetFarByte
@@ -136,63 +138,12 @@ ZhReadFontStrip::
  inc hl
  dec c
  jr nz, .copy
- jp .done
+ jr .done
 .blank
  ld hl, wZhStripPixels
- ld bc, 6
+ ld bc, 16
  xor a
  rst ByteFill
- jp .done
-.ascii
- ld a, c
- cp 114 * 2
- jp nc, .invalid
- and 1
- ld [wZhStripHalf], a
- ld l, c
- ld h, 0
- srl l
- add hl, hl
- add hl, hl
- add hl, hl
- ld de, FontNormal
- add hl, de
- push hl
- ld hl, wZhStripPixels
- ld bc, 6
- xor a
- rst ByteFill
- pop hl
- for y, 8
-  ld a, BANK(FontNormal)
-  call GetFarByte
-  inc hl
-  call .nibble
-  DEF target_row = y + ZH_LAYOUT_ASCII_Y_OFFSET - ZH_LAYOUT_GLYPH_Y_OFFSET
-  ASSERT target_row >= 0 && target_row < 12
-  if target_row % 2
-   swap a
-  endc
-  push hl
-  ld hl, wZhStripPixels + target_row / 2
-  or [hl]
-  ld [hl], a
-  pop hl
- endr
- PURGE target_row
- jr .done
-.nibble
- push bc
- ld c, a
- ld a, [wZhStripHalf]
- and a
- ld a, c
- jr z, .high
- swap a
-.high
- and $f0
- pop bc
- ret
 .done
  pop hl
  pop de
@@ -205,14 +156,6 @@ ZhReadFontStrip::
  pop bc
  scf
  ret
-.PageRemainders
- for high_byte, (ZH_GLYPH_COUNT * 3 + 255) / 256
-  db high_byte % 6
- endr
-.PageOffsets
- for high_byte, (ZH_GLYPH_COUNT * 3 + 255) / 256
-  db (high_byte / 6) * 3
- endr
 
 ; BC/DE=strip key. Return A=slot with pixels ready before any map reference.
 ; Preserves BC/DE/HL and VBK. Caller selects cache WRAM; no map publication.

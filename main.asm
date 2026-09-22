@@ -761,9 +761,15 @@ INCLUDE "engine/zh/text.asm"
 INCLUDE "engine/zh/dialogue.asm"
 INCLUDE "engine/zh/dispatch.asm"
 INCLUDE "engine/zh/moves.asm"
+INCLUDE "engine/zh/start_menu.asm"
+INCLUDE "engine/zh/party.asm"
+INCLUDE "data/zh/party.asm"
 SECTION "Chinese compiled move names", ROMX
 INCLUDE "data/zh/move_names.asm"
 SECTION "Chinese font directory", ROMX, BANK[$80]
 INCLUDE "data/zh/font/font.asm"
 INCLUDE "data/zh/font/font_pages.asm"
+SECTION "Compiled strip directory", ROMX, BANK[$80]
+INCLUDE "data/zh/font/compiled.asm"
+INCLUDE "data/zh/font/compiled_pages.asm"
 endc

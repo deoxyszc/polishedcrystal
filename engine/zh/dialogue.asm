@@ -3,7 +3,7 @@
 ZhShowDialogue::
  push hl
  push de
- call ZhHidePage
+ call ZhHideDialogue
  call ApplyAttrAndTilemapInVBlank
  ldh a, [rWBK]
  push af
@@ -33,7 +33,7 @@ ZhShowDialogue::
  ld a, [wZhTextControl]
  cp ZH_CTRL_PROMPT
  call nz, WaitButton
- call ZhHidePage
+ call ZhHideDialogue
  call ApplyAttrAndTilemapInVBlank
 .done
  pop af

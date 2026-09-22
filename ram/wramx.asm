@@ -1964,8 +1964,8 @@ wZhPolicy:: db
 wZhPolicyDepth:: db
 wZhPolicyStack:: ds ZH_VRAM_POLICY_DEPTH
 wZhCachePixels:: ds 2 tiles
-wZhStripPixels:: ds 6
-wZhStripHalf:: db
+wZhStripPixels:: ds 16
+wZhStripPlane:: db
 wZhBackupCell:: ds 6
 SECTION "ZH temporary map keys", WRAMX
 wZhTempKeys:: ds SCREEN_AREA * 5

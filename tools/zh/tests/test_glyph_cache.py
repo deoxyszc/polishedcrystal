@@ -18,13 +18,14 @@ def main():
                         for i in range(18)) for n in range(513)]
         # A synthetic original pattern; no font, translation, save or game ROM.
         (out / "font.bin").write_bytes(b"".join(glyphs))
+        (out / "strips.bin").write_bytes(bytes(v for v in bytes(2) + glyphs[0][:6] + bytes(2) + glyphs[512][:6] for _ in range(2)))
         asm = [
             'INCLUDE "constants/hardware.inc"',
             'INCLUDE "constants/charmap.asm"',
             'INCLUDE "constants/zh_vram.asm"',
             "DEF ZH_GLYPH_COUNT EQU 513",
-            "DEF ZH_LAYOUT_GLYPH_Y_OFFSET EQU 2",
-            "DEF ZH_LAYOUT_ASCII_Y_OFFSET EQU 4",
+            "DEF ZH_COMPILED_STRIP_COUNT EQU 513 * 3",
+
             "DEF wMenuBorderTopCoord EQU $c900",
             "DEF wMenuBorderBottomCoord EQU $c901",
             "DEF wMenuBorderLeftCoord EQU $c902",
@@ -109,7 +110,9 @@ def main():
             "ZhEnterFontText:", " ret",
             "ZhFontPages:", " db 0", " dw Font", " db 0", " dw Font + 512 * 18",
             "Font:", ' INCBIN "font.bin"',
-            "FontNormal: ds 114 * 8",
+            "ZhDialogueLatinStrips: ds 456", "ZhStartMenuLatinStrips: ds 456",
+            "ZhCompiledStripPages:", *[f" db 0" + chr(10) + f" dw CompiledFont + {16 if page == 6 else 0}" for page in range(7)],
+            "CompiledFont:", ' INCBIN "strips.bin"',
             'INCLUDE "engine/zh/glyph_cache.asm"',
             'INCLUDE "engine/zh/render.asm"',
             'INCLUDE "engine/zh/cache_render.asm"',
@@ -123,7 +126,7 @@ def main():
             "wZhPolicy: db", "wZhPolicyDepth: db",
             "wZhPolicyStack: ds ZH_VRAM_POLICY_DEPTH",
             'SECTION "pixels", WRAMX[$d300], BANK[1]',
-            "wZhCachePixels: ds 32", "wZhStripPixels: ds 6", "wZhStripHalf: db",
+            "wZhCachePixels: ds 32", "wZhStripPixels: ds 16", "wZhStripPlane: db",
         ]
         wram_call = (ROOT / "home/farcall.asm").read_text().split("StackCallInWRAMBankA::", 1)[1]
         asm += ['SECTION "pair source", ROM0[$3e00]', "PairText: db $0e, 0, 0, 6, 0"]
@@ -167,7 +170,7 @@ def main():
             shift = 4 if y % 2 == 0 else 0
             pixel = ((glyphs[0][y // 2] >> shift) & 15) << 4
             pixel |= (glyphs[512][y // 2] >> shift) & 15
-            composite[(y + 2) * 2:(y + 2) * 2 + 2] = bytes((pixel, pixel))
+            composite[(y + 4) * 2:(y + 4) * 2 + 2] = bytes((pixel, pixel))
         assert rows[2] == composite, rows[2].hex()
         print("PASS cache reuse, bank policy, restore, recovery, full refusal; glyph IDs 0/511/512 pixel equality")
 

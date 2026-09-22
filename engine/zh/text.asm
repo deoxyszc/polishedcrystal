@@ -11,7 +11,7 @@ ZhRunText::
  ld [wZhTextEnd + 1], a
  xor a
  ld [wZhTextSlot], a
- hlcoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE
+ hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
 .next
  push hl
  ld a, [wZhTextCursor]
@@ -111,43 +111,43 @@ ZhRunText::
 .bottom
  ld a, 1
  ld [wZhTextSlot], a
- hlcoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE + 2
+ hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP
  jp .next
 .page
  call ApplyAttrAndTilemapInVBlank
  call WaitButton
- call ZhHidePage
+ call ZhHideDialogue
  call ApplyAttrAndTilemapInVBlank
  xor a
  ld [wZhTextSlot], a
- hlcoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE
+ hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
  jp .next
 .scroll
  call ApplyAttrAndTilemapInVBlank
  call WaitButton
  ; Shift IDs and attributes together; surviving glyphs stay live.
- hlcoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE + 2
- decoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE
+ hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP
+ decoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
  call .scrollMap
- hlcoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE + 2, wAttrmap
- decoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE, wAttrmap
+ hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP, wAttrmap
+ decoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP, wAttrmap
  call .scrollMap
- hlcoord ZH_LAYOUT_LEFT_TILES, ZH_LAYOUT_TOP_TILE + 2
- lb bc, 2, ZH_LAYOUT_WIDTH_TILES
+ hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP
+ lb bc, 2, ZH_DIALOGUE_WIDTH
  call ClearBox
  call ApplyAttrAndTilemapInVBlank
  jp .bottom
 .scrollMap
  ld b, 2
 .row
- ld c, ZH_LAYOUT_WIDTH_TILES
+ ld c, ZH_DIALOGUE_WIDTH
 .cell
  ld a, [hli]
  ld [de], a
  inc de
  dec c
  jr nz, .cell
- rept SCREEN_WIDTH - ZH_LAYOUT_WIDTH_TILES
+ rept SCREEN_WIDTH - ZH_DIALOGUE_WIDTH
  inc hl
  inc de
  endr

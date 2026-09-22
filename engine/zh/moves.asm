@@ -42,7 +42,7 @@ ZhCanDrawMoveGrid::
 
 ; Four move slots in a 2x2 grid. Screen rows 13..16, never EXP row11.
 ZhDrawMoveGrid::
- call ZhHidePage
+ call ZhHideMoveGrid
  call ApplyAttrAndTilemapInVBlank
  ldh a, [rWBK]
  push af
@@ -73,10 +73,10 @@ ZhDrawMoveGrid::
  call GetFarByte
  ld d, a
  ld a, [wZhMoveIndex]
- hlcoord 2, 13
+ hlcoord ZH_MOVE_GRID_LEFT + 1, ZH_MOVE_GRID_TOP
  bit 1, a
  jr z, .column
- hlcoord 2, 15
+ hlcoord ZH_MOVE_GRID_LEFT + 1, ZH_MOVE_GRID_TOP + ZH_MOVE_GRID_STEP
 .column
  bit 0, a
  jr z, .draw
