@@ -1511,5 +1511,14 @@ wZhTextControl:: db
 wZhNameBuffer:: ds 12
 wZhMoveGridActive:: db
 wZhMoveIndex:: db
+wZhPartyIndex:: db
+wZhPartyWidths:: ds 6
+wZhPartyStatuses:: ds 6
+wZhPartyStatusTiles:: ds 32
+wZhPartyGender:: db
+wZhPartyLevel:: ds 3
+wZhPartyHP:: ds 7
+wZhPartyLevelKeys:: dw
+
 
 endc

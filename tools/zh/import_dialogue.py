@@ -1,6 +1,7 @@
 import csv,hashlib,re,sys,json
 import encode
 import cache_text
+from layouts import DIALOGUE
 def segments(text):
  result=[];width=0
  for token in re.split(r'(<PLAYER>|[{][^}]+[}])',text):
@@ -16,11 +17,12 @@ def segments(text):
    if control not in ('LINE', 'PARA', 'CONT', 'NEXT', 'DONE', 'PROMPT'):raise ValueError('Unsupported control: '+token)
    result.append({'control':control});width=0
   else:result.append({'text':token});width+=sum(8 if c.isascii() else 12 for c in token)
-  if width>144:raise ValueError('Line exceeds 144 pixels')
+  if width>DIALOGUE.width*8:raise ValueError('Line exceeds 144 pixels')
  return result
 def apply(source,language,manifest):
  sys.path.insert(0,str(source/'tools/i18n'));import messages
  authority={r['id']:r for r in messages.build(source,'normal')[0]}
+ strip_map=json.loads((source/"data/zh/font/compiled.json").read_text())["dialogue"]
  charmap=cache_text.load_charmap(source)
  glyphs=encode.load_glyphs(manifest);outputs=[];edits={};nl=chr(10);seen=set()
  with (source/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
@@ -30,7 +32,7 @@ def apply(source,language,manifest):
    if row['source_path']=='data/moves/names.asm':continue
    if row['resource_kind']!='text' or not text.strip():continue
    # Page assets are deliberately excluded until their new layouts exist.
-   if row['source_path'].startswith(('engine/pokemon/summary/','engine/pokemon/party_menu.asm','data/pokemon/names.asm','data/abilities/','data/items/','data/natures.asm','data/characteristics.asm','data/maps/landmarks.asm','engine/rtc/timeset.asm')):continue
+   if row['source_path'].startswith(('engine/pokemon/summary/','engine/pokemon/party_menu.asm','data/pokemon/names.asm','data/abilities/','data/items/','data/natures.asm','data/characteristics.asm','data/maps/landmarks.asm','engine/rtc/timeset.asm','engine/menus/start_menu.asm')):continue
    original=authority.get(row['id'])
    if not original or original['source_sha256']!=row['source_sha256'] or original['translation_view']!=row['original']:raise ValueError('Source drift: '+row['id'])
    commands=original['commands'];ops=[c['op'] for c in commands]
@@ -43,7 +45,7 @@ def apply(source,language,manifest):
     if any(line.strip() and not line.lstrip().startswith(';') and original['source_line']+i not in allowed for i,line in enumerate(raw)):raise ValueError('Mixed source span')
    if re.findall(r'<PLAYER>|[{][^}]+[}]',text)!=re.findall(r'<PLAYER>|[{][^}]+[}]',row['original']):raise ValueError('Control signature changed')
    entry='ZhText_'+hashlib.sha256(row['id'].encode()).hexdigest()[:16]
-   body=cache_text.compile_segments(segments(text),glyphs,charmap)
+   body=cache_text.compile_segments(segments(text),glyphs,charmap,layout=DIALOGUE,strip_map=strip_map)
    outputs.append(nl.join([entry+'::',body,entry+'End::']))
    replacement=nl.join([' stop_compressing_text',' db ZH_STREAM_COMMAND',' dw '+entry+', '+entry+'End',' assert BANK('+entry+') == $80',''])
    edits.setdefault(row['source_path'],[]).append((original['source_line']-1,original['source_end_line'],replacement))

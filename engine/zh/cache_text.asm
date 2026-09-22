@@ -63,7 +63,8 @@ ZhPlaceEncodedPair::
 
 ; Dynamic names alone are paired at runtime; ordinary text is precompiled.
 ; DE=validated WRAM0 name, HL=upper tile. Return both advanced.
-ZhPlaceDynamicName::
+MACRO zh_dynamic_name
+\1::
  ld a, [de]
  cp $53
  jr z, .done
@@ -72,12 +73,21 @@ ZhPlaceDynamicName::
  cp $7f
  jr z, .space
  sub $80
- add a
- ld c, a
- ld b, $c0
- ld d, b
- ld e, c
- inc de
+ ld l, a
+ ld h, 0
+ add hl, hl
+ add hl, hl
+ ld de, \2
+ add hl, de
+ ld b, [hl]
+ inc hl
+ ld c, [hl]
+ inc hl
+ ld d, [hl]
+ inc hl
+ ld e, [hl]
+ pop hl
+ push hl
  jr .draw
 .space
  ld bc, $ffff
@@ -95,7 +105,7 @@ ZhPlaceDynamicName::
  pop bc
  pop de
  inc de
- jr ZhPlaceDynamicName
+ jr \1
 .bad
  pop hl
  pop de
@@ -104,3 +114,6 @@ ZhPlaceDynamicName::
 .done
  and a
  ret
+ENDM
+zh_dynamic_name ZhPlaceDynamicName, ZhDialogueLatinStrips
+zh_dynamic_name ZhPlaceStartMenuName, ZhStartMenuLatinStrips

@@ -550,6 +550,9 @@ WritePartyMenuTilemap:
 	call PlacePartyMonLevel
 	call PlacePartyMonGender
 	call PlacePartyMonStatus
+if DEF(LOCALE_ZH)
+ farcall ZhPartyLayout
+endc
 
 	pop af
 	ld [wOptions1], a
@@ -1256,6 +1259,19 @@ PartyMenuSelect:
 	ret
 
 PlacePartyMenuText:
+if DEF(LOCALE_ZH)
+ ld a, [wPartyMenuActionText]
+ and a
+ jr nz, .legacy
+ ld a, [wPartyCount]
+ and a
+ jr z, .legacy
+ hlcoord 0, 14
+ lb bc, 2, 18
+ call Textbox
+ farjp ZhPartyFooter
+.legacy
+endc
 	hlcoord 0, 14
 	lb bc, 2, 18
 	call Textbox
