@@ -65,3 +65,7 @@ bank_ends.txt
 # local tools
 rgbds/
 deploy.sh
+
+# Local handoff and development notes (not published)
+/local-docs/
+/local-data/
