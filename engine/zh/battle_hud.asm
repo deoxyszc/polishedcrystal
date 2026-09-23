@@ -3,8 +3,6 @@ ZhBattleHudName::
  ld hl,ZhBattleHudNames
 .next
  ld a,[hli]
- ld [wZhNameBank],a
- ld a,[hli]
  ld c,a
  ld a,[hli]
  ld b,a
@@ -14,9 +12,6 @@ ZhBattleHudName::
  push de
  ld h,b
  ld l,c
- push de
- call ZhCopyNameRecord
- pop de
  ld b,10
 .compare
  ld a,[de]
@@ -105,19 +100,4 @@ ZhBattleHudMetadataAttrs::
  ld a,PAL_BATTLE_BG_STATUS
  ld [hli],a
  ld [hl],a
- ret
-
-; Copy one bounded compiled name record from any ROM bank into WRAM0.
-ZhCopyNameRecord::
- ld de,wZhNameRecord
- ld c,80
-.copy
- ld a,[wZhNameBank]
- call GetFarByte
- ld [de],a
- inc de
- inc hl
- dec c
- jr nz,.copy
- ld hl,wZhNameRecord
  ret

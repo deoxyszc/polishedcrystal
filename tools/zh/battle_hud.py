@@ -4,11 +4,10 @@ def generate(source,language,manifest):
  glyphs=encode.load_glyphs(manifest);cm=cache_text.load_charmap(source)
  sm=json.loads((source/'data/zh/font/compiled.json').read_text())['battle_hud']
  rows=[r for r in csv.DictReader((source/'translations.csv').open(encoding='utf-8-sig')) if r['source_path']=='data/pokemon/names.asm' and r.get('translation_'+language,'').strip()]
- out=['ZhBattleHudNames:']+[' dba ZhHudName'+str(i) for i in range(len(rows))]+[' db 0,0,0']
+ out=['ZhBattleHudNames:']+[' dw .name'+str(i) for i in range(len(rows))]+[' dw 0']
  for i,row in enumerate(rows):
   data,width=cache_text.encode_pairs(row['translation_'+language].strip().rstrip('@'),glyphs,width_tiles=8,charmap=cm,strip_map=sm)
-  out += ['SECTION '+chr(34)+'Hud name '+str(i)+chr(34)+', ROMX','ZhHudName'+str(i)+':',' rawchar '+chr(34)+row['original']+chr(34),' db '+str(width),' db '+','.join(map(str,data+bytes([83])))]
-  out += [' ds 80 - (@ - ZhHudName'+str(i)+'), 0']
+  out += ['.name'+str(i)+':',' db '+chr(34)+row['original']+chr(34),' db '+str(width),' db '+','.join(map(str,data+bytes([83])))]
  (source/'data/zh/battle_hud.asm').write_text(chr(10).join(out)+chr(10))
 
 def menu(source,language,manifest):

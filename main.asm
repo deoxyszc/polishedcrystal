@@ -762,12 +762,10 @@ INCLUDE "engine/zh/dialogue.asm"
 INCLUDE "engine/zh/dispatch.asm"
 INCLUDE "engine/zh/moves.asm"
 INCLUDE "engine/zh/battle_hud.asm"
+INCLUDE "data/zh/battle_hud.asm"
 INCLUDE "engine/zh/start_menu.asm"
 INCLUDE "engine/zh/party.asm"
-SECTION "Chinese party name index", ROMX, BANK[$80]
 INCLUDE "data/zh/party.asm"
-SECTION "Chinese HUD name index", ROMX, BANK[$80]
-INCLUDE "data/zh/battle_hud.asm"
 SECTION "Chinese compiled move names", ROMX
 INCLUDE "data/zh/move_names.asm"
 SECTION "Chinese font directory", ROMX, BANK[$80]
