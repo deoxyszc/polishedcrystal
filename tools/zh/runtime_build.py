@@ -31,6 +31,7 @@ def main():
   import battle_hud
   battle_hud.generate(source,a.language,manifest)
   battle_hud.menu(source,a.language,manifest)
+  battle_hud.party_actions(source,a.language,manifest)
   import move_names
   move_names.generate(source,a.language,manifest)
   import import_dialogue

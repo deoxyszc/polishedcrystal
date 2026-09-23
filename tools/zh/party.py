@@ -13,20 +13,22 @@ def generate(source,language,manifest):
         text=row.get('translation_'+language,'').strip().rstrip('@')
         if not text:continue
         raw=row['original']
-        if len(raw)!=10:raise ValueError('Invalid default name')
+        if len(raw.replace(chr(39)+'d','d'))!=10:raise ValueError('Invalid default name')
         data,_=cache_text.encode_pairs(text,glyphs,width_tiles=8,charmap=charmap,strip_map=maps['party_name'],leading_strips=1)
         plain=maps['party_name']['level_plain']
         four=len(text)==4 and all(not c.isascii() for c in text)
         variant=maps['party_name']['level_four'][glyphs[text[-1]]] if four else {'L':plain,'100':[65535,65535]}
         keys=variant['L']+variant['100']+plain
         header=bytes([int(four)]+[v for k in keys for v in (k>>8,k&255)])
-        label='.name'+str(len(names));names.append(' dw '+label)
-        body += [label+':',' db '+chr(34)+raw+chr(34), ' db '+str(6 if 1 <= len(text) <= 4 and all(not c.isascii() for c in text) else 4),' db '+','.join(map(str,header)), ' db '+','.join(map(str,data+bytes([0x53])))]
-    out=['ZhPartyNames::']+names+[' dw 0']+body
+        label='ZhPartyName'+str(len(names));names.append(' dba '+label)
+        body += ['SECTION '+chr(34)+label+chr(34)+', ROMX',label+':',' rawchar '+chr(34)+raw+chr(34), ' db '+str(6 if 1 <= len(text) <= 4 and all(not c.isascii() for c in text) else 4),' db '+','.join(map(str,header)), ' db '+','.join(map(str,data+bytes([0x53])))]
+        body += [' ds 80 - (@ - '+label+'), 0']
+    out=['ZhPartyNames::']+names+[' db 0,0,0']
     for label,key in [('ZhPartyCancel','PlacePartyNicknames.Cancel'),('ZhPartyPrompt','ChooseAMonString')]:
         row=next(row for row in rows if row['id']==f'engine/pokemon/party_menu.asm::{key}::1')
         text=(row.get('translation_'+language,'').strip() or row['original']).rstrip('@')
         text=cache_text.expand_static_ngrams(source,text)
         data,_=cache_text.encode_pairs(text,glyphs,width_tiles=18,charmap=charmap,strip_map=maps['party_footer'])
         out += [label+'::',' db '+','.join(map(str,data+bytes([0x53])))]
+    out += body
     (source/'data/zh/party.asm').write_text(chr(10).join(out)+chr(10))

@@ -25,6 +25,8 @@ ZhPartyLayout::
  ld hl,ZhPartyNames
 .search
  ld a,[hli]
+ ld [wZhNameBank],a
+ ld a,[hli]
  ld c,a
  ld a,[hli]
  ld b,a
@@ -33,6 +35,7 @@ ZhPartyLayout::
  push hl
  ld h,b
  ld l,c
+ call ZhCopyNameRecord
  ld de,wStringBuffer1
  ld b,10
 .compare

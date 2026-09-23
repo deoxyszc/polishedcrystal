@@ -4708,10 +4708,14 @@ endc
 .MenuData:
 	db $c0 ; flags
 	db 3 ; items
+if DEF(LOCALE_ZH)
+ INCLUDE "data/zh/battle_party_actions.asm"
+else
 	db "Switch@"
 	db "Summary@"
 	db "Cancel@"
 
+endc
 AI_OpponentCanSwitch:
 	call StackCallOpponentTurn
 AI_UserCanSwitch:

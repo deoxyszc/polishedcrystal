@@ -31,6 +31,7 @@ def apply(source,language,manifest):
    seen.add(row['id']);text=row.get('translation_'+language,'')
    if row['source_path']=='data/moves/names.asm':continue
    if row['id'].startswith('engine/battle/menu.asm::BattleMenuDataHeader.Strings::'):continue
+   if row['id'].startswith('engine/battle/core.asm::BattleMenuPKMN_Loop.MenuData::'):continue
    if row['resource_kind']!='text' or not text.strip():continue
    # Page assets are deliberately excluded until their new layouts exist.
    if row['source_path'].startswith(('engine/pokemon/summary/','engine/pokemon/party_menu.asm','data/pokemon/names.asm','data/abilities/','data/items/','data/natures.asm','data/characteristics.asm','data/maps/landmarks.asm','engine/rtc/timeset.asm','engine/menus/start_menu.asm')):continue
