@@ -34,33 +34,33 @@ ZhHideDialogue::
  and a
  ret
 
-ZhHideMoveGrid::
+ZhHideMoveList::
  push bc
  push hl
- hlcoord ZH_MOVE_GRID_LEFT, ZH_MOVE_GRID_TOP
- ld b, ZH_MOVE_GRID_STEP + 2
+ hlcoord ZH_MOVE_LIST_LEFT, ZH_MOVE_LIST_TOP
+ ld b, 8
 .row
- ld c, ZH_MOVE_GRID_WIDTH
+ ld c, 9
  ld a, $7f
 .tile
  ld [hli], a
  dec c
  jr nz, .tile
- rept SCREEN_WIDTH - ZH_MOVE_GRID_WIDTH
+ rept SCREEN_WIDTH - 9
  inc hl
  endr
  dec b
  jr nz, .row
- hlcoord ZH_MOVE_GRID_LEFT, ZH_MOVE_GRID_TOP, wAttrmap
- ld b, ZH_MOVE_GRID_STEP + 2
+ hlcoord ZH_MOVE_LIST_LEFT, ZH_MOVE_LIST_TOP, wAttrmap
+ ld b, 8
 .attrrow
- ld c, ZH_MOVE_GRID_WIDTH
+ ld c, 9
  ld a, 7
 .attr
  ld [hli], a
  dec c
  jr nz, .attr
- rept SCREEN_WIDTH - ZH_MOVE_GRID_WIDTH
+ rept SCREEN_WIDTH - 9
  inc hl
  endr
  dec b

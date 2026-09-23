@@ -449,7 +449,7 @@ Move2DMenuCursor:
 	ld [hl], a
 Place2DMenuCursor:
 if DEF(LOCALE_ZH)
- ld a,[wZhMoveGridActive]
+ ld a,[wZhMoveListActive]
  and a
  jr z,.ordinary
  farcall ZhMoveCursorCoord
@@ -458,6 +458,24 @@ if DEF(LOCALE_ZH)
  pop hl
  jr .cursor_on
 .ordinary
+ ld a,[wZhBattleCommandActive]
+ and a
+ jr z,.notBattleCommand
+ farcall ZhBattleCommandCursor
+ push hl
+ call ApplyAttrAndTilemapInVBlank
+ pop hl
+ jr .cursor_on
+.notBattleCommand
+ ld a,[wZhPartyActionActive]
+ and a
+ jr z,.notPartyAction
+ farcall ZhPartyActionCursor
+ push hl
+ call ApplyAttrAndTilemapInVBlank
+ pop hl
+ jr .cursor_on
+.notPartyAction
 endc
 	ld a, [w2DMenuCursorInitY]
 	ld b, a

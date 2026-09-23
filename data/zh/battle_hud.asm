@@ -1,0 +1,2 @@
+ZhBattleHudNames:
+ dw 0

@@ -1509,7 +1509,7 @@ wZhTextEnd:: dw
 wZhTextSlot:: db
 wZhTextControl:: db
 wZhNameBuffer:: ds 12
-wZhMoveGridActive:: db
+wZhMoveListActive:: db
 wZhMoveIndex:: db
 wZhPartyIndex:: db
 wZhPartyWidths:: ds 6
@@ -1521,4 +1521,18 @@ wZhPartyHP:: ds 7
 wZhPartyLevelKeys:: dw
 
 
+endc
+
+if DEF(LOCALE_ZH)
+wZhHudEnemyWidth:: db
+endc
+
+if DEF(LOCALE_ZH)
+wZhBattleCommandActive:: db
+endc
+
+
+
+if DEF(LOCALE_ZH)
+wZhPartyActionActive:: db
 endc

@@ -5,7 +5,7 @@ from dataclasses import replace
 from PIL import Image
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import strip_assets
-from layouts import DIALOGUE,MOVE_GRID
+from layouts import DIALOGUE,MOVE_LIST
 from cache_text import encode_pairs
 
 def pixels(assets,name):
@@ -23,11 +23,11 @@ with tempfile.TemporaryDirectory() as tmp:
     before=strip_assets.StripAssets(root,1)
     strip_assets.LAYOUTS={**strip_assets.LAYOUTS,'dialogue':replace(DIALOGUE,cjk_y=0,latin_y=4)}
     after=strip_assets.StripAssets(root,1)
-    assert pixels(before,'move_grid')==pixels(after,'move_grid')
+    assert pixels(before,'move_list')==pixels(after,'move_list')
     assert pixels(before,'dialogue')!=pixels(after,'dialogue')
-    assert before.maps['dialogue']['glyphs'][0] != before.maps['move_grid']['glyphs'][0]
+    assert before.maps['dialogue']['glyphs'][0] != before.maps['move_list']['glyphs'][0]
     # 8px Latin pixels retain their shape at the independently selected offset.
-    for name,offset in [('dialogue',8),('move_grid',4)]:
+    for name,offset in [('dialogue',8),('move_list',4)]:
         halves=[before.strips[k][::2] for k in before.maps[name]['latin'][:2]]
         for y in range(16):
             row=0
@@ -35,5 +35,5 @@ with tempfile.TemporaryDirectory() as tmp:
             assert row==(128>>(y-offset) if offset<=y<offset+8 else 0)
     encoded,tiles=encode_pairs('中',{'中':0},width_tiles=2,strip_map=before.maps['dialogue'])
     assert tiles==2 and len(encoded)==10
-    assert encoded != encode_pairs('中',{'中':0},width_tiles=2,strip_map=before.maps['move_grid'])[0]
+    assert encoded != encode_pairs('中',{'中':0},width_tiles=2,strip_map=before.maps['move_list'])[0]
 print('PASS independent layout pixels, distinct cache identities, unchanged Latin pixels')

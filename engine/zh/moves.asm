@@ -1,6 +1,5 @@
-; Carry set when a selected move exceeds its composed cell (72px left,
-; 56px right after the cursor and 80px column offset in a 144px line).
-ZhCanDrawMoveGrid::
+; Carry set when a move exceeds the 64px vertical-list text region.
+ZhCanDrawMoveList::
  ; Reordering uses the original list and its original swap-marker geometry.
  ld a,[wMoveSwapBuffer]
  and a
@@ -22,14 +21,8 @@ ZhCanDrawMoveGrid::
  ld e,a
  pop bc
  pop hl
- bit 0,b
  ld a,e
- jr nz,.right
- cp 73
- jr .checked
-.right
- cp 57
-.checked
+ cp 65
  jr nc,.wide
  dec b
  jr nz,.loop
@@ -40,9 +33,9 @@ ZhCanDrawMoveGrid::
  scf
  ret
 
-; Four move slots in a 2x2 grid. Screen rows 13..16, never EXP row11.
-ZhDrawMoveGrid::
- call ZhHideMoveGrid
+; Four vertical slots, with independent 16px line spacing.
+ZhDrawMoveList::
+ call ZhHideMoveList
  call ApplyAttrAndTilemapInVBlank
  ldh a, [rWBK]
  push af
@@ -72,16 +65,12 @@ ZhDrawMoveGrid::
  ld a, BANK(ZhMoveNames)
  call GetFarByte
  ld d, a
- ld a, [wZhMoveIndex]
- hlcoord ZH_MOVE_GRID_LEFT + 1, ZH_MOVE_GRID_TOP
- bit 1, a
- jr z, .column
- hlcoord ZH_MOVE_GRID_LEFT + 1, ZH_MOVE_GRID_TOP + ZH_MOVE_GRID_STEP
-.column
- bit 0, a
- jr z, .draw
- ld bc, 10
- add hl, bc
+ push de
+ ld a,[wZhMoveIndex]
+ hlcoord 2,9
+ ld bc,SCREEN_WIDTH * 2
+ rst AddNTimes
+ pop de
 .draw
  ld a, BANK(ZhMoveNames)
  call FarString
@@ -94,53 +83,21 @@ ZhDrawMoveGrid::
 
 ; Return physical cursor location from original 1-based linear move selection.
 ZhMoveCursorCoord::
- ; Cursor cells are static spaces, never borrowed glyph slots.
- hlcoord 1,13
+ hlcoord 1,9
+ ld b,8
+.clear
  ld [hl],$7f
- hlcoord 1,13,wAttrmap
- ld [hl],7
- hlcoord 11,13
- ld [hl],$7f
- hlcoord 11,13,wAttrmap
- ld [hl],7
- hlcoord 1,14
- ld [hl],$7f
- hlcoord 1,14,wAttrmap
- ld [hl],7
- hlcoord 11,14
- ld [hl],$7f
- hlcoord 11,14,wAttrmap
- ld [hl],7
- hlcoord 1,15
- ld [hl],$7f
- hlcoord 1,15,wAttrmap
- ld [hl],7
- hlcoord 11,15
- ld [hl],$7f
- hlcoord 11,15,wAttrmap
- ld [hl],7
- hlcoord 1,16
- ld [hl],$7f
- hlcoord 1,16,wAttrmap
- ld [hl],7
- hlcoord 11,16
- ld [hl],$7f
- hlcoord 11,16,wAttrmap
- ld [hl],7
+ ld de,SCREEN_WIDTH
+ add hl,de
+ dec b
+ jr nz,.clear
  ld a,[wMenuCursorY]
  dec a
- bit 1,a
- hlcoord 1,13
- jr z,.column
- hlcoord 1,15
-.column
- bit 0,a
- jr z,.cursorAttr
- ld bc,10
- add hl,bc
-.cursorAttr
+ hlcoord 1,9
+ ld bc,SCREEN_WIDTH * 2
+ rst AddNTimes
  push hl
- hlcoord 1,9,wAttrmap
+ hlcoord 11,13,wAttrmap
  ld b,6
 .infoAttrs
  ld [hl],PAL_BATTLE_BG_TYPE_CAT
@@ -148,6 +105,7 @@ ZhMoveCursorCoord::
  dec b
  jr nz,.infoAttrs
  pop hl
+ZhDrawTallBattleCursor::
  push hl
  ld [hl],$c8
  ld bc,SCREEN_WIDTH
@@ -179,3 +137,73 @@ ZhMoveCursorCoord::
 ZhMoveCursorTiles:
  db 0,0,0,0,0,0,0,0,0,0,$80,$80,$c0,$c0,$e0,$e0
  db $f0,$f0,$e0,$e0,$c0,$c0,$80,$80,0,0,0,0,0,0,0,0
+
+; Preserve coordinate and move-property registers; carry selects legacy geometry.
+ZhUseVerticalMoveList::
+ push bc
+ push de
+ push hl
+ ld a,[wMoveSelectionMenuType]
+ and a
+ scf
+ jr nz,.done
+ call ZhCanDrawMoveList
+.done
+ pop hl
+ pop de
+ pop bc
+ ret
+
+ZhBattleCommandCursor::
+ hlcoord 7,13
+ ld b,4
+.clear
+ ld [hl],$7f
+ push hl
+ ld de,6
+ add hl,de
+ ld [hl],$7f
+ pop hl
+ push hl
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ ld [hl],PAL_BATTLE_BG_TEXT
+ ld de,6
+ add hl,de
+ ld [hl],PAL_BATTLE_BG_TEXT
+ pop hl
+ ld de,SCREEN_WIDTH
+ add hl,de
+ dec b
+ jr nz,.clear
+ hlcoord 7,13
+ ld a,[wMenuCursorY]
+ dec a
+ ld bc,2 * SCREEN_WIDTH
+ rst AddNTimes
+ ld a,[wMenuCursorX]
+ dec a
+ ld bc,6
+ rst AddNTimes
+ jp ZhDrawTallBattleCursor
+
+ZhPartyActionCursor::
+ hlcoord 14,11
+ ld b,6
+.clear
+ ld [hl],$7f
+ push hl
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ ld [hl],PAL_BATTLE_BG_TEXT
+ pop hl
+ ld de,SCREEN_WIDTH
+ add hl,de
+ dec b
+ jr nz,.clear
+ hlcoord 14,11
+ ld a,[wMenuCursorY]
+ dec a
+ ld bc,2 * SCREEN_WIDTH
+ rst AddNTimes
+ jp ZhDrawTallBattleCursor

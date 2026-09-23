@@ -194,7 +194,11 @@ ClearActorHUD:
 	; fallthrough
 ClearEnemyHUD:
 	hlcoord 0, 0
+if DEF(LOCALE_ZH)
+	lb bc, 4, 11
+else
 	lb bc, 3, 11
+endc
 	jmp ClearBox
 
 BattleAnimCmd_ClearOpponentHUD:
@@ -203,9 +207,29 @@ BattleAnimCmd_ClearOpponentHUD:
 	jr z, ClearEnemyHUD
 	; fallthrough
 ClearPlayerHUD:
+if DEF(LOCALE_ZH)
+ ; Name occupies at most eight tiles, ending before gender at x128.
+ hlcoord 8,7
+ lb bc,2,12
+ call ClearBox
+ ; Lower HP/EXP region must not erase the battler picture to its left.
+ hlcoord 8,9
+ lb bc,3,12
+ call ClearBox
+ ; Cleared spaces must use the native bank, not stale glyph/cursor banks.
+ hlcoord 8,7,wAttrmap
+ lb bc,2,12
+ ld a,PAL_BATTLE_BG_TEXT
+ call FillBoxWithByte
+ hlcoord 8,9,wAttrmap
+ lb bc,3,12
+ ld a,PAL_BATTLE_BG_PLAYER_HP
+ call FillBoxWithByte
+else
 	hlcoord 11, 7
 	lb bc, 5, 9
 	call ClearBox
+endc
 	ld a, ' '
 	hlcoord 10, 7
 	ld [hl], a
