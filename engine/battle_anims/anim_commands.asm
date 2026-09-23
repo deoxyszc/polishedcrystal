@@ -213,9 +213,18 @@ if DEF(LOCALE_ZH)
  lb bc,2,12
  call ClearBox
  ; Lower HP/EXP region must not erase the battler picture to its left.
- hlcoord 10,9
- lb bc,3,10
+ hlcoord 8,9
+ lb bc,3,12
  call ClearBox
+ ; Cleared spaces must use the native bank, not stale glyph/cursor banks.
+ hlcoord 8,7,wAttrmap
+ lb bc,2,12
+ ld a,PAL_BATTLE_BG_TEXT
+ call FillBoxWithByte
+ hlcoord 8,9,wAttrmap
+ lb bc,3,12
+ ld a,PAL_BATTLE_BG_PLAYER_HP
+ call FillBoxWithByte
 else
 	hlcoord 11, 7
 	lb bc, 5, 9
