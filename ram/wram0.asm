@@ -1522,3 +1522,7 @@ wZhPartyLevelKeys:: dw
 
 
 endc
+
+if DEF(LOCALE_ZH)
+wZhHudEnemyWidth:: db
+endc

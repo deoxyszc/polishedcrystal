@@ -21,7 +21,9 @@ MOVE_LIST = Layout(1, 9, 18, 2, 2, 4)
 START_MENU = Layout(12, 1, 7, 2, 4, 8)
 PARTY_NAME = Layout(2, 0, 8, 2, 4, 8)
 PARTY_FOOTER = Layout(1, 12, 18, 2, 4, 8)
-LAYOUTS = {"party_name": PARTY_NAME, "party_footer": PARTY_FOOTER, "dialogue": DIALOGUE, "move_list": MOVE_LIST, "start_menu": START_MENU}
+BATTLE_HUD = Layout(1, 0, 8, 2, 2, 4)
+BATTLE_COMMAND = Layout(7, 13, 12, 2, 2, 4)
+LAYOUTS = {'battle_command': BATTLE_COMMAND, 'battle_hud': BATTLE_HUD, "party_name": PARTY_NAME, "party_footer": PARTY_FOOTER, "dialogue": DIALOGUE, "move_list": MOVE_LIST, "start_menu": START_MENU}
 
 def emit_constants(source):
     lines = ["; Generated from tools/zh/layouts.py. No runtime layout selection."]

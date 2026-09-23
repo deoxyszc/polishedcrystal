@@ -3976,7 +3976,11 @@ DrawPlayerHUD:
 
 	; Status icon
 	farcall LoadPlayerStatusIcon
+if DEF(LOCALE_ZH)
+	hlcoord 10, 10
+else
 	hlcoord 12, 8
+endc
 	ld a, $55
 	ld [hli], a
 	ld [hl], $56
@@ -4013,6 +4017,11 @@ CheckDanger:
 	ret
 
 PrintPlayerHUD:
+if DEF(LOCALE_ZH)
+ ld de,wBattleMonNickname
+ hlcoord 7,7
+ farcall ZhBattleHudName
+else
 	ld de, wBattleMonNickname
 	hlcoord 11, 7
 	ld a, [wBattleMonNickname + MON_NAME_LENGTH - 2]
@@ -4022,6 +4031,7 @@ PrintPlayerHUD:
 .short_name
 	rst PlaceString
 
+endc
 	push bc
 
 	ld a, [wCurBattleMon]
@@ -4072,10 +4082,18 @@ endr
 	inc a ; "<FEMALE>"
 
 .got_gender_char
+if DEF(LOCALE_ZH)
+	hlcoord 16, 8
+else
 	hlcoord 18, 8
+endc
 	ld [hl], a
 
+if DEF(LOCALE_ZH)
+	hlcoord 17, 8
+else
 	hlcoord 15, 8
+endc
 	ld a, [wBattleMonLevel]
 	ld [wTempMonLevel], a
 	jmp PrintLevel
@@ -4115,7 +4133,11 @@ DrawEnemyHUD:
 	ld de, wEnemyMonNickname
 .got_nickname
 	hlcoord 1, 0
+if DEF(LOCALE_ZH)
+	farcall ZhBattleHudName
+else
 	rst PlaceString
+endc
 	ld h, b
 	ld l, c
 	dec hl
@@ -4135,7 +4157,11 @@ endr
 	farcall CheckShininess
 	jr nc, .not_shiny
 	ld a, '<SHINY>'
+if DEF(LOCALE_ZH)
+	hlcoord 0, 2
+else
 	hlcoord 9, 1
+endc
 	ld [hl], a
 
 .not_shiny
@@ -4153,10 +4179,34 @@ endr
 	inc a ; "<FEMALE>"
 
 .got_gender
+if DEF(LOCALE_ZH)
+ push af
+ ld a,[wZhHudEnemyWidth]
+ and a
+ jr z,.legacyEnemyMeta
+ inc a
+ ld e,a
+ ld d,0
+ hlcoord 0,1
+ add hl,de
+ pop af
+ ld [hli],a
+ jr .enemyMetaDone
+.legacyEnemyMeta
+ pop af
+ hlcoord 8,1
+ ld [hl],a
+ hlcoord 5,1
+.enemyMetaDone
+else
 	hlcoord 8, 1
 	ld [hl], a
+endc
 
+if DEF(LOCALE_ZH)
+else
 	hlcoord 5, 1
+endc
 	ld a, [wEnemyMonLevel]
 	ld [wTempMonLevel], a
 	call PrintLevel
@@ -4226,7 +4276,25 @@ endr
 	call DrawBattleHPBar
 
 	farcall LoadEnemyStatusIcon
+if DEF(LOCALE_ZH)
+ ld a,[wEnemyMonStatus]
+ and a
+ jp z,FinishBattleAnim
+ ld a,[wZhHudEnemyWidth]
+ add 2
+ ld e,a
+ ld d,0
+ hlcoord 0,1
+ add hl,de
+ push hl
+ ld a,$7f
+ ld [hli],a
+ ld [hli],a
+ ld [hl],a
+ pop hl
+else
 	hlcoord 2, 1
+endc
 	ld a, $57
 	ld [hli], a
 	ld [hl], $58
@@ -5540,14 +5608,26 @@ MoveInfoBox:
  push af
  farcall ZhUseVerticalMoveList
  jr c,.legacyCoord0
+if DEF(LOCALE_ZH)
+hlcoord 10, 12
+else
 	hlcoord 10, 12
+endc
  jr .coordDone0
 .legacyCoord0
+if DEF(LOCALE_ZH)
+hlcoord 0, 8
+else
 	hlcoord 0, 8
+endc
 .coordDone0
  pop af
 else
+if DEF(LOCALE_ZH)
+hlcoord 0, 8
+else
 	hlcoord 0, 8
+endc
 endc
 	ld a, [hl]
 	cp '┌'
@@ -5556,14 +5636,26 @@ endc
  push af
  farcall ZhUseVerticalMoveList
  jr c,.legacyCoord1
+if DEF(LOCALE_ZH)
+lb bc, 4, 8
+else
 	lb bc, 4, 8
+endc
  jr .coordDone1
 .legacyCoord1
+if DEF(LOCALE_ZH)
+lb bc, 3, 9
+else
 	lb bc, 3, 9
+endc
 .coordDone1
  pop af
 else
+if DEF(LOCALE_ZH)
+lb bc, 3, 9
+else
 	lb bc, 3, 9
+endc
 endc
 	call Textbox
 
@@ -5601,14 +5693,26 @@ endc
  push af
  farcall ZhUseVerticalMoveList
  jr c,.legacyCoord2
+if DEF(LOCALE_ZH)
+hlcoord 11, 14
+else
 	hlcoord 11, 14
+endc
  jr .coordDone2
 .legacyCoord2
+if DEF(LOCALE_ZH)
+hlcoord 1, 10
+else
 	hlcoord 1, 10
+endc
 .coordDone2
  pop af
 else
+if DEF(LOCALE_ZH)
+hlcoord 1, 10
+else
 	hlcoord 1, 10
+endc
 endc
 	ld de, .PowAcc
 if DEF(LOCALE_ZH)
@@ -5652,14 +5756,26 @@ endc
  push af
  farcall ZhUseVerticalMoveList
  jr c,.legacyCoord3
+if DEF(LOCALE_ZH)
+hlcoord 15, 14
+else
 	hlcoord 15, 14
+endc
  jr .coordDone3
 .legacyCoord3
+if DEF(LOCALE_ZH)
+hlcoord 6, 10
+else
 	hlcoord 6, 10
+endc
 .coordDone3
  pop af
 else
+if DEF(LOCALE_ZH)
+hlcoord 6, 10
+else
 	hlcoord 6, 10
+endc
 endc
 	cp -1
 	jr nc, .no_acc
@@ -5706,14 +5822,26 @@ endc
  push af
  farcall ZhUseVerticalMoveList
  jr c,.legacyCoord4
+if DEF(LOCALE_ZH)
+hlcoord 11, 13
+else
 	hlcoord 11, 13
+endc
  jr .coordDone4
 .legacyCoord4
+if DEF(LOCALE_ZH)
+hlcoord 1, 9
+else
 	hlcoord 1, 9
+endc
 .coordDone4
  pop af
 else
+if DEF(LOCALE_ZH)
+hlcoord 1, 9
+else
 	hlcoord 1, 9
+endc
 endc
 	ld b, 6
 	ld a, $59
@@ -5740,14 +5868,26 @@ endc
  push af
  farcall ZhUseVerticalMoveList
  jr c,.legacyCoord5
+if DEF(LOCALE_ZH)
+hlcoord 11, 16
+else
 	hlcoord 11, 16
+endc
  jr .coordDone5
 .legacyCoord5
+if DEF(LOCALE_ZH)
+hlcoord 2, 11
+else
 	hlcoord 2, 11
+endc
 .coordDone5
  pop af
 else
+if DEF(LOCALE_ZH)
+hlcoord 2, 11
+else
 	hlcoord 2, 11
+endc
 endc
 	ld a, '<BOLDP>'
 	ld [hli], a

@@ -37,23 +37,35 @@ _BattleMenuCommon:
 
 BattleMenuDataHeader:
 	db MENU_BACKUP_TILES
-	menu_coords 8, 12, 19, 17
+	if DEF(LOCALE_ZH)
+ menu_coords 6,12,19,17
+else
+ menu_coords 8,12,19,17
+endc
 	dw .MenuData2
 	db 1 ; default option
 
 .MenuData2:
-	db $87 ; flags
+	if DEF(LOCALE_ZH)
+ db $c7
+else
+ db $87
+endc
 	dn 2, 2 ; rows, columns
 	db 6 ; spacing
 	dba .Strings
 	dbw BANK(.MenuData2), 0
 
 .Strings:
+if DEF(LOCALE_ZH)
+ INCLUDE "data/zh/battle_command.asm"
+else
 	db "Fight@"
 	db "<PK><MN>@"
 	db "Bag@"
 	db "Run@"
 
+endc
 ContestBattleMenuDataHeader:
 	db MENU_BACKUP_TILES
 	menu_coords 5, 12, 19, 17

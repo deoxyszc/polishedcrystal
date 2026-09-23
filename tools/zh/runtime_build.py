@@ -28,6 +28,9 @@ def main():
   party.generate(source,a.language,manifest)
   import start_menu
   start_menu.generate(source,a.language,manifest)
+  import battle_hud
+  battle_hud.generate(source,a.language,manifest)
+  battle_hud.menu(source,a.language,manifest)
   import move_names
   move_names.generate(source,a.language,manifest)
   import import_dialogue
