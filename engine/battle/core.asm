@@ -4671,7 +4671,12 @@ BattleMenuPKMN_Loop:
 	call MenuBox
 	call UpdateSprites
 	call PlaceVerticalMenuItems
+if DEF(LOCALE_ZH)
+ ; Publish the submenu attributes too: the covered footer uses cached tiles.
+ call ApplyAttrAndTilemapInVBlank
+else
 	call ApplyTilemapInVBlank
+endc
 	call CopyMenuData2
 	ld a, [wMenuDataFlags]
 	bit 7, a
