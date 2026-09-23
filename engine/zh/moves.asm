@@ -188,7 +188,7 @@ ZhBattleCommandCursor::
  jp ZhDrawTallBattleCursor
 
 ZhPartyActionCursor::
- hlcoord 15,11
+ hlcoord 14,11
  ld b,6
 .clear
  ld [hl],$7f
@@ -201,7 +201,7 @@ ZhPartyActionCursor::
  add hl,de
  dec b
  jr nz,.clear
- hlcoord 15,11
+ hlcoord 14,11
  ld a,[wMenuCursorY]
  dec a
  ld bc,2 * SCREEN_WIDTH

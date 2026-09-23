@@ -4710,7 +4710,7 @@ endc
 .MenuHeader:
 	db $00 ; flags
 if DEF(LOCALE_ZH)
- menu_coords 14,10,19,17
+ menu_coords 13,10,19,17
 else
 	menu_coords 10, 11, 19, 17
 endc
