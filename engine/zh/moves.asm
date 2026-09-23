@@ -105,6 +105,7 @@ ZhMoveCursorCoord::
  dec b
  jr nz,.infoAttrs
  pop hl
+ZhDrawTallBattleCursor::
  push hl
  ld [hl],$c8
  ld bc,SCREEN_WIDTH
@@ -152,3 +153,36 @@ ZhUseVerticalMoveList::
  pop de
  pop bc
  ret
+
+ZhBattleCommandCursor::
+ hlcoord 7,13
+ ld b,4
+.clear
+ ld [hl],$7f
+ push hl
+ ld de,6
+ add hl,de
+ ld [hl],$7f
+ pop hl
+ push hl
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ ld [hl],PAL_BATTLE_BG_TEXT
+ ld de,6
+ add hl,de
+ ld [hl],PAL_BATTLE_BG_TEXT
+ pop hl
+ ld de,SCREEN_WIDTH
+ add hl,de
+ dec b
+ jr nz,.clear
+ hlcoord 7,13
+ ld a,[wMenuCursorY]
+ dec a
+ ld bc,2 * SCREEN_WIDTH
+ rst AddNTimes
+ ld a,[wMenuCursorX]
+ dec a
+ ld bc,6
+ rst AddNTimes
+ jp ZhDrawTallBattleCursor

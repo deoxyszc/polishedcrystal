@@ -458,6 +458,15 @@ if DEF(LOCALE_ZH)
  pop hl
  jr .cursor_on
 .ordinary
+ ld a,[wZhBattleCommandActive]
+ and a
+ jr z,.notBattleCommand
+ farcall ZhBattleCommandCursor
+ push hl
+ call ApplyAttrAndTilemapInVBlank
+ pop hl
+ jr .cursor_on
+.notBattleCommand
 endc
 	ld a, [w2DMenuCursorInitY]
 	ld b, a

@@ -1526,3 +1526,7 @@ endc
 if DEF(LOCALE_ZH)
 wZhHudEnemyWidth:: db
 endc
+
+if DEF(LOCALE_ZH)
+wZhBattleCommandActive:: db
+endc

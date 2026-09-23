@@ -1,4 +1,8 @@
 LoadBattleMenu:
+if DEF(LOCALE_ZH)
+ ld a,1
+ ld [wZhBattleCommandActive],a
+endc
 	ld hl, BattleMenuDataHeader
 	jr _BattleMenuCommon
 
@@ -28,6 +32,10 @@ _BattleMenuCommon:
 .ok2
 	ld [wBattleMenuFlags], a
 	call _2DMenu
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhBattleCommandActive],a
+endc
 	ld a, [wBattleMenuFlags]
 	and QUICK_PACK
 	ld [wBattleMenuFlags], a
