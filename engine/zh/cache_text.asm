@@ -117,3 +117,141 @@ MACRO zh_dynamic_name
 ENDM
 zh_dynamic_name ZhPlaceDynamicName, ZhDialogueLatinStrips
 zh_dynamic_name ZhPlaceStartMenuName, ZhStartMenuLatinStrips
+
+; Original one-byte strings keep their 8x8 cells, line controls and endpoint.
+; Key ($f800 + font-index*128 + character),$ffff identifies original fonts.
+; No lower map cell is touched. Static symbols/numerals retain bank0 IDs.
+ZhPlaceLegacyLiteral::
+ push bc
+ push de
+ cp $80
+ jr c,.static
+ cp ZH_CACHE_END_TILE
+ jr nc,.static
+ push hl
+ sub $80
+ ld c,a
+ ld a,[wOptions2]
+ and FONT_MASK
+ ld b,a
+ srl a
+ add $f8
+ ld d,a
+ ld a,b
+ and 1
+ rrca
+ or c
+ ld c,a
+ ld b,d
+ ld de,$ffff
+ pop hl
+ ldh a,[rWBK]
+ push af
+ ld a,BANK(wZhCacheKeys)
+ ldh [rWBK],a
+ ld a,[wZhPolicy]
+ and a
+ jr nz,.active
+ ld a,ZH_VRAM_BOTH
+ call ZhGlyphCacheInit
+.active
+ call ZhEnsureCacheBlock
+ jr c,.failed
+ push hl
+ call ZhGlyphCacheLocation
+ ld [hl],a
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ ld a,[hl]
+ and $ff ^ BG_BANK1
+ bit 0,b
+ jr z,.attr
+ or BG_BANK1
+.attr
+ ld [hl],a
+ pop hl
+ inc hl
+ pop af
+ ldh [rWBK],a
+ pop de
+ pop bc
+ and a
+ ret
+.failed
+ pop af
+ ldh [rWBK],a
+ pop de
+ pop bc
+ scf
+ ret
+.static
+ ld [hli],a
+ push hl
+ ld bc,wAttrmap-wTilemap-1
+ add hl,bc
+ res B_BG_BANK1,[hl]
+ pop hl
+ pop de
+ pop bc
+ and a
+ ret
+
+; Reserved tagged key, original font selection compiled as a pointer table.
+; B=$f8..$fb, C contains the low seven character bits and one font bit.
+ZhComposeLegacyLiteral::
+ push bc
+ push de
+ push hl
+ ld a,c
+ and $7f
+ ld l,a
+ ld h,0
+ add hl,hl
+ add hl,hl
+ add hl,hl
+ push hl
+ ld a,c
+ rlca
+ and 1
+ ld c,a
+ ld a,b
+ sub $f8
+ add a
+ or c
+ add a
+ ld c,a
+ ld b,0
+ ld hl,.fonts
+ add hl,bc
+ ld a,[hli]
+ ld h,[hl]
+ ld l,a
+ pop de
+ add hl,de
+ ld de,wZhCachePixels
+ ld c,8
+.row
+ ld a,BANK(FontTiles)
+ call GetFarByte
+ inc hl
+ ld [de],a
+ inc de
+ ld [de],a
+ inc de
+ dec c
+ jr nz,.row
+ xor a
+ ld c,16
+.blank
+ ld [de],a
+ inc de
+ dec c
+ jr nz,.blank
+ pop hl
+ pop de
+ pop bc
+ and a
+ ret
+.fonts
+ dw FontNormal,FontNarrow,FontBold,FontItalic
+ dw FontSerif,FontChicago,FontMICR,FontUnown

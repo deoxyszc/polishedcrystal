@@ -2,6 +2,12 @@
 ; BC=left strip, DE=right strip. Output wZhCachePixels (8x16, 2bpp).
 ; Caller selects cache WRAM. Preserves BC/DE/HL, carry on invalid ID.
 ZhComposeCacheBlock::
+ ld a,b
+ cp $f8
+ jr c,.strips
+ cp $fc
+ jp c,ZhComposeLegacyLiteral
+.strips
  push bc
  push de
  push hl

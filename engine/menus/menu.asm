@@ -523,6 +523,16 @@ _PushWindow::
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
+if DEF(LOCALE_ZH)
+ ; Reject exhausted stacks before writing even the fixed header/link.
+ ld a,e
+ sub 18
+ ld a,d
+ sbc 0
+ cp HIGH(wWindowStack)
+ ld a,ERR_WINDOW_OVERFLOW
+ jp c,Crash
+endc
 	push de
 
 	ld b, $10
@@ -547,6 +557,7 @@ _PushWindow::
 	ld l, a
 	set 0, [hl]
 if DEF(LOCALE_ZH)
+	call PushWindow_MenuBoxCoordToTile
 	call GetTileBackupMenuBoxDims
 	farcall ZhWindowCheckSpace
 	ld a, ERR_WINDOW_OVERFLOW
