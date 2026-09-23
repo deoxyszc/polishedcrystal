@@ -1,90 +1,148 @@
-; Window-stack adapters. Original stack stays in bank 7; six-byte records
-; preserve dynamic strip IDs instead of pinning old VRAM slots.
-; HL=map cell, DE=descending stack. Preserve BC/HL, advance DE by six.
+; Descending window stack: tile, attribute, optional four-byte key.
+; Bit4 is a storage tag only, never copied to the live attribute map.
+; Static records use 2 bytes; dynamic records retain the 6-byte payload.
+ZhWindowPrepareRecord::
+ push de
+ ld de,wZhBackupCell
+ call ZhCacheBackupCell
+ pop de
+ ld hl,wZhBackupCell + 1
+ res 4,[hl]
+ ld hl,wZhBackupCell + 2
+ ld a,[hli]
+ and [hl]
+ inc hl
+ and [hl]
+ inc hl
+ and [hl]
+ inc a
+ ld c,2
+ ret z
+ ld hl,wZhBackupCell + 1
+ set 4,[hl]
+ ld c,6
+ ret
+
+; HL=map cell, DE=stack pointer; BC/HL preserved, DE decremented by size.
 ZhWindowBackupCell::
- ld a, BANK(wZhCacheKeys)
+ ld a,BANK(wZhCacheKeys)
  call StackCallInWRAMBankA
 .bank
  push bc
- push de
- ld de, wZhBackupCell
- call ZhCacheBackupCell
- pop de
  push hl
- ld hl, wZhBackupCell
- ld c, 6
+ call ZhWindowPrepareRecord
+ ld hl,wZhBackupCell
 .copy
- ld b, [hl]
- ld a, BANK(wWindowStack)
- ldh [rWBK], a
- ld a, b
- ld [de], a
+ ld b,[hl]
+ ld a,BANK(wWindowStack)
+ ldh [rWBK],a
+ ld a,b
+ ld [de],a
  dec de
- ld a, BANK(wZhCacheKeys)
- ldh [rWBK], a
+ ld a,BANK(wZhCacheKeys)
+ ldh [rWBK],a
  inc hl
  dec c
- jr nz, .copy
+ jr nz,.copy
  pop hl
  pop bc
  ret
 
 ZhWindowRestoreCell::
- ld a, BANK(wZhCacheKeys)
+ ld a,BANK(wZhCacheKeys)
  call StackCallInWRAMBankA
 .bank
  push bc
  push hl
- ld hl, wZhBackupCell
- ld c, 6
-.copy
- ld a, BANK(wWindowStack)
- ldh [rWBK], a
- ld a, [de]
- ld b, a
- dec de
- ld a, BANK(wZhCacheKeys)
- ldh [rWBK], a
- ld [hl], b
- inc hl
+ ld hl,wZhBackupCell
+ ; Read the fixed header before deciding whether a key follows.
+ call .read
+ call .read
+ ld a,[wZhBackupCell + 1]
+ bit 4,a
+ jr z,.static
+ and $ef
+ ld [wZhBackupCell + 1],a
+ ld c,4
+.dynamic
+ call .read
  dec c
- jr nz, .copy
+ jr nz,.dynamic
+ jr .restore
+.static
+ ld a,$ff
+ rept 4
+ ld [hli],a
+ endr
+.restore
  pop hl
  push de
- ld de, wZhBackupCell
+ ld de,wZhBackupCell
  call ZhCacheRestoreCell
  pop de
  pop bc
  ret
+.read
+ ld a,BANK(wWindowStack)
+ ldh [rWBK],a
+ ld a,[de]
+ ld b,a
+ dec de
+ ld a,BANK(wZhCacheKeys)
+ ldh [rWBK],a
+ ld [hl],b
+ inc hl
+ ret
 
-; B/C=runtime menu rectangle, DE=descending stack pointer. Preserve registers.
-; Check before copying cells; include trailing saved pointer.
+; Exact preflight: inspect precisely the same cells/keys as the encoder.
+; HL=top-left cell, BC=rectangle, DE=stack after menu header.
+; No stack writes, cache mutation or allocation. Preserve BC/DE/HL.
 ZhWindowCheckSpace::
+ ld a,BANK(wZhCacheKeys)
+ call StackCallInWRAMBankA
+.bank
  push hl
  push bc
  push de
- ld hl, 0
- ld d, 0
- ld e, c
-.size
- add hl, de
- dec b
- jr nz, .size
- ld d, h
- ld e, l
- add hl, hl
- add hl, de
- add hl, hl
- inc hl
- inc hl
- ld b, h
- ld c, l
- pop de
- ld a, e
+ ; Reserve two bytes for the trailing window link first.
+ dec de
+ dec de
+.row
+ push bc
+ push hl
+.col
+ push bc
+ push hl
+ call ZhWindowPrepareRecord
+ ld a,e
  sub c
- ld a, d
- sbc b
+ ld e,a
+ ld a,d
+ sbc 0
+ ld d,a
  cp HIGH(wWindowStack)
+ pop hl
+ pop bc
+ jr c,.overflow
+ inc hl
+ dec c
+ jr nz,.col
+ pop hl
+ push bc
+ ld bc,SCREEN_WIDTH
+ add hl,bc
+ pop bc
+ pop bc
+ dec b
+ jr nz,.row
+ and a
+ jr .done
+.overflow
+ pop hl
+ pop bc
+ scf
+.done
+ pop de
  pop bc
  pop hl
  ret

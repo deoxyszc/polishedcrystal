@@ -178,7 +178,13 @@ _PlaceString::
 SpaceChar::
 	ld a, ' '
 _PlaceLiteralChar:
-	ld [hli], a
+if DEF(LOCALE_ZH)
+ farcall ZhPlaceLegacyLiteral
+ ld a,ERR_WINDOW_OVERFLOW
+ jp c,Crash
+else
+ ld [hli],a
+endc
 	call PrintLetterDelay
 NextChar::
 	inc de

@@ -46,7 +46,7 @@ class StripAssets:
         if not any(pixels):
             return 0xffff
         if pixels not in self.ids:
-            if len(self.strips) >= 0xffff:
+            if len(self.strips) >= 0xf800:
                 raise ValueError("Too many compiled strips")
             self.ids[pixels] = len(self.strips)
             self.strips.append(pixels)

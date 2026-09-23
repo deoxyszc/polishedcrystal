@@ -58,3 +58,17 @@ At level 100 the L is omitted; the four-character shared cell preserves the
 reviewed small overlap between the last glyph and the digit 1. Shared-cell
 variants are compiled as individual strips, not whole strings.
 Layout choice is currently per member, not the longest name in the party.
+
+Original one-byte PlaceString input now uses one-cell cached Latin glyphs
+with font-sensitive tagged keys ($f800..$fbff). It preserves original 8x8
+geometry, controls, string endpoints and the cell below. Static symbols and
+numerals outside the cache pool still use their original bank0 tiles.
+This does not cover arbitrary direct tile writes bypassing PlaceString, and
+is independent of the window-stack record format.
+
+Window-stack records now reserve attribute bit4 as a private storage tag.
+Static cells occupy two bytes; dynamic cache cells append four key bytes.
+The incoming bit4 is cleared before tagging and removed on restore. The
+preflight scans the same rectangle with the same record classifier to measure
+actual size before copying cells. Temporary-map sidecars keep their existing
+fixed format. No additional WRAM bank is borrowed by this change.
