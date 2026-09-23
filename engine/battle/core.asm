@@ -4684,7 +4684,15 @@ endc
 	call InitVerticalMenuCursor
 	ld hl, w2DMenuFlags1
 	set 6, [hl]
+if DEF(LOCALE_ZH)
+ ld a,1
+ ld [wZhPartyActionActive],a
+endc
 	call DoMenuJoypadLoop
+if DEF(LOCALE_ZH)
+ xor a
+ ld [wZhPartyActionActive],a
+endc
 	ld de, SFX_READ_TEXT_2
 	call PlaySFX
 	ldh a, [hJoyPressed]
@@ -4701,7 +4709,11 @@ endc
 
 .MenuHeader:
 	db $00 ; flags
+if DEF(LOCALE_ZH)
+ menu_coords 14,10,19,17
+else
 	menu_coords 10, 11, 19, 17
+endc
 	dw .MenuData
 	db 1 ; default option
 

@@ -1535,3 +1535,7 @@ if DEF(LOCALE_ZH)
 wZhNameBank:: db
 wZhNameRecord:: ds 80
 endc
+
+if DEF(LOCALE_ZH)
+wZhPartyActionActive:: db
+endc

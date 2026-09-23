@@ -186,3 +186,24 @@ ZhBattleCommandCursor::
  ld bc,6
  rst AddNTimes
  jp ZhDrawTallBattleCursor
+
+ZhPartyActionCursor::
+ hlcoord 15,11
+ ld b,6
+.clear
+ ld [hl],$7f
+ push hl
+ ld de,wAttrmap-wTilemap
+ add hl,de
+ ld [hl],PAL_BATTLE_BG_TEXT
+ pop hl
+ ld de,SCREEN_WIDTH
+ add hl,de
+ dec b
+ jr nz,.clear
+ hlcoord 15,11
+ ld a,[wMenuCursorY]
+ dec a
+ ld bc,2 * SCREEN_WIDTH
+ rst AddNTimes
+ jp ZhDrawTallBattleCursor
