@@ -5053,10 +5053,10 @@ if DEF(LOCALE_ZH)
  ld a,[wMoveSelectionMenuType]
  and a
  jr nz,.legacyMoveList
- farcall ZhCanDrawMoveGrid
+ farcall ZhCanDrawMoveList
  jr c,.legacyMoveList
- hlcoord 0,12
- lb bc,4,18
+ hlcoord 0,8
+ lb bc,8,9
  call Textbox
  ; Preserve list-count semantics used by PP, move use, reorder and wrapping.
  ld hl,wListMoves_MoveIndicesBuffer
@@ -5073,7 +5073,7 @@ if DEF(LOCALE_ZH)
  ld a,b
  dec a
  ld [wNumMoves],a
- farcall ZhDrawMoveGrid
+ farcall ZhDrawMoveList
  jr .moveListDone
 .legacyMoveList
 endc
@@ -5168,17 +5168,17 @@ if DEF(LOCALE_ZH)
  ld a,[wMoveSelectionMenuType]
  and a
  jr nz,.gridOff
- farcall ZhCanDrawMoveGrid
+ farcall ZhCanDrawMoveList
  jr c,.gridOff
  ld a,1
- ld [wZhMoveGridActive],a
+ ld [wZhMoveListActive],a
 .gridOff
 endc
 	call DoMenuJoypadLoop
 if DEF(LOCALE_ZH)
  push af
  xor a
- ld [wZhMoveGridActive],a
+ ld [wZhMoveListActive],a
  pop af
 endc
 	bit B_PAD_UP, a
@@ -5536,11 +5536,35 @@ MoveInfoBox:
 	assert NO_BG_MAP_TRANSFER == 0
 	ldh [hBGMapMode], a
 
+	if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyCoord0
+	hlcoord 10, 12
+ jr .coordDone0
+.legacyCoord0
 	hlcoord 0, 8
+.coordDone0
+ pop af
+else
+	hlcoord 0, 8
+endc
 	ld a, [hl]
 	cp '┌'
 	push af
+	if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyCoord1
+	lb bc, 4, 8
+ jr .coordDone1
+.legacyCoord1
 	lb bc, 3, 9
+.coordDone1
+ pop af
+else
+	lb bc, 3, 9
+endc
 	call Textbox
 
 	ld hl, wMenuCursorY
@@ -5573,13 +5597,43 @@ MoveInfoBox:
 
 	farcall UpdateMoveData
 
+	if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyCoord2
+	hlcoord 11, 14
+ jr .coordDone2
+.legacyCoord2
 	hlcoord 1, 10
+.coordDone2
+ pop af
+else
+	hlcoord 1, 10
+endc
 	ld de, .PowAcc
+if DEF(LOCALE_ZH)
+ farcall ZhUseVerticalMoveList
+ jr c,.powAccReady
+ ld de,.VerticalPowAcc
+.powAccReady
+endc
 	rst PlaceString
 
 	ld hl, Moves + MOVE_POWER
 	call GetCurMoveProperty
-	hlcoord 1, 10
+if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyPower
+ hlcoord 11,14
+ jr .powerCoordDone
+.legacyPower
+ hlcoord 1,10
+.powerCoordDone
+ pop af
+else
+ hlcoord 1,10
+endc
 	cp 2
 	jr c, .no_power
 	ld [wTextDecimalByte], a
@@ -5594,7 +5648,19 @@ MoveInfoBox:
 .place_accuracy
 	ld hl, Moves + MOVE_ACC
 	call GetCurMoveProperty
+	if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyCoord3
+	hlcoord 15, 14
+ jr .coordDone3
+.legacyCoord3
 	hlcoord 6, 10
+.coordDone3
+ pop af
+else
+	hlcoord 6, 10
+endc
 	cp -1
 	jr nc, .no_acc
 	ld [wTextDecimalByte], a
@@ -5636,7 +5702,19 @@ MoveInfoBox:
 	ld hl, vTiles2 tile $5b
 	lb bc, BANK(TypeIconGFX), 4
 	call Request1bpp
+	if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyCoord4
+	hlcoord 11, 13
+ jr .coordDone4
+.legacyCoord4
 	hlcoord 1, 9
+.coordDone4
+ pop af
+else
+	hlcoord 1, 9
+endc
 	ld b, 6
 	ld a, $59
 .loop
@@ -5648,13 +5726,29 @@ MoveInfoBox:
 	call nz, ApplyTilemap
 	ret
 
+if DEF(LOCALE_ZH)
+.VerticalPowAcc:
+ db "   /   %@"
+endc
 .PowAcc:
 	db "   <BOLDP>/   %@"
 .NA:
 	db "---@"
 
 .PrintPP:
+	if DEF(LOCALE_ZH)
+ push af
+ farcall ZhUseVerticalMoveList
+ jr c,.legacyCoord5
+	hlcoord 11, 16
+ jr .coordDone5
+.legacyCoord5
 	hlcoord 2, 11
+.coordDone5
+ pop af
+else
+	hlcoord 2, 11
+endc
 	ld a, '<BOLDP>'
 	ld [hli], a
 	ld [hli], a

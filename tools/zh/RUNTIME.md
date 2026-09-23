@@ -20,7 +20,7 @@ validation. No fonts, translations, ROMs or saves are distributed here.
 
 ## Compile-time consumer layouts
 
-Edit tools/zh/layouts.py: dialogue and move_grid are independent configurations.
+Edit tools/zh/layouts.py: dialogue and move_list are independent configurations.
 The build emits region constants and positions each individual 4px font strip
 in a 16px cell. Chinese glyphs keep 12px width; original Latin letters and
 numbers keep 8px width. There are no precomposed words, sentences or panels.

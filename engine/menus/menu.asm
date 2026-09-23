@@ -449,7 +449,7 @@ Move2DMenuCursor:
 	ld [hl], a
 Place2DMenuCursor:
 if DEF(LOCALE_ZH)
- ld a,[wZhMoveGridActive]
+ ld a,[wZhMoveListActive]
  and a
  jr z,.ordinary
  farcall ZhMoveCursorCoord

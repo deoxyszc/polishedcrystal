@@ -17,11 +17,11 @@ class Layout:
         if not 0 <= self.cjk_y <= 4 or not 0 <= self.latin_y <= 8:
             raise ValueError("Font placement exceeds the 16px cell")
 DIALOGUE = Layout(1, 13, 18, 2, 4, 8)
-MOVE_GRID = Layout(1, 13, 18, 2, 2, 4)
+MOVE_LIST = Layout(1, 9, 18, 2, 2, 4)
 START_MENU = Layout(12, 1, 7, 2, 4, 8)
 PARTY_NAME = Layout(2, 0, 8, 2, 4, 8)
 PARTY_FOOTER = Layout(1, 12, 18, 2, 4, 8)
-LAYOUTS = {"party_name": PARTY_NAME, "party_footer": PARTY_FOOTER, "dialogue": DIALOGUE, "move_grid": MOVE_GRID, "start_menu": START_MENU}
+LAYOUTS = {"party_name": PARTY_NAME, "party_footer": PARTY_FOOTER, "dialogue": DIALOGUE, "move_list": MOVE_LIST, "start_menu": START_MENU}
 
 def emit_constants(source):
     lines = ["; Generated from tools/zh/layouts.py. No runtime layout selection."]

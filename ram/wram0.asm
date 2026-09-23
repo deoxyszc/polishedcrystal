@@ -1509,7 +1509,7 @@ wZhTextEnd:: dw
 wZhTextSlot:: db
 wZhTextControl:: db
 wZhNameBuffer:: ds 12
-wZhMoveGridActive:: db
+wZhMoveListActive:: db
 wZhMoveIndex:: db
 wZhPartyIndex:: db
 wZhPartyWidths:: ds 6
