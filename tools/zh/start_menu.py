@@ -1,3 +1,4 @@
+from stable_runtime import menu_text
 """Compile fixed Start menu labels; the player entry stays dynamic."""
 import csv,json
 import cache_text
@@ -24,6 +25,6 @@ def generate(source, language, manifest):
             symbol=chr(0xe000+code)
             charmap[symbol]=code
             text=text.replace(token,symbol)
-        data,_=cache_text.encode_pairs(text,glyphs,width_tiles=START_MENU.width,charmap=charmap,strip_map=strip_map)
+        data=menu_text(text,glyphs,charmap,source,style=0,width_tiles=START_MENU.width)
         lines.append(' db '+','.join(str(v) for v in data+bytes([0x53])))
     (source/'data/zh/start_menu.asm').write_text(chr(10).join(lines)+chr(10))

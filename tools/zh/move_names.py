@@ -1,3 +1,4 @@
+from stable_runtime import menu_text
 import csv,re,json
 from layouts import MOVE_LIST
 import encode,cache_text
@@ -9,5 +10,5 @@ def generate(source,language,manifest):
  for i,row in enumerate(rows,1):
   text=row.get('translation_'+language,'').strip() or row['original'];text=text.replace('{li}','').strip();width=sum(12 if not c.isascii() else 8 for c in text)
   if width>MOVE_LIST.width*8:raise ValueError('Move name too wide: '+row['id'])
-  lines.append(' dw .name'+str(i));bodies.extend(['.name'+str(i)+':',cache_text.compile_segments([dict(text=text)],glyphs,charmap,layout=MOVE_LIST,strip_map=strip_map)]);widths.append(width)
+  lines.append(' dw .name'+str(i));bodies.extend(['.name'+str(i)+':',' db '+','.join(map(str,menu_text(text,glyphs,charmap,source,style=1,width_tiles=MOVE_LIST.width)+bytes([83])))]);widths.append(width)
  (source/'data/zh/move_names.asm').write_text(chr(10).join(lines+bodies+['ZhMoveNameWidths:',' db '+','.join(map(str,widths))])+chr(10))

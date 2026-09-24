@@ -26,10 +26,19 @@ ZhDecodeStableGlyph::
  cp 2
  jr c,.bad
 .read
+if DEF(LOCALE_ZH)
+ call ZhReadStableByte
+ inc hl
+ ld b,a
+ call ZhReadStableByte
+ ld c,a
+else
  ld a,[hli]
  ld b,a
  ld c,[hl]
+endc
  push de
+ ld de,0
  ld hl,ZhStableGlyphDirectory
 .loop
  ld a,[hli]
@@ -40,9 +49,8 @@ ZhDecodeStableGlyph::
  ld a,[hli]
  cp c
  jr nz,.skipID
- ld a,[hli]
- ld c,a
- ld b,[hl]
+ ld b,d
+ ld c,e
  pop de
  pop hl
  inc hl
@@ -52,8 +60,7 @@ ZhDecodeStableGlyph::
 .skip
  inc hl
 .skipID
- inc hl
- inc hl
+ inc de
  jr .loop
 .missing
  pop de

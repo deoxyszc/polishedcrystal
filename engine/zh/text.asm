@@ -32,7 +32,7 @@ ZhRunText::
 .read
  ld a, [hli]
  ld [wZhTextControl], a
- call ZhIsStableLead
+ call ZhIsStableTextByte
  jr nc,.notStable
  dec hl
  call .saveCursor
@@ -41,8 +41,6 @@ ZhRunText::
  ret c
  jp .next
 .notStable
- cp ZH_PAIR_COMMAND
- jr z, .run
  cp ZH_CTRL_AT
  jr z, .advance
  cp ZH_CTRL_RAM
@@ -73,44 +71,6 @@ ZhRunText::
  jp z, .scroll
  scf
  ret
-.run
- dec hl
- push hl
-.validateRun
- ld a, h
- cp d
- jr c, .runByte
- jr nz, .invalidRun
- ld a, l
- cp e
- jr nc, .invalidRun
-.runByte
- ld a, [hli]
- cp ZH_CTRL_AT
- jr z, .validRun
- cp ZH_PAIR_COMMAND
- jr nz, .invalidRun
- ld bc, 4
- add hl, bc
- jr c, .invalidRun
- jr .validateRun
-.invalidRun
- pop hl
- jp .bad
-.validRun
- pop hl
- ld d, h
- ld e, l
- pop hl
- rst PlaceString
- ; PlaceString leaves DE pointing at the run terminator and BC at its end.
- inc de
- push bc
- ld h, d
- ld l, e
- call .saveCursor
- pop hl
- jp .next
 .wait
  push hl
  call ApplyAttrAndTilemapInVBlank

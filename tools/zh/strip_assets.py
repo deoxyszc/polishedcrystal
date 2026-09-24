@@ -66,7 +66,7 @@ class StripAssets:
             (source/path).write_bytes(blob[page*4096:(page+1)*4096])
             directory += [f" db BANK({label})", f" dw {label}"]
             sections += [f'SECTION "Compiled font strips {page}", ROMX', label+"::", f' INCBIN "{path}"']
-        for name,label in [("dialogue","ZhDialogueLatinStrips"),("start_menu","ZhStartMenuLatinStrips")]:
+        for name,label in [("dialogue","ZhDialogueLatinStrips"),("start_menu","ZhStartMenuLatinStrips"),("battle_hud","ZhStableHudLatin")]:
             directory += [label+"::"]
             for code in range(114):
                 pair = self.maps[name]["latin"][code*2:code*2+2]

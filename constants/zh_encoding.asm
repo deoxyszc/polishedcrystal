@@ -28,4 +28,4 @@ DEF ZH_STREAM_COMMAND EQU $0a
 DEF ZH_CTRL_CONT EQU $55
 
 DEF ZH_CTRL_RAM EQU $0d
-DEF ZH_PAIR_COMMAND EQU $0e
+; $0e retired; no pre-expanded drawing opcode.

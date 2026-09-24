@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": 1,
+  "version": 2,
   "status": "reviewed",
   "reviewer": "AI",
   "scope": "ROM text encoding allocation; runtime integration is separate",
@@ -19,7 +19,6 @@
     11,
     12,
     13,
-    14,
     77,
     78,
     79,
@@ -1664,13 +1663,6 @@
       "kind": "zh_control",
       "source": "constants/zh_encoding.asm",
       "line": 30
-    },
-    {
-      "byte": 14,
-      "symbol": "ZH_PAIR_COMMAND",
-      "kind": "zh_control",
-      "source": "constants/zh_encoding.asm",
-      "line": 31
     }
   ],
   "script_parameters": [
@@ -1845,11 +1837,6 @@
       "parameters": "two high-bit-set 7-bit glyph ID payloads"
     },
     {
-      "layer": "zh_pair",
-      "bytes": "0E",
-      "parameters": "two BE16 strip IDs, four bytes"
-    },
-    {
       "layer": "zh_private",
       "bytes": "0D",
       "parameters": "bank + LE16 RAM address"
@@ -1868,6 +1855,12 @@
       "layer": "compression",
       "bytes": "5D",
       "rule": "Huffman bitstream; decoded 52/53/54 terminate; never scan compressed bytes as controls"
+    },
+    {
+      "layer": "menu string",
+      "bytes": "0A",
+      "parameters": "style|80, length high7|80, length low7|80; bounded character payload; followed by original @",
+      "rule": "PlaceString adapter; private E1/dialogue 0A remain separate contexts"
     }
   ],
   "reader_constraints": [
@@ -1953,5 +1946,8 @@
     "Existing runtime rejects the proposed lead bytes; decoder integration is separate.",
     "Fixed byte capacities and glyph-counted layout still require consumer adaptation.",
     "Map, animation and audio script opcodes are separate namespaces, not text controls."
+  ],
+  "retired_reserved_bytes": [
+    14
   ]
 }

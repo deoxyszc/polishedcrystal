@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from strip_assets import StripAssets
-from cache_text import encode_pairs
+from cache_text import measure_text
 ROOT=Path(__file__).resolve().parents[3]
 with tempfile.TemporaryDirectory() as tmp:
     source=Path(tmp)
@@ -34,6 +34,6 @@ with tempfile.TemporaryDirectory() as tmp:
         assert unpack(m['level_four'][0][kind])==expected
     for count in range(1,6):
         lead=1
-        _,width=encode_pairs('中'*count,{'中':0},width_tiles=8,strip_map=m,leading_strips=lead)
+        width=measure_text('中'*count,{'中':0},width_tiles=8,strip_map=m,leading_strips=lead)
         assert width<=8
 print('PASS shared L/100 cell pixel equality and one-to-five-character encoding')

@@ -3,3 +3,5 @@ ZhIsStableLead: and a
  ret
 ZhStableGlyphDirectory: db 0
 ZhStableDialogueStrips:
+ZhStableHudStrips:
+ZhStableHudLatin:

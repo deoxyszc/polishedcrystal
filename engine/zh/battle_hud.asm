@@ -1,6 +1,6 @@
 ZhBattleHudName::
  push hl
- ld hl,ZhBattleHudNames
+ ld hl,ZhPartyNames
 .next
  ld a,[hli]
  ld c,a
@@ -12,17 +12,13 @@ ZhBattleHudName::
  push de
  ld h,b
  ld l,c
- ld b,10
-.compare
- ld a,[de]
- cp [hl]
- jr nz,.mismatch
- inc de
- inc hl
- dec b
- jr nz,.compare
+ call ZhMatchDefaultName
+ jr c,.mismatch
  pop de
  pop bc
+ inc hl ; party bar
+ inc hl ; level header pointer
+ inc hl
  ld a,[hli]
  ld d,h
  ld e,l
@@ -45,8 +41,8 @@ ZhBattleHudName::
  hlcoord 1,0
 .positioned
  pop de
- ld a,BANK(ZhBattleHudNames)
- jp FarString
+ ld a,1
+ jp ZhPlaceStableName
 .mismatch
  pop de
  pop hl

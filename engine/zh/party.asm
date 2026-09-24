@@ -34,15 +34,8 @@ ZhPartyLayout::
  ld h,b
  ld l,c
  ld de,wStringBuffer1
- ld b,10
-.compare
- ld a,[de]
- cp [hl]
- jp nz,.mismatch
- inc de
- inc hl
- dec b
- jr nz,.compare
+ call ZhMatchDefaultName
+ jp c,.mismatch
  pop bc
  ld a,[hli] ; compile-time choice: six-tile bar for 2/3 CJK names
  push hl
@@ -55,12 +48,11 @@ ZhPartyLayout::
  pop af
  ld [hl],a
  pop hl
- ld a,l
+ ld a,[hli]
  ld [wZhPartyLevelKeys],a
- ld a,h
+ ld a,[hli]
  ld [wZhPartyLevelKeys+1],a
- ld bc,13
- add hl,bc
+ inc hl ; shared HUD width
  push hl ; encoded name
  ; Preserve the real engine-formatted metadata before clearing its old cells.
  call .coord
@@ -105,7 +97,8 @@ ZhPartyLayout::
 
  pop de
  call .coord
- rst PlaceString
+ xor a
+ call ZhPlaceStableName
  call .coord
  ld bc,8
  add hl,bc
