@@ -176,13 +176,19 @@ ZhEnsureCacheBlock::
  push bc
  push de
  push hl
+ call ZhSummaryDisplayActive
+ jr c,.summaryRecovery
  call ApplyAttrAndTilemapInVBlank
+.summaryRecovery
  pop hl
  pop de
  pop bc
  call ZhGlyphCacheRecover
  call ZhGlyphCacheAlloc
  ret c
+ push af
+ call ZhComposeCacheBlock
+ pop af
 .upload
  push bc
  push de
@@ -238,17 +244,17 @@ ZhPlaceCacheBlock::
 .bank
  ld [hl], c
  push hl
- ld de, SCREEN_WIDTH
+ call ZhSummaryRowStride
  add hl, de
  inc c
  ld [hl], c
- ld de, wAttrmap - wTilemap
+ call ZhSummaryAttrStride
  add hl, de
  ld a, [hl]
  and $ff ^ BG_BANK1
  or b
  ld [hl], a
- ld de, -SCREEN_WIDTH
+ call ZhSummaryPreviousRow
  add hl, de
  ld a, [hl]
  and $ff ^ BG_BANK1
@@ -265,18 +271,56 @@ ZhPlaceCacheBlock::
  push de
  push hl
  ld [hl], $7f
- ld de, SCREEN_WIDTH
+ call ZhSummaryRowStride
  add hl, de
  ld [hl], $7f
- ld de, wAttrmap - wTilemap
+ call ZhSummaryAttrStride
  add hl, de
  res B_BG_BANK1, [hl]
- ld de, -SCREEN_WIDTH
+ call ZhSummaryPreviousRow
  add hl, de
  res B_BG_BANK1, [hl]
  pop hl
  inc hl
  pop de
  pop bc
+ and a
+ ret
+
+ZhSummaryRowStride:
+ ld de,SCREEN_WIDTH
+ call ZhIsSummaryDestination
+ ret nc
+ ld de,32
+ ret
+ZhSummaryPreviousRow:
+ ld de,-SCREEN_WIDTH
+ call ZhIsSummaryDestination
+ ret nc
+ ld de,-32
+ ret
+ZhSummaryAttrStride:
+ ld de,wAttrmap-wTilemap
+ call ZhIsSummaryDestination
+ ret nc
+ ld de,16
+ ret
+ZhIsSummaryDestination:
+ push af
+ ld a,h
+ cp HIGH(wSummaryScreenWindowBuffer)
+ jr c,.no
+ cp HIGH(wSummaryScreenWindowBuffer+320)
+ jr c,.yes
+ jr nz,.no
+ ld a,l
+ cp LOW(wSummaryScreenWindowBuffer+320)
+ jr nc,.no
+.yes
+ pop af
+ scf
+ ret
+.no
+ pop af
  and a
  ret

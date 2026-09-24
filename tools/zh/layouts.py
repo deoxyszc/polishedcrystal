@@ -31,3 +31,6 @@ def emit_constants(source):
         for field in ("left", "top", "width", "step"):
             lines.append(f"DEF ZH_{name.upper()}_{field.upper()} EQU {getattr(layout, field)}")
     (source / "constants/zh_layout.asm").write_text(chr(10).join(lines) + chr(10))
+
+SUMMARY_PINK = Layout(1, 13, 18, 2, 0, 4)
+LAYOUTS['summary_pink'] = SUMMARY_PINK

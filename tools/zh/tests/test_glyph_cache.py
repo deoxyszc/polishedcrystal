@@ -144,6 +144,7 @@ def main():
             'SECTION "pixels", WRAMX[$d300], BANK[1]',
             "wZhCachePixels: ds 32", "wZhStripPixels: ds 16", "wZhStripPlane: db",
         ]
+        asm += ['DEF hLCDInterruptFunctionTargetLo EQU $ff90', 'DEF hLCDInterruptFunctionTargetHi EQU $ff91', 'SECTION "summary fixture", ROM0', 'LCDSummaryScreenHideWindow: ret', 'LCDSummaryScreenShowWindow: ret', 'LCDSummaryScreenScrollBackground: ret', 'INCLUDE "engine/zh/summary_cache.asm"', 'SECTION "summary buffer", WRAM0[$c800]', 'wSummaryScreenWindowBuffer: ds 320']
         wram_call = (ROOT / "home/farcall.asm").read_text().split("StackCallInWRAMBankA::", 1)[1]
         asm += ['SECTION "wram helper", ROM0', "StackCallInWRAMBankA::" + wram_call]
         asm += ['INCLUDE "engine/zh/cache_window.asm"']
@@ -152,6 +153,18 @@ def main():
         asm += ['SECTION "temp map", WRAMX[$d000], BANK[2]', "wTempTileMap: ds 360"]
         asm += ['SECTION "backup", WRAMX[$d340], BANK[1]', "wZhBackupCell: ds 6"]
         asm += ['SECTION "window", WRAMX[$d000], BANK[7]', "wWindowStack: ds $1000"]
+        at=asm.index(' ld a, $42')
+        asm[at:at]=[
+            ' ld a,LOW(LCDSummaryScreenShowWindow)', ' ldh [hLCDInterruptFunctionTargetLo],a',
+            ' ld a,HIGH(LCDSummaryScreenShowWindow)', ' ldh [hLCDInterruptFunctionTargetHi],a',
+            ' ld hl,wTilemap', ' ld bc,720', ' ld a,$7f', ' rst ByteFill',
+            ' ld hl,wSummaryScreenWindowBuffer', ' ld bc,320', ' ld a,$7f', ' rst ByteFill',
+            ' ld a,$aa', ' ld [wSummaryScreenWindowBuffer],a',
+            ' ld a,8', ' ld [wSummaryScreenWindowBuffer+16],a',
+            ' call ZhGlyphCacheRecover', ' ld a,[wZhCacheUsed+64]', ' ld [$c355],a',
+            ' xor a', ' ldh [hLCDInterruptFunctionTargetLo],a', ' ldh [hLCDInterruptFunctionTargetHi],a',
+            ' call ZhGlyphCacheRecover', ' ld a,[wZhCacheUsed+64]', ' ld [$c356],a'
+        ]
         (out / "test.asm").write_text(chr(10).join(asm) + chr(10))
         for command in (
             ["rgbasm", "-I", str(ROOT) + "/", "-o", "test.o", "test.asm"],
@@ -160,7 +173,7 @@ def main():
         ):
             subprocess.run(command, cwd=out, check=True, capture_output=True)
         commands = ["write ff50 1", "cpu 150 dfff", "run 30 0",
-                    "read c300 15", "read c400 192", "read d300 32", "read c311 4", "read c320 32", "read c350 5", "quit"]
+                    "read c300 15", "read c400 192", "read d300 32", "read c311 4", "read c320 32", "read c350 7", "quit"]
         result = subprocess.run([args.runner, str(out / "test.gb")],
                                 input=chr(10).join(commands) + chr(10),
                                 text=True, capture_output=True, check=True)
@@ -191,7 +204,7 @@ def main():
             pixel |= (glyphs[512][y // 2] >> shift) & 15
             composite[(y + 4)*2:(y + 4)*2+2] = bytes((pixel,pixel))
         assert rows[4] == composite
-        assert rows[5] == bytes([0xee,0x7f,0x0d,0,1]), rows[5].hex()
+        assert rows[5] == bytes([0xee,0x7f,0x0d,0,1,1,0]), rows[5].hex()
         print("PASS cache reuse, bank policy, restore, recovery, full refusal; glyph IDs 0/511/512 and Latin pixels, font keys, single-cell output")
 
 if __name__ == "__main__":

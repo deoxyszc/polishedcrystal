@@ -59,6 +59,21 @@ zh_dynamic_name ZhPlaceStartMenuName, ZhStartMenuLatinStrips
 ; Key ($f800 + font-index*128 + character),$ffff identifies original fonts.
 ; No lower map cell is touched. Static symbols/numerals retain bank0 IDs.
 ZhPlaceLegacyLiteral::
+ push af
+ call ZhSummaryDisplayActive
+ jr nc,.notSummary
+ pop af
+ ld [hli],a
+ and a
+ ret
+.notSummary
+ pop af
+ call ZhIsSummaryDestination
+ jr nc,.normal
+ ld [hli],a
+ and a
+ ret
+.normal
  push bc
  push de
  cp $80

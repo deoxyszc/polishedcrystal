@@ -18,6 +18,8 @@ ZhIsStableTextByte::
  ret
 
 ZhPlaceStableRun::
+ ld a,BANK(ZhStableDialogueStrips)
+ ld [wZhNameBuffer+11],a
  ld a,BANK(ZhPlaceStableRun)
  ld [wZhNameBuffer+10],a
  push hl
@@ -37,6 +39,10 @@ ZhPlaceStableRun::
 
 ; DE=length-prefixed same-bank name, HL=destination. A=0 party, 1 HUD.
 ZhPlaceStableName::
+ push af
+ ld a,BANK(ZhStableDialogueStrips)
+ ld [wZhNameBuffer+11],a
+ pop af
  push af
  ld a,BANK(ZhPlaceStableName)
  ld [wZhNameBuffer+10],a
@@ -60,12 +66,20 @@ ZhPlaceStableName::
  ld [wZhTextEnd+1],a
  pop af
  push af
+ cp 2
+ jr z,.summaryTables
  and a
  ld hl,ZhStableDialogueStrips
  ld de,ZhDialogueLatinStrips
  jr z,.tables
  ld hl,ZhStableHudStrips
  ld de,ZhStableHudLatin
+ jr .tables
+.summaryTables
+ ld a,BANK(ZhSummaryGlyphStrips)
+ ld [wZhNameBuffer+11],a
+ ld hl,ZhSummaryGlyphStrips
+ ld de,ZhSummaryLatinStrips
 .tables
  ld a,l
  ld [wZhNameBuffer],a
@@ -76,7 +90,11 @@ ZhPlaceStableName::
  ld a,d
  ld [wZhNameBuffer+3],a
  pop af
- xor 1 ; party leading 4px blank, HUD none
+ and a
+ ld a,0
+ jr nz,.noPad
+ inc a
+.noPad
  pop hl
  ld b,a
  ld a,$ff
@@ -132,9 +150,10 @@ ZhStableRunStart::
  ld a,[wZhNameBuffer+1]
  ld d,a
  add hl,de
- ld a,[hli]
+ call ZhReadSummaryStripByte
+ inc hl
  ld [wZhNameBuffer+7],a
- ld a,[hl]
+ call ZhReadSummaryStripByte
  ld [wZhNameBuffer+8],a
  ld a,3
  ld [wZhNameBuffer+6],a
@@ -162,7 +181,7 @@ ZhStableRunStart::
  add hl,de
  jr .latinPointer
 .space
- ld hl,.blank
+ ld hl,$ffff
 .latinPointer
  ld a,l
  ld [wZhNameBuffer+7],a
@@ -177,6 +196,12 @@ ZhStableRunStart::
  ld l,a
  ld a,[wZhNameBuffer+8]
  ld h,a
+ ld a,h
+ cp $ff
+ jr nz,.notBlankStrip
+ ld bc,$ffff
+ jr .advanceStrip
+.notBlankStrip
  bit 7,h
  jr z,.indirectStrip
  ld b,h
@@ -185,9 +210,11 @@ ZhStableRunStart::
  inc hl
  jr .advanceStrip
 .indirectStrip
- ld b,[hl]
+ call ZhReadSummaryStripByte
+ ld b,a
  inc hl
- ld c,[hl]
+ call ZhReadSummaryStripByte
+ ld c,a
  inc hl
 .advanceStrip
  ld a,l
@@ -297,6 +324,8 @@ ZhMatchDefaultName::
 ; A=source bank, DE=header, HL=destination. Preserve BC, return DE at @.
 ZhPlaceStableMenu::
  ld [wZhNameBuffer+10],a
+ ld a,BANK(ZhStableDialogueStrips)
+ ld [wZhNameBuffer+11],a
  push bc
  push hl
  ld h,d
@@ -330,12 +359,20 @@ ZhPlaceStableMenu::
  ld a,h
  ld [wZhTextEnd+1],a
  pop af
+ cp 2
+ jr z,.summaryTables
  ld hl,ZhStableDialogueStrips
  ld de,ZhDialogueLatinStrips
  and a
  jr z,.tables
  ld hl,ZhStableHudStrips
  ld de,ZhStableHudLatin
+ jr .tables
+.summaryTables
+ ld a,BANK(ZhSummaryGlyphStrips)
+ ld [wZhNameBuffer+11],a
+ ld hl,ZhSummaryGlyphStrips
+ ld de,ZhSummaryLatinStrips
 .tables
  ld a,l
  ld [wZhNameBuffer],a
@@ -357,4 +394,8 @@ ZhPlaceStableMenu::
 
 ZhReadStableByte::
  ld a,[wZhNameBuffer+10]
+ jp GetFarByte
+
+ZhReadSummaryStripByte::
+ ld a,[wZhNameBuffer+11]
  jp GetFarByte
