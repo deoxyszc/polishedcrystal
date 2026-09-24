@@ -32,6 +32,15 @@ ZhRunText::
 .read
  ld a, [hli]
  ld [wZhTextControl], a
+ call ZhIsStableLead
+ jr nc,.notStable
+ dec hl
+ call .saveCursor
+ pop hl
+ call ZhPlaceStableRun
+ ret c
+ jp .next
+.notStable
  cp ZH_PAIR_COMMAND
  jr z, .run
  cp ZH_CTRL_AT
