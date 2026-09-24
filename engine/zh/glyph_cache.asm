@@ -149,6 +149,7 @@ ZhGlyphCacheRecover::
  ld a, b
  or c
  jr nz, .scan
+ call ZhSummaryMarkWindow
  pop hl
  pop de
  pop bc

@@ -38,6 +38,9 @@ SummaryScreenInit:
 	ldh [hBGMapAddress], a
 
 	call UpdateSprites
+if DEF(LOCALE_ZH)
+ call LoadStandardFont
+endc
 	call LoadFontsBattleExtra
 	call SummaryScreen_InitTiles
 
@@ -104,6 +107,9 @@ SummaryScreenInit:
 	; Enter loop
 	call SummaryScreenLoop
 	; Clean up
+if DEF(LOCALE_ZH)
+ farcall ZhSummaryCacheExit
+endc
 
 	call ClearSprites
 	call ClearBGPalettes
@@ -521,6 +527,16 @@ SummaryScreen_InitLayout:
 	db 108, 44, SUMMARY_TILE_OAM_TITLES + 3, $0
 
 SummaryScreen_LoadPage:
+if DEF(LOCALE_ZH)
+ farcall ZhSummaryCacheInit
+ hlcoord 0,13,wAttrmap
+ ld b,5*SCREEN_WIDTH
+.zhResetAttrs
+ res B_BG_BANK1,[hl]
+ inc hl
+ dec b
+ jr nz,.zhResetAttrs
+endc
 	ld a, [wCurPartySpecies]
 	ld [wTempSpecies], a
 	ld [wCurSpecies], a
@@ -561,7 +577,19 @@ SummaryScreen_LoadPage:
 	bit SUMMARY_FLAGS_PLACE_FRONTPIC_F, [hl]
 	call nz, SummaryScreen_PlaceFrontpic
 .frontpic_done
+if DEF(LOCALE_ZH)
+ ld a,[wTempMonIsEgg]
+ bit MON_IS_EGG_F,a
+ jr nz,.zhDone
+ ld a,[wSummaryScreenFlags]
+ and SUMMARY_FLAGS_PAGE_MASK
+ call z,ZhSummaryPinkLayout
+.zhDone
+endc
 	call SummaryScreen_SwitchPage
+if DEF(LOCALE_ZH)
+ farcall HDMATransferAttrMapToWRAMBank3
+endc
 	farcall HDMATransferTileMapToWRAMBank3
 	ld a, 7 + 64
 	ldh [hWX], a
@@ -629,6 +657,9 @@ SummaryScreen_LoadPage:
 	dw SummaryScreen_GreenPage
 	dw SummaryScreen_OrangePage
 
+if DEF(LOCALE_ZH)
+INCLUDE "engine/pokemon/summary/zh_pink.asm"
+endc
 INCLUDE "engine/pokemon/summary/pink_page.asm"
 INCLUDE "engine/pokemon/summary/blue_page.asm"
 INCLUDE "engine/pokemon/summary/green_page.asm"
@@ -813,6 +844,12 @@ endr
 	dw .OrangeInterrupts
 
 .PinkInterrupts:
+if DEF(LOCALE_ZH)
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 87,SUMMARY_LCD_HIDE_WINDOW
+; Keep all 16 pixels of the last Chinese row visible.
+ db -1
+else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
 	db 31,  SUMMARY_LCD_SHOW_WINDOW
@@ -827,6 +864,7 @@ endr
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+endc
 .BlueInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW

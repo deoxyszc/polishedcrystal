@@ -4,7 +4,7 @@ import argparse,csv,hashlib,json,shutil,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--language',choices=['en','zh-Hans','zh-Hant'],required=True);p.add_argument('--font',type=Path);p.add_argument('--licenses',type=Path);p.add_argument('--characters',default='中文测试');p.add_argument('--out',type=Path,required=True);p.add_argument('--jobs',type=int,default=4);p.add_argument('--layout',type=Path,help='Editor summary-pink layout JSON');a=p.parse_args()
  out=a.out.resolve()
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
  chinese=a.language!='en'
@@ -14,11 +14,16 @@ def main():
   with (ROOT/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
    for row in csv.DictReader(f):
     if row['resource_kind']=='text':chars.update(c for c in row.get('translation_'+a.language,'') if not c.isascii())
+  from summary_pink import CHARACTERS
+  chars.update(CHARACTERS)
   chars={c for c in chars if not c.isascii()}
   if not chars:p.error('At least one non-ASCII character is required')
  out.mkdir(parents=True);source=out/'source'
  shutil.copytree(ROOT,source,ignore=shutil.ignore_patterns('.git','__pycache__','*.pyc','*.o','*.gbc','*.sym','*.map','local-data','local-docs','*.sav'))
  if chinese:
+  from summary_layout_config import emit as emit_layout, DEFAULT
+  layout_report=emit_layout(a.layout or DEFAULT,source)
+  (out/'layout-input.json').write_bytes((a.layout or DEFAULT).read_bytes())
   manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
   subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
   (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
@@ -26,6 +31,8 @@ def main():
   StripAssets(source,len(chars)).emit()
   from stable_runtime import emit
   emit(source,manifest)
+  import summary_pink
+  summary_pink.generate(source,manifest)
   import party
   party.generate(source,a.language,manifest)
   import start_menu

@@ -190,6 +190,24 @@ SummaryScreen_PinkPage:
 	inc a
 	ld d, a
 	farcall CalcExpAtLevel
+if DEF(LOCALE_ZH)
+ ; A synthetic/imported record may already exceed the next threshold.
+ ld hl,wTempMonExp
+ ldh a,[hQuotient]
+ cp [hl]
+ jr c,.AlreadyAtMaxLevel
+ jr nz,.subtract
+ inc hl
+ ldh a,[hQuotient+1]
+ cp [hl]
+ jr c,.AlreadyAtMaxLevel
+ jr nz,.subtract
+ inc hl
+ ldh a,[hQuotient+2]
+ cp [hl]
+ jr c,.AlreadyAtMaxLevel
+.subtract
+endc
 	ld hl, wTempMonExp + 2
 	ldh a, [hQuotient + 2]
 	sub [hl]

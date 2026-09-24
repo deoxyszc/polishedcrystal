@@ -57,6 +57,20 @@ class StripAssets:
         emit_constants(source)
         hp_table = self.compile_hp()
         self.compile_party_levels()
+        manifest = source / 'data/zh/font/manifest.json'
+        if manifest.exists():
+            ids = {e['char']: e['id'] for e in json.loads(manifest.read_text())['glyphs']}
+            if all(c in ids for c in '经验'):
+                raw = (source / 'gfx/zh/prototype.1bpp').read_bytes()
+                keys=[]
+                for c in '经验':
+                    for i in range(3):
+                        pixels=bytearray(position_strip(raw[ids[c]*18+i*6:ids[c]*18+i*6+6],3))
+                        # Preserve the native tab top edge in the same cache cell.
+                        pixels[0] |= 0xf0
+                        keys.append(self.add(bytes(pixels)))
+                self.maps['summary_tab']={'keys':keys}
+
         blob = b"".join(self.strips)
         directory = ["ZhCompiledStripPages::"]
         sections = []

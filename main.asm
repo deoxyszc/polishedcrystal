@@ -1,3 +1,6 @@
+if DEF(LOCALE_ZH)
+INCLUDE "constants/zh_summary_layout.asm"
+endc
 SECTION "bank1", ROMX
 
 INCLUDE "engine/init.asm"
@@ -760,6 +763,8 @@ INCLUDE "engine/zh/cache_backup.asm"
 INCLUDE "engine/zh/cache_window.asm"
 INCLUDE "engine/zh/cache_temp.asm"
 INCLUDE "engine/zh/cache_text.asm"
+INCLUDE "engine/zh/summary.asm"
+INCLUDE "engine/zh/summary_cache.asm"
 INCLUDE "engine/zh/text.asm"
 INCLUDE "engine/zh/dialogue.asm"
 INCLUDE "engine/zh/dispatch.asm"
