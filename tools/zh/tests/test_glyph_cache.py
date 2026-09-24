@@ -82,9 +82,9 @@ def main():
             " ld a, [wAttrmap]",
             " ld [$c30a], a",
             " ld hl, wTilemap + 2",
-            " ld de, PairText",
+            " ld de, $3e00",
             " xor a",
-            " call ZhPlaceEncodedPair",
+            ' ld bc,0', ' ld de,1536', ' call ZhPlaceCacheBlock', ' ld de,$3e05',
             " ld a, [wTilemap + 2]",
             " ld [$c30b], a",
             " ld a, [wTilemap + 22]",
@@ -145,7 +145,6 @@ def main():
             "wZhCachePixels: ds 32", "wZhStripPixels: ds 16", "wZhStripPlane: db",
         ]
         wram_call = (ROOT / "home/farcall.asm").read_text().split("StackCallInWRAMBankA::", 1)[1]
-        asm += ['SECTION "pair source", ROM0[$3e00]', "PairText: db $0e, 0, 0, 6, 0"]
         asm += ['SECTION "wram helper", ROM0', "StackCallInWRAMBankA::" + wram_call]
         asm += ['INCLUDE "engine/zh/cache_window.asm"']
         asm += ['INCLUDE "engine/zh/cache_temp.asm"']

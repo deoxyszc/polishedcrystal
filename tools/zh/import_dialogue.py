@@ -47,7 +47,8 @@ def apply(source,language,manifest):
     if any(line.strip() and not line.lstrip().startswith(';') and original['source_line']+i not in allowed for i,line in enumerate(raw)):raise ValueError('Mixed source span')
    if re.findall(r'<PLAYER>|[{][^}]+[}]',text)!=re.findall(r'<PLAYER>|[{][^}]+[}]',row['original']):raise ValueError('Control signature changed')
    entry='ZhText_'+hashlib.sha256(row['id'].encode()).hexdigest()[:16]
-   body=cache_text.compile_segments(segments(text),glyphs,charmap,layout=DIALOGUE,strip_map=strip_map)
+   from stable_runtime import compile_dialogue
+   body=compile_dialogue(segments(text),glyphs,charmap,strip_map,source)
    outputs.append(nl.join([entry+'::',body,entry+'End::']))
    replacement=nl.join([' stop_compressing_text',' db ZH_STREAM_COMMAND',' dw '+entry+', '+entry+'End',' assert BANK('+entry+') == $80',''])
    edits.setdefault(row['source_path'],[]).append((original['source_line']-1,original['source_end_line'],replacement))

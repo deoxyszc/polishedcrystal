@@ -16,15 +16,30 @@ ZhDecodeGlyph::
 	cp 3
 	jr c,.invalid
 .enough
-	ld a,[hli]
+if DEF(LOCALE_ZH)
+ call ZhReadStableByte
+ inc hl
+else
+ ld a,[hli]
+endc
 	cp ZH_ESCAPE
 	jr nz,.invalid
-	ld a,[hli]
+if DEF(LOCALE_ZH)
+ call ZhReadStableByte
+ inc hl
+else
+ ld a,[hli]
+endc
 	bit 7,a
 	jr z,.invalid
 	and $7f
 	ld b,a
-	ld a,[hli]
+if DEF(LOCALE_ZH)
+ call ZhReadStableByte
+ inc hl
+else
+ ld a,[hli]
+endc
 	bit 7,a
 	jr z,.invalid
 	and $7f

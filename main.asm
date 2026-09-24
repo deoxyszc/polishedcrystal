@@ -747,6 +747,9 @@ SECTION "MBC30 runtime extent", ROMX[$7fff], BANK[$ff]
  db $ff
 SECTION "Language runtime", ROMX, BANK[$80]
 INCLUDE "engine/zh/decode.asm"
+INCLUDE "engine/zh/stable_decode.asm"
+INCLUDE "engine/zh/stable_text.asm"
+INCLUDE "data/zh/stable.asm"
 INCLUDE "engine/zh/stream.asm"
 INCLUDE "engine/zh/name.asm"
 INCLUDE "engine/zh/render.asm"

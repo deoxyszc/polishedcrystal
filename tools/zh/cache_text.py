@@ -1,39 +1,16 @@
-"""Compile fixed text into DFS strip pairs for the shared PlaceString entry."""
-PAIR_COMMAND = 0x0e
-EMPTY_STRIP = 0xffff
-
-def encode_pairs(text, glyphs, *, width_tiles, charmap=None, strip_map, leading_strips=0):
-    """Resolve glyph IDs, pairing, padding and bounds before ROM assembly.
-
-    This entry accepts manifested 12px glyphs and the original 8px font. Controls and dynamic names are
-    compiled by their owning text compiler, never guessed from the string.
-    """
-    if not 1 <= width_tiles <= 20:
-        raise ValueError("Invalid text region width")
-    strips = [EMPTY_STRIP] * leading_strips
+"""Text measurement and legacy source spelling helpers; no drawing bytecode."""
+def measure_text(text, glyphs, *, width_tiles, charmap=None, leading_strips=0, **unused):
+    width=leading_strips*4
     for char in text:
-        if char == " ":
-            strips.extend((EMPTY_STRIP, EMPTY_STRIP))
-            continue
-        if charmap and char in charmap and 0x80 <= charmap[char] < 0xf2:
-            code = (charmap[char] - 0x80) * 2
-            strips.extend(strip_map["latin"][code:code + 2])
-            continue
-        if char not in glyphs:
-            raise ValueError(f"Unmanifested glyph: {char!r}")
-        glyph = glyphs[char]
-        if not 0 <= glyph < 16384:
-            raise ValueError("Glyph ID outside font")
-        strips.extend(strip_map["glyphs"][glyph])
-    tiles = (len(strips) + 1) // 2
-    if tiles > width_tiles:
-        raise ValueError("Text exceeds compile-time region")
-    if len(strips) % 2:
-        strips.append(EMPTY_STRIP)
-    result = bytearray()
-    for left, right in zip(strips[::2], strips[1::2]):
-        result.extend((PAIR_COMMAND, left >> 8, left & 255, right >> 8, right & 255))
-    return bytes(result), tiles
+        if char==' ' or charmap and char in charmap and 128<=charmap[char]<242:
+            width+=8
+        elif char in glyphs:
+            width+=12
+        else:
+            raise ValueError('Unmanifested glyph: '+repr(char))
+    tiles=(width+7)//8
+    if tiles>width_tiles:raise ValueError('Text exceeds compile-time region')
+    return tiles
 
 def load_charmap(source):
     import re
@@ -71,28 +48,20 @@ def expand_static_ngrams(source, text):
                 text = text.replace(fields[1], fixed[labels[index]])
     return text
 
-def compile_segments(segments, glyphs, charmap, *, layout, strip_map):
-    import encode
-    lines = []
-    width = 0
-    for segment in segments:
-        if "text" in segment:
-            data, tiles = encode_pairs(segment["text"], glyphs, width_tiles=layout.width, charmap=charmap, strip_map=strip_map)
-            width += tiles
-            lines.append(" db " + ",".join("$%02x" % value for value in data + bytes((0x53,))))
-        elif "control" in segment:
-            lines.append(" db $%02x" % encode.CONTROLS[segment["control"]])
-            if segment["control"] in ("LINE", "NEXT", "PARA", "CONT"):
-                width = 0
-        elif "name" in segment:
-            width += 10
-            lines.append(" db ZH_CTRL_PLAYER" if segment["name"] == "player" else " db ZH_CTRL_RIVAL")
-        elif "ram_name" in segment:
-            width += 10
-            symbol = segment["ram_name"]
-            lines += [" db ZH_CTRL_RAM, BANK(" + symbol + ")", " dw " + symbol]
-        else:
-            raise ValueError("Unsupported compiled segment")
-        if width > layout.width:
-            raise ValueError("Compiled fragments exceed the dialogue region")
-    return chr(10).join(lines) + chr(10)
+def encode_legacy_name(source, text):
+    """Encode source rawchar names by longest match, not Python length."""
+    import re
+    definitions={}
+    for line in (source/'constants/charmap.asm').read_text().splitlines():
+        fields=line.split(chr(34))
+        if len(fields)<3 or 'charmap ' not in fields[0]:continue
+        match=re.search(r'[$]([0-9a-fA-F]+)',fields[2])
+        if match:definitions[fields[1]]=int(match[1],16)
+    tokens=sorted(definitions,key=lambda t:(-len(t),t))
+    out=bytearray()
+    while text:
+        token=next((t for t in tokens if text.startswith(t)),None)
+        if token is None:raise ValueError('Unsupported raw name')
+        out.append(definitions[token]);text=text[len(token):]
+    if len(out)!=10:raise ValueError('Default name must encode to ten bytes')
+    return bytes(out)

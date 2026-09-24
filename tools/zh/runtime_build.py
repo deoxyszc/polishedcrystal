@@ -17,13 +17,15 @@ def main():
   chars={c for c in chars if not c.isascii()}
   if not chars:p.error('At least one non-ASCII character is required')
  out.mkdir(parents=True);source=out/'source'
- shutil.copytree(ROOT,source,ignore=shutil.ignore_patterns('.git','__pycache__','*.pyc','*.o','*.gbc','*.sym','*.map'))
+ shutil.copytree(ROOT,source,ignore=shutil.ignore_patterns('.git','__pycache__','*.pyc','*.o','*.gbc','*.sym','*.map','local-data','local-docs','*.sav'))
  if chinese:
   manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
   subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
   (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
   from strip_assets import StripAssets
   StripAssets(source,len(chars)).emit()
+  from stable_runtime import emit
+  emit(source,manifest)
   import party
   party.generate(source,a.language,manifest)
   import start_menu

@@ -192,10 +192,10 @@ PlaceNextChar::
 	; charmap order: commands, then ngrams, then specials, then literals
 	ld a, [de]
 if DEF(LOCALE_ZH)
-	cp ZH_PAIR_COMMAND
+	cp ZH_ESCAPE
 	jr nz, .legacy
 	ldh a, [hROMBank]
-	farcall ZhPlaceEncodedPair
+	farcall ZhPlaceStableMenu
 	ld a, ERR_WINDOW_OVERFLOW
 	jmp c, Crash
 	call PrintLetterDelay

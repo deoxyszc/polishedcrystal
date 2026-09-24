@@ -1,0 +1,1953 @@
+{
+  "schema": 1,
+  "version": 2,
+  "status": "reviewed",
+  "reviewer": "AI",
+  "scope": "ROM text encoding allocation; runtime integration is separate",
+  "controls": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94
+  ],
+  "leads": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76
+  ],
+  "tails": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160,
+    161,
+    162,
+    163,
+    164,
+    165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    187,
+    188,
+    189,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205,
+    206,
+    207,
+    208,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    235,
+    236,
+    237,
+    238,
+    239,
+    240,
+    241,
+    242,
+    243,
+    244,
+    245,
+    246,
+    247,
+    248,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255
+  ],
+  "entries": [
+    {
+      "byte": 0,
+      "symbol": "<START>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 5,
+      "handler": "TextCommand_START"
+    },
+    {
+      "byte": 1,
+      "symbol": "<RAM>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 6,
+      "handler": "TextCommand_RAM"
+    },
+    {
+      "byte": 2,
+      "symbol": "<WAIT>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 7,
+      "handler": "TextCommand_PROMPT_BUTTON"
+    },
+    {
+      "byte": 3,
+      "symbol": "<ASM>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 8,
+      "handler": "TextCommand_ASM"
+    },
+    {
+      "byte": 4,
+      "symbol": "<NUM>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 9,
+      "handler": "TextCommand_DECIMAL"
+    },
+    {
+      "byte": 5,
+      "symbol": "<PAUSE>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 10,
+      "handler": "TextCommand_PAUSE"
+    },
+    {
+      "byte": 6,
+      "symbol": "<SOUND>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 11,
+      "handler": "TextCommand_SOUND"
+    },
+    {
+      "byte": 7,
+      "symbol": "<DAY>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 12,
+      "handler": "TextCommand_DAY"
+    },
+    {
+      "byte": 8,
+      "symbol": "<FAR>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 13,
+      "handler": "TextCommand_FAR"
+    },
+    {
+      "byte": 9,
+      "symbol": "<PLURAL>",
+      "kind": "script",
+      "source": "constants/charmap.asm",
+      "line": 14,
+      "handler": "TextCommand_PLURAL"
+    },
+    {
+      "byte": 82,
+      "symbol": "<DONE>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 26,
+      "handler": "DoneText"
+    },
+    {
+      "byte": 83,
+      "symbol": "@",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 27,
+      "handler": "FinishString"
+    },
+    {
+      "byte": 84,
+      "symbol": "<PROMPT>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 28,
+      "handler": "PromptText"
+    },
+    {
+      "byte": 85,
+      "symbol": "<LNBRK>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 29,
+      "handler": "LineBreak"
+    },
+    {
+      "byte": 86,
+      "symbol": "<NEXT>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 30,
+      "handler": "NextLineChar"
+    },
+    {
+      "byte": 87,
+      "symbol": "<LINE>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 31,
+      "handler": "LineChar"
+    },
+    {
+      "byte": 88,
+      "symbol": "<CONT>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 32,
+      "handler": "ContText"
+    },
+    {
+      "byte": 89,
+      "symbol": "<PARA>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 33,
+      "handler": "Paragraph"
+    },
+    {
+      "byte": 90,
+      "symbol": "<TARGET>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 35,
+      "handler": "PlaceTargetsName"
+    },
+    {
+      "byte": 91,
+      "symbol": "<USER>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 36,
+      "handler": "PlaceUsersName"
+    },
+    {
+      "byte": 92,
+      "symbol": "<ENEMY>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 37,
+      "handler": "PlaceEnemysName"
+    },
+    {
+      "byte": 93,
+      "symbol": "<CTXT>",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 39,
+      "handler": "DecompressString"
+    },
+    {
+      "byte": 94,
+      "symbol": "¯",
+      "kind": "string_control",
+      "source": "constants/charmap.asm",
+      "line": 41,
+      "handler": "SpaceChar"
+    },
+    {
+      "byte": 95,
+      "symbol": "<MALE>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 47
+    },
+    {
+      "byte": 96,
+      "symbol": "<FEMALE>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 48
+    },
+    {
+      "byte": 97,
+      "symbol": "<SHINY>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 49
+    },
+    {
+      "byte": 98,
+      "symbol": "<BALL>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 50
+    },
+    {
+      "byte": 99,
+      "symbol": "<HP1>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 52
+    },
+    {
+      "byte": 100,
+      "symbol": "<HP2>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 53
+    },
+    {
+      "byte": 101,
+      "symbol": "<NOHP>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 54
+    },
+    {
+      "byte": 109,
+      "symbol": "<FULLHP>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 56
+    },
+    {
+      "byte": 110,
+      "symbol": "<HPEND>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 57
+    },
+    {
+      "byte": 111,
+      "symbol": "◢",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 59
+    },
+    {
+      "byte": 112,
+      "symbol": "—",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 60
+    },
+    {
+      "byte": 113,
+      "symbol": "◣",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 61
+    },
+    {
+      "byte": 114,
+      "symbol": "<NONO>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 62
+    },
+    {
+      "byte": 115,
+      "symbol": "<XP1>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 64
+    },
+    {
+      "byte": 116,
+      "symbol": "<XP2>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 65
+    },
+    {
+      "byte": 117,
+      "symbol": "<NOXP>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 66
+    },
+    {
+      "byte": 125,
+      "symbol": "<FULLXP>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 68
+    },
+    {
+      "byte": 126,
+      "symbol": "<XPEND>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 69
+    },
+    {
+      "byte": 127,
+      "symbol": " ",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 77
+    },
+    {
+      "byte": 128,
+      "symbol": "A",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 81
+    },
+    {
+      "byte": 129,
+      "symbol": "B",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 82
+    },
+    {
+      "byte": 130,
+      "symbol": "C",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 83
+    },
+    {
+      "byte": 131,
+      "symbol": "D",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 84
+    },
+    {
+      "byte": 132,
+      "symbol": "E",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 85
+    },
+    {
+      "byte": 133,
+      "symbol": "F",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 86
+    },
+    {
+      "byte": 134,
+      "symbol": "G",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 87
+    },
+    {
+      "byte": 135,
+      "symbol": "H",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 88
+    },
+    {
+      "byte": 136,
+      "symbol": "I",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 89
+    },
+    {
+      "byte": 137,
+      "symbol": "J",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 90
+    },
+    {
+      "byte": 138,
+      "symbol": "K",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 91
+    },
+    {
+      "byte": 139,
+      "symbol": "L",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 92
+    },
+    {
+      "byte": 140,
+      "symbol": "M",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 93
+    },
+    {
+      "byte": 141,
+      "symbol": "N",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 94
+    },
+    {
+      "byte": 142,
+      "symbol": "O",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 95
+    },
+    {
+      "byte": 143,
+      "symbol": "P",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 96
+    },
+    {
+      "byte": 144,
+      "symbol": "Q",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 97
+    },
+    {
+      "byte": 145,
+      "symbol": "R",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 98
+    },
+    {
+      "byte": 146,
+      "symbol": "S",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 99
+    },
+    {
+      "byte": 147,
+      "symbol": "T",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 100
+    },
+    {
+      "byte": 148,
+      "symbol": "U",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 101
+    },
+    {
+      "byte": 149,
+      "symbol": "V",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 102
+    },
+    {
+      "byte": 150,
+      "symbol": "W",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 103
+    },
+    {
+      "byte": 151,
+      "symbol": "X",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 104
+    },
+    {
+      "byte": 152,
+      "symbol": "Y",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 105
+    },
+    {
+      "byte": 153,
+      "symbol": "Z",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 106
+    },
+    {
+      "byte": 154,
+      "symbol": "(",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 108
+    },
+    {
+      "byte": 155,
+      "symbol": ")",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 109
+    },
+    {
+      "byte": 156,
+      "symbol": ".",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 110
+    },
+    {
+      "byte": 157,
+      "symbol": ",",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 111
+    },
+    {
+      "byte": 158,
+      "symbol": "?",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 112
+    },
+    {
+      "byte": 159,
+      "symbol": "!",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 113
+    },
+    {
+      "byte": 160,
+      "symbol": "a",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 115
+    },
+    {
+      "byte": 161,
+      "symbol": "b",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 116
+    },
+    {
+      "byte": 162,
+      "symbol": "c",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 117
+    },
+    {
+      "byte": 163,
+      "symbol": "d",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 118
+    },
+    {
+      "byte": 164,
+      "symbol": "e",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 119
+    },
+    {
+      "byte": 165,
+      "symbol": "f",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 120
+    },
+    {
+      "byte": 166,
+      "symbol": "g",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 121
+    },
+    {
+      "byte": 167,
+      "symbol": "h",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 122
+    },
+    {
+      "byte": 168,
+      "symbol": "i",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 123
+    },
+    {
+      "byte": 169,
+      "symbol": "j",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 124
+    },
+    {
+      "byte": 170,
+      "symbol": "k",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 125
+    },
+    {
+      "byte": 171,
+      "symbol": "l",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 126
+    },
+    {
+      "byte": 172,
+      "symbol": "m",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 127
+    },
+    {
+      "byte": 173,
+      "symbol": "n",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 128
+    },
+    {
+      "byte": 174,
+      "symbol": "o",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 129
+    },
+    {
+      "byte": 175,
+      "symbol": "p",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 130
+    },
+    {
+      "byte": 176,
+      "symbol": "q",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 131
+    },
+    {
+      "byte": 177,
+      "symbol": "r",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 132
+    },
+    {
+      "byte": 178,
+      "symbol": "s",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 133
+    },
+    {
+      "byte": 179,
+      "symbol": "t",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 134
+    },
+    {
+      "byte": 180,
+      "symbol": "u",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 135
+    },
+    {
+      "byte": 181,
+      "symbol": "v",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 136
+    },
+    {
+      "byte": 182,
+      "symbol": "w",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 137
+    },
+    {
+      "byte": 183,
+      "symbol": "x",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 138
+    },
+    {
+      "byte": 184,
+      "symbol": "y",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 139
+    },
+    {
+      "byte": 185,
+      "symbol": "z",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 140
+    },
+    {
+      "byte": 186,
+      "symbol": "“",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 142
+    },
+    {
+      "byte": 187,
+      "symbol": "”",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 143
+    },
+    {
+      "byte": 188,
+      "symbol": "-",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 144
+    },
+    {
+      "byte": 189,
+      "symbol": ":",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 145
+    },
+    {
+      "byte": 190,
+      "symbol": "♂",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 146
+    },
+    {
+      "byte": 191,
+      "symbol": "♀",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 147
+    },
+    {
+      "byte": 192,
+      "symbol": "'",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 149
+    },
+    {
+      "byte": 193,
+      "symbol": "'d",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 150
+    },
+    {
+      "byte": 194,
+      "symbol": "'l",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 151
+    },
+    {
+      "byte": 195,
+      "symbol": "'m",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 152
+    },
+    {
+      "byte": 196,
+      "symbol": "'r",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 153
+    },
+    {
+      "byte": 197,
+      "symbol": "'s",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 154
+    },
+    {
+      "byte": 198,
+      "symbol": "'t",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 155
+    },
+    {
+      "byte": 199,
+      "symbol": "'v",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 156
+    },
+    {
+      "byte": 200,
+      "symbol": "é",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 158
+    },
+    {
+      "byte": 201,
+      "symbol": "É",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 159
+    },
+    {
+      "byte": 202,
+      "symbol": "á",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 160
+    },
+    {
+      "byte": 203,
+      "symbol": "<BOLDH>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 161
+    },
+    {
+      "byte": 204,
+      "symbol": "í",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 162
+    },
+    {
+      "byte": 205,
+      "symbol": "ó",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 163
+    },
+    {
+      "byte": 206,
+      "symbol": "¿",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 165
+    },
+    {
+      "byte": 207,
+      "symbol": "¡",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 166
+    },
+    {
+      "byte": 208,
+      "symbol": "<PO>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 168
+    },
+    {
+      "byte": 209,
+      "symbol": "<KE>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 169
+    },
+    {
+      "byte": 210,
+      "symbol": "<PK>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 170
+    },
+    {
+      "byte": 211,
+      "symbol": "<MN>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 171
+    },
+    {
+      "byte": 212,
+      "symbol": "<ID>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 173
+    },
+    {
+      "byte": 213,
+      "symbol": "№",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 174
+    },
+    {
+      "byte": 214,
+      "symbol": "<LV>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 175
+    },
+    {
+      "byte": 215,
+      "symbol": "<BOLDP>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 176
+    },
+    {
+      "byte": 216,
+      "symbol": "&",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 178
+    },
+    {
+      "byte": 217,
+      "symbol": "♪",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 180
+    },
+    {
+      "byte": 218,
+      "symbol": "♥",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 181
+    },
+    {
+      "byte": 219,
+      "symbol": "×",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 183
+    },
+    {
+      "byte": 220,
+      "symbol": "/",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 184
+    },
+    {
+      "byte": 221,
+      "symbol": "%",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 185
+    },
+    {
+      "byte": 222,
+      "symbol": "+",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 187
+    },
+    {
+      "byte": 223,
+      "symbol": "<SHARP>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 188
+    },
+    {
+      "byte": 224,
+      "symbol": "0",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 190
+    },
+    {
+      "byte": 225,
+      "symbol": "1",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 191
+    },
+    {
+      "byte": 226,
+      "symbol": "2",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 192
+    },
+    {
+      "byte": 227,
+      "symbol": "3",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 193
+    },
+    {
+      "byte": 228,
+      "symbol": "4",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 194
+    },
+    {
+      "byte": 229,
+      "symbol": "5",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 195
+    },
+    {
+      "byte": 230,
+      "symbol": "6",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 196
+    },
+    {
+      "byte": 231,
+      "symbol": "7",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 197
+    },
+    {
+      "byte": 232,
+      "symbol": "8",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 198
+    },
+    {
+      "byte": 233,
+      "symbol": "9",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 199
+    },
+    {
+      "byte": 234,
+      "symbol": "¥",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 201
+    },
+    {
+      "byte": 235,
+      "symbol": "…",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 203
+    },
+    {
+      "byte": 236,
+      "symbol": "★",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 205
+    },
+    {
+      "byte": 237,
+      "symbol": "▼",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 207
+    },
+    {
+      "byte": 238,
+      "symbol": "▲",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 208
+    },
+    {
+      "byte": 239,
+      "symbol": "◀",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 209
+    },
+    {
+      "byte": 240,
+      "symbol": "▶",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 210
+    },
+    {
+      "byte": 241,
+      "symbol": "▷",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 211
+    },
+    {
+      "byte": 242,
+      "symbol": "↑",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 214
+    },
+    {
+      "byte": 243,
+      "symbol": "↓",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 215
+    },
+    {
+      "byte": 244,
+      "symbol": "′",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 216
+    },
+    {
+      "byte": 245,
+      "symbol": "″",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 217
+    },
+    {
+      "byte": 246,
+      "symbol": "<PHONE>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 218
+    },
+    {
+      "byte": 247,
+      "symbol": "<BLACK>",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 219
+    },
+    {
+      "byte": 248,
+      "symbol": "┌",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 222
+    },
+    {
+      "byte": 249,
+      "symbol": "─",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 223
+    },
+    {
+      "byte": 250,
+      "symbol": "┐",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 224
+    },
+    {
+      "byte": 251,
+      "symbol": "│",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 225
+    },
+    {
+      "byte": 252,
+      "symbol": "┃",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 226
+    },
+    {
+      "byte": 253,
+      "symbol": "└",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 227
+    },
+    {
+      "byte": 254,
+      "symbol": "━",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 228
+    },
+    {
+      "byte": 255,
+      "symbol": "┘",
+      "kind": "literal",
+      "source": "constants/charmap.asm",
+      "line": 229
+    },
+    {
+      "byte": 77,
+      "symbol": "#",
+      "kind": "ngram",
+      "source": "constants/charmap.asm",
+      "line": 235
+    },
+    {
+      "byte": 78,
+      "symbol": "#mon",
+      "kind": "ngram",
+      "source": "constants/charmap.asm",
+      "line": 236
+    },
+    {
+      "byte": 79,
+      "symbol": "<PLAYER>",
+      "kind": "ngram",
+      "source": "constants/charmap.asm",
+      "line": 239
+    },
+    {
+      "byte": 80,
+      "symbol": "<RIVAL>",
+      "kind": "ngram",
+      "source": "constants/charmap.asm",
+      "line": 240
+    },
+    {
+      "byte": 81,
+      "symbol": "<TRENDY>",
+      "kind": "ngram",
+      "source": "constants/charmap.asm",
+      "line": 241
+    },
+    {
+      "byte": 10,
+      "symbol": "ZH_ESCAPE",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 2
+    },
+    {
+      "byte": 2,
+      "symbol": "ZH_CTRL_WAIT",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 13
+    },
+    {
+      "byte": 82,
+      "symbol": "ZH_CTRL_DONE",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 14
+    },
+    {
+      "byte": 83,
+      "symbol": "ZH_CTRL_AT",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 15
+    },
+    {
+      "byte": 84,
+      "symbol": "ZH_CTRL_PROMPT",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 16
+    },
+    {
+      "byte": 86,
+      "symbol": "ZH_CTRL_NEXT",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 17
+    },
+    {
+      "byte": 87,
+      "symbol": "ZH_CTRL_LINE",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 18
+    },
+    {
+      "byte": 89,
+      "symbol": "ZH_CTRL_PARA",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 19
+    },
+    {
+      "byte": 11,
+      "symbol": "ZH_CTRL_PLAYER",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 22
+    },
+    {
+      "byte": 12,
+      "symbol": "ZH_CTRL_RIVAL",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 23
+    },
+    {
+      "byte": 10,
+      "symbol": "ZH_STREAM_COMMAND",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 26
+    },
+    {
+      "byte": 85,
+      "symbol": "ZH_CTRL_CONT",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 28
+    },
+    {
+      "byte": 13,
+      "symbol": "ZH_CTRL_RAM",
+      "kind": "zh_control",
+      "source": "constants/zh_encoding.asm",
+      "line": 30
+    }
+  ],
+  "script_parameters": [
+    {
+      "macro": "text_start",
+      "byte": 0,
+      "symbol": "<START>",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "string until terminator"
+    },
+    {
+      "macro": "text_ram",
+      "byte": 1,
+      "symbol": "<RAM>",
+      "parameter_bytes": 2,
+      "parameters": [
+        {
+          "expression": "dw \\1",
+          "bytes": 2
+        }
+      ],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_promptbutton",
+      "byte": 2,
+      "symbol": "<WAIT>",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_asm",
+      "byte": 3,
+      "symbol": "<ASM>",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "executable assembly, not character data"
+    },
+    {
+      "macro": "text_decimal",
+      "byte": 4,
+      "symbol": "<NUM>",
+      "parameter_bytes": 3,
+      "parameters": [
+        {
+          "expression": "dw \\1",
+          "bytes": 2
+        },
+        {
+          "expression": "dn \\2, \\3",
+          "bytes": 1
+        }
+      ],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_pause",
+      "byte": 5,
+      "symbol": "<PAUSE>",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_sound",
+      "byte": 6,
+      "symbol": "<SOUND>",
+      "parameter_bytes": 1,
+      "parameters": [
+        {
+          "expression": "db \\1",
+          "bytes": 1
+        }
+      ],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_today",
+      "byte": 7,
+      "symbol": "<DAY>",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_far",
+      "byte": 8,
+      "symbol": "<FAR>",
+      "parameter_bytes": 3,
+      "parameters": [
+        {
+          "expression": "bigdw \\1",
+          "bytes": 2
+        },
+        {
+          "expression": "db BANK(\\1)",
+          "bytes": 1
+        }
+      ],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_farend",
+      "byte": 8,
+      "symbol": "<FAR>",
+      "parameter_bytes": 3,
+      "parameters": [
+        {
+          "expression": "bigdw (\\1) | $8000",
+          "bytes": 2
+        },
+        {
+          "expression": "db BANK(\\1)",
+          "bytes": 1
+        }
+      ],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_plural",
+      "byte": 9,
+      "symbol": "<PLURAL>",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "script"
+    },
+    {
+      "macro": "text_end",
+      "byte": 83,
+      "symbol": "@",
+      "parameter_bytes": 0,
+      "parameters": [],
+      "continuation": "terminate"
+    }
+  ],
+  "semantic_rules": [
+    {
+      "layer": "script",
+      "bytes": "00-09",
+      "rule": "TextCommands indexed table; macro-derived parameters; 0A descriptor intercepted in ZH mode"
+    },
+    {
+      "layer": "script",
+      "bytes": "52/53/54",
+      "rule": "CheckTerminatorChar before command dispatch"
+    },
+    {
+      "layer": "string",
+      "bytes": "4D-51",
+      "rule": "ngram expansion; 4F-51 indirect RAM strings"
+    },
+    {
+      "layer": "string",
+      "bytes": "52-5E",
+      "rule": "SpecialCharacters table; CTXT 5D enters Huffman bitstream"
+    },
+    {
+      "layer": "string",
+      "bytes": "00-4C",
+      "rule": "legacy rejects low bytes except ZH 0E pair; proposed leads need new decoder"
+    },
+    {
+      "layer": "zh_descriptor",
+      "bytes": "0A",
+      "parameters": "LE16 start + LE16 end, fixed bank80"
+    },
+    {
+      "layer": "zh_e1",
+      "bytes": "0A",
+      "parameters": "two high-bit-set 7-bit glyph ID payloads"
+    },
+    {
+      "layer": "zh_private",
+      "bytes": "0D",
+      "parameters": "bank + LE16 RAM address"
+    },
+    {
+      "layer": "zh_private",
+      "bytes": "0B/0C",
+      "parameters": "none; dynamic player/rival"
+    },
+    {
+      "layer": "zh_private",
+      "bytes": "02/52/53/54/55/56/57/59",
+      "parameters": "none; WAIT/DONE/AT/PROMPT/CONT/NEXT/LINE/PARA; AT ends a pair run, not necessarily dialogue"
+    },
+    {
+      "layer": "compression",
+      "bytes": "5D",
+      "rule": "Huffman bitstream; decoded 52/53/54 terminate; never scan compressed bytes as controls"
+    },
+    {
+      "layer": "menu string",
+      "bytes": "0A",
+      "parameters": "style|80, length high7|80, length low7|80; bounded character payload; followed by original @",
+      "rule": "PlaceString adapter; private E1/dialogue 0A remain separate contexts"
+    }
+  ],
+  "reader_constraints": [
+    {
+      "source": "home/names.asm",
+      "entry": "GetNthString",
+      "rule": "byte-wise AT scan; no tail may equal AT"
+    },
+    {
+      "source": "home/names.asm",
+      "entry": "GetBasePokemonName",
+      "rule": "byte-wise gender and AT scan; exclude BE/BF from payload"
+    },
+    {
+      "source": "home/names.asm",
+      "entry": "GetPokemonName",
+      "rule": "10-byte species records + AT; maximum five two-byte Han; no field expansion"
+    },
+    {
+      "source": "home/names.asm",
+      "entry": "GetName",
+      "rule": "GetNthString then ITEM_NAME_LENGTH byte copy; enforce encoded byte budget"
+    },
+    {
+      "source": "home/array.asm",
+      "entry": "SkipNames",
+      "rule": "fixed NAME_LENGTH stride, not terminator scan"
+    },
+    {
+      "source": "home/copy_name.asm",
+      "entry": "CopyName2",
+      "rule": "byte copy through AT; caller must enforce destination capacity"
+    },
+    {
+      "source": "home/string.asm",
+      "entry": "InitName",
+      "rule": "NAME_LENGTH budget and space/AT detection; exclude space from payload"
+    },
+    {
+      "source": "home/string.asm",
+      "entry": "FarCopyRadioText",
+      "rule": "BE16 far descriptor; repeated decompression; DONE ends radio lines"
+    },
+    {
+      "source": "home/text.asm",
+      "entry": "DecompressStringToRAM",
+      "rule": "byte-wise CTXT and terminator detection; payload excludes both"
+    },
+    {
+      "source": "home/text.asm",
+      "entry": "TextCommand_PLURAL",
+      "rule": "backward pattern matching English; do not apply to Chinese without adaptation"
+    },
+    {
+      "source": "engine/menus",
+      "entry": "menu strings",
+      "rule": "byte sentinel traversal distinct from tilemap cursor predicates; new glyph width handling required"
+    },
+    {
+      "source": "engine/gfx/vwf.asm",
+      "entry": "VWF",
+      "rule": "legacy single-byte glyph metrics require new decoder before Chinese input"
+    },
+    {
+      "source": "engine/events/map_name_sign.asm",
+      "entry": "map name",
+      "rule": "legacy width/spacing reader requires adaptation"
+    },
+    {
+      "source": "engine/menus/naming_screen.asm",
+      "entry": "naming",
+      "rule": "save/input encoding unchanged; generated ROM table does not authorize conversion"
+    }
+  ],
+  "source_evidence": {
+    "constants/charmap.asm": "61a86882bf1849e549a2447c045283600df4e2b182dac2e936fbd04ba160a628",
+    "constants/zh_encoding.asm": "8c32658fe34f35e07262fc6814a57ec2324d7c5aafef13710316090095ff7282",
+    "home/text.asm": "ebbb4caefae96fa6ba5c1f81658711de8dac199b81967bd414a415c78c716c89",
+    "macros/scripts/text.asm": "b1937d49237a3ace797be69ffdd0817c2886cc524bd4f3c445f2940039893ae3",
+    "data/text/ngrams.asm": "a340f17aa01e2a8ff200fa6ea388307f956d6f6dc0043cb630475f24256c9f62"
+  },
+  "limitations": [
+    "Existing runtime rejects the proposed lead bytes; decoder integration is separate.",
+    "Fixed byte capacities and glyph-counted layout still require consumer adaptation.",
+    "Map, animation and audio script opcodes are separate namespaces, not text controls."
+  ],
+  "retired_reserved_bytes": [
+    14
+  ]
+}
