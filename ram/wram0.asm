@@ -1503,36 +1503,10 @@ wPaletteSwapNeedsReload:: db
 wPaletteSwapReloadMask:: db
 
 if DEF(LOCALE_ZH)
-SECTION "ZH bounded text state", WRAM0
-wZhTextCursor:: dw
-wZhTextEnd:: dw
-wZhTextSlot:: db
-wZhTextControl:: db
-wZhNameBuffer:: ds 12
-wZhMoveListActive:: db
-wZhMoveIndex:: db
-wZhPartyIndex:: db
-wZhPartyWidths:: ds 6
-wZhPartyStatuses:: ds 6
-wZhPartyStatusTiles:: ds 32
-wZhPartyGender:: db
-wZhPartyLevel:: ds 3
-wZhPartyHP:: ds 7
-wZhPartyLevelKeys:: dw
-
-
-endc
-
-if DEF(LOCALE_ZH)
-wZhHudEnemyWidth:: db
-endc
-
-if DEF(LOCALE_ZH)
-wZhBattleCommandActive:: db
-endc
-
-
-
-if DEF(LOCALE_ZH)
-wZhPartyActionActive:: db
+SECTION "Shared text cursor", WRAM0
+wTextSourceBank:: db
+wTextSource:: dw
+wTextPending:: dw
+wTextFragments:: dw
+wTextFragmentCount:: db
 endc

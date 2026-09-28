@@ -18,10 +18,7 @@ def emit(source, manifest):
     strips=maps['dialogue']['glyphs']
     rows=sorted((codes[e['char']],e['id']) for e in glyphs if e['char'] in codes)
     leads=sorted({code[0] for code,glyph in rows})
-    lines=['; A=byte; carry set exactly for manifested stable lead bytes.', 'ZhIsStableLead:']
-    for lead in leads:
-        lines += [f' cp {lead}', ' jr z,.yes']
-    lines += [' and a', ' ret', '.yes', ' scf', ' ret', 'ZhStableGlyphDirectory:']
+    lines=['ZhStableGlyphDirectory:']
     for entry in glyphs:
         code=codes.get(entry['char'],bytes((255,255)))
         lines += [' db '+','.join(map(str,code))]

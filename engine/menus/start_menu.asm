@@ -171,9 +171,6 @@ StartMenu::
 	dw StartMenu_Pokegear, .PokegearString
 	dw StartMenu_Quit,     .QuitString
 
-if DEF(LOCALE_ZH)
-INCLUDE "data/zh/start_menu.asm"
-else
 .PokedexString:  db "#dex@"
 .PartyString:    db "#mon@"
 .PackString:     db "Bag@"
@@ -184,7 +181,6 @@ else
 .PokegearString: db "<PO><KE>gear@"
 .QuitString:     db "Quit@"
 
-endc
 
 .OpenMenu:
 	ld a, [wMenuSelection]
@@ -192,17 +188,6 @@ endc
 	jmp IndirectHL
 
 .MenuString:
-if DEF(LOCALE_ZH)
- push de
- ld a, [wMenuSelection]
- cp STARTMENUITEM_STATUS
- jr nz, .fixedString
- farcall ZhDrawStartMenuPlayer
- pop de
- ret
-.fixedString
- pop de
-endc
 
 	push de
 	ld a, [wMenuSelection]
@@ -213,11 +198,6 @@ endc
 	ld d, [hl]
 	ld e, a
 	pop hl
-if DEF(LOCALE_ZH)
- ld bc, (ZH_START_MENU_TOP - 2) * SCREEN_WIDTH + ZH_START_MENU_LEFT - 12
- add hl, bc
- farcall ZhPrepareStartMenuText
-endc
 	rst PlaceString
 	ret
 
