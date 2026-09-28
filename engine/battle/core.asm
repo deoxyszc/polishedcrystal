@@ -3976,11 +3976,7 @@ DrawPlayerHUD:
 
 	; Status icon
 	farcall LoadPlayerStatusIcon
-if DEF(LOCALE_ZH)
-	hlcoord 10, 10
-else
 	hlcoord 12, 8
-endc
 	ld a, $55
 	ld [hli], a
 	ld [hl], $56
@@ -4017,11 +4013,6 @@ CheckDanger:
 	ret
 
 PrintPlayerHUD:
-if DEF(LOCALE_ZH)
- ld de,wBattleMonNickname
- hlcoord 7,7
- farcall ZhBattleHudName
-else
 	ld de, wBattleMonNickname
 	hlcoord 11, 7
 	ld a, [wBattleMonNickname + MON_NAME_LENGTH - 2]
@@ -4031,7 +4022,6 @@ else
 .short_name
 	rst PlaceString
 
-endc
 	push bc
 
 	ld a, [wCurBattleMon]
@@ -4082,18 +4072,10 @@ endr
 	inc a ; "<FEMALE>"
 
 .got_gender_char
-if DEF(LOCALE_ZH)
-	hlcoord 16, 8
-else
 	hlcoord 18, 8
-endc
 	ld [hl], a
 
-if DEF(LOCALE_ZH)
-	hlcoord 17, 8
-else
 	hlcoord 15, 8
-endc
 	ld a, [wBattleMonLevel]
 	ld [wTempMonLevel], a
 	jmp PrintLevel
@@ -4133,11 +4115,7 @@ DrawEnemyHUD:
 	ld de, wEnemyMonNickname
 .got_nickname
 	hlcoord 1, 0
-if DEF(LOCALE_ZH)
-	farcall ZhBattleHudName
-else
 	rst PlaceString
-endc
 	ld h, b
 	ld l, c
 	dec hl
@@ -4157,11 +4135,7 @@ endr
 	farcall CheckShininess
 	jr nc, .not_shiny
 	ld a, '<SHINY>'
-if DEF(LOCALE_ZH)
-	hlcoord 0, 2
-else
 	hlcoord 9, 1
-endc
 	ld [hl], a
 
 .not_shiny
@@ -4179,34 +4153,10 @@ endc
 	inc a ; "<FEMALE>"
 
 .got_gender
-if DEF(LOCALE_ZH)
- push af
- ld a,[wZhHudEnemyWidth]
- and a
- jr z,.legacyEnemyMeta
- inc a
- ld e,a
- ld d,0
- hlcoord 0,1
- add hl,de
- pop af
- ld [hli],a
- jr .enemyMetaDone
-.legacyEnemyMeta
- pop af
- hlcoord 8,1
- ld [hl],a
- hlcoord 5,1
-.enemyMetaDone
-else
 	hlcoord 8, 1
 	ld [hl], a
-endc
 
-if DEF(LOCALE_ZH)
-else
 	hlcoord 5, 1
-endc
 	ld a, [wEnemyMonLevel]
 	ld [wTempMonLevel], a
 	call PrintLevel
@@ -4276,25 +4226,7 @@ endc
 	call DrawBattleHPBar
 
 	farcall LoadEnemyStatusIcon
-if DEF(LOCALE_ZH)
- ld a,[wEnemyMonStatus]
- and a
- jp z,FinishBattleAnim
- ld a,[wZhHudEnemyWidth]
- add 2
- ld e,a
- ld d,0
- hlcoord 0,1
- add hl,de
- push hl
- ld a,$7f
- ld [hli],a
- ld [hli],a
- ld [hl],a
- pop hl
-else
 	hlcoord 2, 1
-endc
 	ld a, $57
 	ld [hli], a
 	ld [hl], $58
@@ -4671,12 +4603,7 @@ BattleMenuPKMN_Loop:
 	call MenuBox
 	call UpdateSprites
 	call PlaceVerticalMenuItems
-if DEF(LOCALE_ZH)
- ; Publish the submenu attributes too: the covered footer uses cached tiles.
- call ApplyAttrAndTilemapInVBlank
-else
 	call ApplyTilemapInVBlank
-endc
 	call CopyMenuData2
 	ld a, [wMenuDataFlags]
 	bit 7, a
@@ -4684,15 +4611,7 @@ endc
 	call InitVerticalMenuCursor
 	ld hl, w2DMenuFlags1
 	set 6, [hl]
-if DEF(LOCALE_ZH)
- ld a,1
- ld [wZhPartyActionActive],a
-endc
 	call DoMenuJoypadLoop
-if DEF(LOCALE_ZH)
- xor a
- ld [wZhPartyActionActive],a
-endc
 	ld de, SFX_READ_TEXT_2
 	call PlaySFX
 	ldh a, [hJoyPressed]
@@ -4709,25 +4628,17 @@ endc
 
 .MenuHeader:
 	db $00 ; flags
-if DEF(LOCALE_ZH)
- menu_coords 13,10,19,17
-else
 	menu_coords 10, 11, 19, 17
-endc
 	dw .MenuData
 	db 1 ; default option
 
 .MenuData:
 	db $c0 ; flags
 	db 3 ; items
-if DEF(LOCALE_ZH)
- INCLUDE "data/zh/battle_party_actions.asm"
-else
 	db "Switch@"
 	db "Summary@"
 	db "Cancel@"
 
-endc
 AI_OpponentCanSwitch:
 	call StackCallOpponentTurn
 AI_UserCanSwitch:
@@ -5138,34 +5049,6 @@ MoveSelectionScreen:
 	assert NO_BG_MAP_TRANSFER == 0
 	ldh [hBGMapMode], a
 
-if DEF(LOCALE_ZH)
- ld a,[wMoveSelectionMenuType]
- and a
- jr nz,.legacyMoveList
- farcall ZhCanDrawMoveList
- jr c,.legacyMoveList
- hlcoord 0,8
- lb bc,8,9
- call Textbox
- ; Preserve list-count semantics used by PP, move use, reorder and wrapping.
- ld hl,wListMoves_MoveIndicesBuffer
- ld b,0
-.countMoves
- ld a,[hli]
- and a
- jr z,.countDone
- inc b
- ld a,b
- cp 4
- jr c,.countMoves
-.countDone
- ld a,b
- dec a
- ld [wNumMoves],a
- farcall ZhDrawMoveList
- jr .moveListDone
-.legacyMoveList
-endc
 	hlcoord 4, 17 - NUM_MOVES - 1
 	ld a, [wMoveSelectionMenuType]
 	dec a
@@ -5185,9 +5068,6 @@ endc
 	ld [wListMovesLineSpacing], a
 	farcall ListMoves
 
-if DEF(LOCALE_ZH)
-.moveListDone
-endc
 
 	ld a, [wMoveSelectionMenuType]
 	dec a
@@ -5253,23 +5133,7 @@ endc
 .interpret_joypad
 	ld a, TRANSFER_TILEMAP
 	ldh [hBGMapMode], a
-if DEF(LOCALE_ZH)
- ld a,[wMoveSelectionMenuType]
- and a
- jr nz,.gridOff
- farcall ZhCanDrawMoveList
- jr c,.gridOff
- ld a,1
- ld [wZhMoveListActive],a
-.gridOff
-endc
 	call DoMenuJoypadLoop
-if DEF(LOCALE_ZH)
- push af
- xor a
- ld [wZhMoveListActive],a
- pop af
-endc
 	bit B_PAD_UP, a
 	jmp nz, .pressed_up
 	bit B_PAD_DOWN, a
@@ -5625,59 +5489,11 @@ MoveInfoBox:
 	assert NO_BG_MAP_TRANSFER == 0
 	ldh [hBGMapMode], a
 
-	if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyCoord0
-if DEF(LOCALE_ZH)
-hlcoord 10, 12
-else
-	hlcoord 10, 12
-endc
- jr .coordDone0
-.legacyCoord0
-if DEF(LOCALE_ZH)
-hlcoord 0, 8
-else
 	hlcoord 0, 8
-endc
-.coordDone0
- pop af
-else
-if DEF(LOCALE_ZH)
-hlcoord 0, 8
-else
-	hlcoord 0, 8
-endc
-endc
 	ld a, [hl]
 	cp '┌'
 	push af
-	if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyCoord1
-if DEF(LOCALE_ZH)
-lb bc, 4, 8
-else
-	lb bc, 4, 8
-endc
- jr .coordDone1
-.legacyCoord1
-if DEF(LOCALE_ZH)
-lb bc, 3, 9
-else
 	lb bc, 3, 9
-endc
-.coordDone1
- pop af
-else
-if DEF(LOCALE_ZH)
-lb bc, 3, 9
-else
-	lb bc, 3, 9
-endc
-endc
 	call Textbox
 
 	ld hl, wMenuCursorY
@@ -5710,55 +5526,13 @@ endc
 
 	farcall UpdateMoveData
 
-	if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyCoord2
-if DEF(LOCALE_ZH)
-hlcoord 11, 14
-else
-	hlcoord 11, 14
-endc
- jr .coordDone2
-.legacyCoord2
-if DEF(LOCALE_ZH)
-hlcoord 1, 10
-else
 	hlcoord 1, 10
-endc
-.coordDone2
- pop af
-else
-if DEF(LOCALE_ZH)
-hlcoord 1, 10
-else
-	hlcoord 1, 10
-endc
-endc
 	ld de, .PowAcc
-if DEF(LOCALE_ZH)
- farcall ZhUseVerticalMoveList
- jr c,.powAccReady
- ld de,.VerticalPowAcc
-.powAccReady
-endc
 	rst PlaceString
 
 	ld hl, Moves + MOVE_POWER
 	call GetCurMoveProperty
-if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyPower
- hlcoord 11,14
- jr .powerCoordDone
-.legacyPower
  hlcoord 1,10
-.powerCoordDone
- pop af
-else
- hlcoord 1,10
-endc
 	cp 2
 	jr c, .no_power
 	ld [wTextDecimalByte], a
@@ -5773,31 +5547,7 @@ endc
 .place_accuracy
 	ld hl, Moves + MOVE_ACC
 	call GetCurMoveProperty
-	if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyCoord3
-if DEF(LOCALE_ZH)
-hlcoord 15, 14
-else
-	hlcoord 15, 14
-endc
- jr .coordDone3
-.legacyCoord3
-if DEF(LOCALE_ZH)
-hlcoord 6, 10
-else
 	hlcoord 6, 10
-endc
-.coordDone3
- pop af
-else
-if DEF(LOCALE_ZH)
-hlcoord 6, 10
-else
-	hlcoord 6, 10
-endc
-endc
 	cp -1
 	jr nc, .no_acc
 	ld [wTextDecimalByte], a
@@ -5839,31 +5589,7 @@ endc
 	ld hl, vTiles2 tile $5b
 	lb bc, BANK(TypeIconGFX), 4
 	call Request1bpp
-	if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyCoord4
-if DEF(LOCALE_ZH)
-hlcoord 11, 13
-else
-	hlcoord 11, 13
-endc
- jr .coordDone4
-.legacyCoord4
-if DEF(LOCALE_ZH)
-hlcoord 1, 9
-else
 	hlcoord 1, 9
-endc
-.coordDone4
- pop af
-else
-if DEF(LOCALE_ZH)
-hlcoord 1, 9
-else
-	hlcoord 1, 9
-endc
-endc
 	ld b, 6
 	ld a, $59
 .loop
@@ -5875,41 +5601,13 @@ endc
 	call nz, ApplyTilemap
 	ret
 
-if DEF(LOCALE_ZH)
-.VerticalPowAcc:
- db "   /   %@"
-endc
 .PowAcc:
 	db "   <BOLDP>/   %@"
 .NA:
 	db "---@"
 
 .PrintPP:
-	if DEF(LOCALE_ZH)
- push af
- farcall ZhUseVerticalMoveList
- jr c,.legacyCoord5
-if DEF(LOCALE_ZH)
-hlcoord 11, 16
-else
-	hlcoord 11, 16
-endc
- jr .coordDone5
-.legacyCoord5
-if DEF(LOCALE_ZH)
-hlcoord 2, 11
-else
 	hlcoord 2, 11
-endc
-.coordDone5
- pop af
-else
-if DEF(LOCALE_ZH)
-hlcoord 2, 11
-else
-	hlcoord 2, 11
-endc
-endc
 	ld a, '<BOLDP>'
 	ld [hli], a
 	ld [hli], a

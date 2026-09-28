@@ -36,9 +36,6 @@ CloseText::
 	ret
 
 .CloseText:
-if DEF(LOCALE_ZH)
- call LoadStandardFont
-endc
 	call ClearWindowData
 	xor a
 	assert NO_BG_MAP_TRANSFER == 0

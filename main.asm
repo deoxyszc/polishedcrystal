@@ -1,6 +1,3 @@
-if DEF(LOCALE_ZH)
-INCLUDE "constants/zh_summary_layout.asm"
-endc
 SECTION "bank1", ROMX
 
 INCLUDE "engine/init.asm"
@@ -746,40 +743,9 @@ SECTION "LureMenu", ROMX
 INCLUDE "engine/menus/lure_menu.asm"
 
 if DEF(LOCALE_ZH)
-SECTION "MBC30 runtime extent", ROMX[$7fff], BANK[$ff]
- db $ff
-SECTION "Language runtime", ROMX, BANK[$80]
-INCLUDE "engine/zh/decode.asm"
-INCLUDE "engine/zh/stable_decode.asm"
-INCLUDE "engine/zh/stable_text.asm"
-INCLUDE "data/zh/stable.asm"
-INCLUDE "engine/zh/stream.asm"
-INCLUDE "engine/zh/name.asm"
-INCLUDE "engine/zh/render.asm"
-INCLUDE "engine/zh/cache.asm"
-INCLUDE "engine/zh/glyph_cache.asm"
-INCLUDE "engine/zh/cache_render.asm"
-INCLUDE "engine/zh/cache_backup.asm"
-INCLUDE "engine/zh/cache_window.asm"
-INCLUDE "engine/zh/cache_temp.asm"
-INCLUDE "engine/zh/cache_text.asm"
-INCLUDE "engine/zh/summary.asm"
-INCLUDE "engine/zh/summary_cache.asm"
-INCLUDE "engine/zh/text.asm"
-INCLUDE "engine/zh/dialogue.asm"
-INCLUDE "engine/zh/dispatch.asm"
-INCLUDE "engine/zh/moves.asm"
-INCLUDE "engine/zh/battle_hud.asm"
-INCLUDE "data/zh/battle_hud.asm"
-INCLUDE "engine/zh/start_menu.asm"
-INCLUDE "engine/zh/party.asm"
-INCLUDE "data/zh/party.asm"
-SECTION "Chinese compiled move names", ROMX
-INCLUDE "data/zh/move_names.asm"
-SECTION "Chinese font directory", ROMX, BANK[$80]
-INCLUDE "data/zh/font/font.asm"
-INCLUDE "data/zh/font/font_pages.asm"
-SECTION "Compiled strip directory", ROMX, BANK[$80]
-INCLUDE "data/zh/font/compiled.asm"
-INCLUDE "data/zh/font/compiled_pages.asm"
+SECTION "MBC30 text extent", ROMX[$7fff], BANK[$ff]
+ db 0
+SECTION "Shared Chinese text", ROMX, BANK[$80]
+INCLUDE "engine/text/chinese.asm"
+INCLUDE "data/zh/characters.asm"
 endc

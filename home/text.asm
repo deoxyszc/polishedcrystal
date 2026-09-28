@@ -1,6 +1,10 @@
 ClearSpeechBox::
+if DEF(LOCALE_ZH)
+ farjp ClearChineseSpeechBox
+else
 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
 	lb bc, TEXTBOX_INNERH - 1, TEXTBOX_INNERW
+endc
 ClearBox::
 ; Fill a c*b box at hl with blank tiles.
 	ld a, ' '
@@ -178,30 +182,20 @@ _PlaceString::
 SpaceChar::
 	ld a, ' '
 _PlaceLiteralChar:
-if DEF(LOCALE_ZH)
- farcall ZhPlaceLegacyLiteral
- ld a,ERR_WINDOW_OVERFLOW
- jp c,Crash
-else
  ld [hli],a
-endc
 	call PrintLetterDelay
 NextChar::
 	inc de
 PlaceNextChar::
 	; charmap order: commands, then ngrams, then specials, then literals
-	ld a, [de]
 if DEF(LOCALE_ZH)
-	cp ZH_ESCAPE
-	jr nz, .legacy
-	ldh a, [hROMBank]
-	farcall ZhPlaceStableMenu
-	ld a, ERR_WINDOW_OVERFLOW
-	jmp c, Crash
-	call PrintLetterDelay
-	jr PlaceNextChar
-.legacy
+ ldh a,[hROMBank]
+ farcall PlaceStringChinese
+ jr c,.notChinese
+ jp PlaceNextChar
+.notChinese
 endc
+	ld a, [de]
 	cp BATTLEEXTRA_GFX_START
 	jr nc, _PlaceLiteralChar
 	cp SPECIALS_START
@@ -521,8 +515,12 @@ TextScroll::
 	push af
 	ld c, TEXTBOX_INNERW
 .row
-	ld a, [hli]
-	ld [de], a
+if DEF(LOCALE_ZH)
+ farcall ScrollTextCell
+else
+ ld a,[hli]
+ ld [de],a
+endc
 	inc de
 	dec c
 	jr nz, .row
@@ -537,6 +535,9 @@ TextScroll::
 	ld a, ' '
 	ld bc, TEXTBOX_INNERW
 	rst ByteFill
+if DEF(LOCALE_ZH)
+ farcall ClearScrolledTextAttributes
+endc
 	ld c, 5
 	jmp DelayFrames
 
@@ -546,7 +547,11 @@ Text_WaitBGMap::
 	push af
 	ld a, 1
 	ldh [hOAMUpdate], a
+if DEF(LOCALE_ZH)
+	call ApplyAttrAndTilemapInVBlank
+else
 	call ApplyTilemapInVBlank
+endc
 	pop af
 	ldh [hOAMUpdate], a
 	pop bc
@@ -581,17 +586,6 @@ DoTextUntilTerminator::
 	and a
 	ret nz
 	ld a, [hli]
-if DEF(LOCALE_ZH)
-	cp ZH_STREAM_COMMAND
-	jr nz, .legacy
-	push bc
-	ldh a, [hROMBank]
-	ld b, a
-	farcall ZhDispatchText
-	pop bc
-	ret
-.legacy
-endc
 	call CheckTerminatorChar
 	ret z
 	call .TextCommand

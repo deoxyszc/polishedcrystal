@@ -12,7 +12,7 @@ _LoadStandardFont::
 _LoadStandardMaybeOpaqueFont:
 	push af
 if DEF(LOCALE_ZH)
-	farcall ZhFontCacheInvalidate
+ farcall InitializeChineseTextCache
 endc
 	call LoadStandardFontPointer
 	ld d, h

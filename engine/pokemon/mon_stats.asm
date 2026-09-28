@@ -119,6 +119,7 @@ endr
 	add hl, de
 	ret
 
+
 AllStatNames:
 	db   "Health<NEXT>"
 MostStatNames:

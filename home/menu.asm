@@ -46,9 +46,6 @@ PopWindow::
 	ret
 
 GetMenuBoxDims::
-if DEF(LOCALE_ZH)
-    farjp ZhGetMenuBoxDims
-else
 	ld a, [wMenuBorderTopCoord]
 	ld b, a
 	ld a, [wMenuBorderBottomCoord]
@@ -67,7 +64,6 @@ else
 	ld c, a
 	ret
 
-endc
 
 CopyMenuData2::
 	push hl

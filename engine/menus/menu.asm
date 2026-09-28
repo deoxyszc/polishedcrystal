@@ -448,35 +448,6 @@ Move2DMenuCursor:
 	ld a, [wCursorOffCharacter]
 	ld [hl], a
 Place2DMenuCursor:
-if DEF(LOCALE_ZH)
- ld a,[wZhMoveListActive]
- and a
- jr z,.ordinary
- farcall ZhMoveCursorCoord
- push hl
- call ApplyAttrAndTilemapInVBlank
- pop hl
- jr .cursor_on
-.ordinary
- ld a,[wZhBattleCommandActive]
- and a
- jr z,.notBattleCommand
- farcall ZhBattleCommandCursor
- push hl
- call ApplyAttrAndTilemapInVBlank
- pop hl
- jr .cursor_on
-.notBattleCommand
- ld a,[wZhPartyActionActive]
- and a
- jr z,.notPartyAction
- farcall ZhPartyActionCursor
- push hl
- call ApplyAttrAndTilemapInVBlank
- pop hl
- jr .cursor_on
-.notPartyAction
-endc
 	ld a, [w2DMenuCursorInitY]
 	ld b, a
 	ld a, [w2DMenuCursorInitX]
@@ -541,16 +512,6 @@ _PushWindow::
 	ld a, [hli]
 	ld d, [hl]
 	ld e, a
-if DEF(LOCALE_ZH)
- ; Reject exhausted stacks before writing even the fixed header/link.
- ld a,e
- sub 18
- ld a,d
- sbc 0
- cp HIGH(wWindowStack)
- ld a,ERR_WINDOW_OVERFLOW
- jp c,Crash
-endc
 	push de
 
 	ld b, $10
@@ -574,20 +535,10 @@ endc
 	ld h, [hl]
 	ld l, a
 	set 0, [hl]
-if DEF(LOCALE_ZH)
-	call PushWindow_MenuBoxCoordToTile
-	call GetTileBackupMenuBoxDims
-	farcall ZhWindowCheckSpace
-	ld a, ERR_WINDOW_OVERFLOW
-	jmp c, Crash
-	call PushWindow_MenuBoxCoordToTile
-	call .copy
-else
 	call PushWindow_MenuBoxCoordToTile
 	call .copy
 	call PushWindow_MenuBoxCoordToAttr
 	call .copy
-endc
 	jr .done
 
 .not_bit_6
@@ -632,14 +583,9 @@ endc
 	push hl
 
 .col
-if DEF(LOCALE_ZH)
-	farcall ZhWindowBackupCell
-	inc hl
-else
 	ld a, [hli]
 	ld [de], a
 	dec de
-endc
 	dec c
 	jr nz, .col
 
@@ -675,10 +621,8 @@ PushWindow_MenuBoxCoordToAbsolute:
 
 RestoreTileBackup::
 	call PushWindow_MenuBoxCoordToTile
-if !DEF(LOCALE_ZH)
 	call .copy
 	call PushWindow_MenuBoxCoordToAttr
-endc
 	; fallthrough
 
 .copy
@@ -689,16 +633,9 @@ endc
 	push hl
 
 .col
-if DEF(LOCALE_ZH)
-	farcall ZhWindowRestoreCell
-	ld a, ERR_WINDOW_UNDERFLOW
-	jmp c, Crash
-	inc hl
-else
 	ld a, [de]
 	ld [hli], a
 	dec de
-endc
 	dec c
 	jr nz, .col
 

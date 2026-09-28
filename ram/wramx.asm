@@ -1955,18 +1955,9 @@ SECTION "Window Stack", WRAMX
 wWindowStack:: ds $1000 - 1
 wWindowStackBottom:: db
 
-
 if DEF(LOCALE_ZH)
-SECTION "ZH glyph cache", WRAMX
-wZhCacheKeys:: ds ZH_CACHE_BLOCKS * ZH_CACHE_KEY_SIZE
-wZhCacheUsed:: ds ZH_CACHE_BLOCKS
-wZhPolicy:: db
-wZhPolicyDepth:: db
-wZhPolicyStack:: ds ZH_VRAM_POLICY_DEPTH
-wZhCachePixels:: ds 2 tiles
-wZhStripPixels:: ds 16
-wZhStripPlane:: db
-wZhBackupCell:: ds 6
-SECTION "ZH temporary map keys", WRAMX
-wZhTempKeys:: ds SCREEN_AREA * 5
+SECTION "Shared text cache", WRAMX
+wTextGlyphKeys:: ds 43*4
+wTextGlyphUsed:: ds 43
+wTextGlyphPixels:: ds 32
 endc

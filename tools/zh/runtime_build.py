@@ -8,6 +8,7 @@ def main():
  out=a.out.resolve()
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
  chinese=a.language!='en'
+ if chinese:p.error('Chinese runtime has been removed; existing codec is retained, rendering must be reimplemented before Chinese builds')
  if chinese and (not a.font or not a.licenses):p.error('Chinese builds require --font and --licenses resources')
  chars=set(a.characters) if chinese else set()
  if chinese:
