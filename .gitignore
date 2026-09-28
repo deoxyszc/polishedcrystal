@@ -1,6 +1,7 @@
 # compiled objects
 *.o
 *.h.gch
+*.pch
 
 # compiled graphics
 *.1bpp
