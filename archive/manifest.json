@@ -1,0 +1,1078 @@
+{
+  "date": "2026-10-08",
+  "status": "abandoned-incomplete-not-release-ready",
+  "worktrees": [
+    {
+      "name": "polishedcrystal-party-pr",
+      "head": "adbd0e5369163fa9c5fd77a3379d7dcccd2be988",
+      "changes": [
+        {
+          "path": ".gitignore",
+          "deleted": false
+        },
+        {
+          "path": "constants/zh_summary_blue.asm",
+          "deleted": false
+        },
+        {
+          "path": "data/zh/characters.asm",
+          "deleted": false
+        },
+        {
+          "path": "data/zh/summary_blue.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/battle/core.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/battle/menu.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/battle_anims/anim_commands.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/gfx/cgb_layouts.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/gfx/load_font.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/menus/menu.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/menus/start_menu.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/pokemon/mon_stats.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/pokemon/party_menu.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/pokemon/summary/pink_page.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/pokemon/summary/zh_pink.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/pokemon/summary_screen.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/text/chinese.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/battle_hud.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/cache.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/cache_backup.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/cache_render.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/cache_temp.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/cache_text.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/cache_window.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/decode.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/dialogue.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/dispatch.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/glyph_cache.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/moves.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/name.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/party.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/render.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/stable_decode.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/stable_text.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/start_menu.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/stream.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/summary.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/summary_cache.asm",
+          "deleted": true
+        },
+        {
+          "path": "engine/zh/text.asm",
+          "deleted": true
+        },
+        {
+          "path": "home/copy_tilemap.asm",
+          "deleted": false
+        },
+        {
+          "path": "home/menu.asm",
+          "deleted": false
+        },
+        {
+          "path": "home/text.asm",
+          "deleted": false
+        },
+        {
+          "path": "home/window.asm",
+          "deleted": false
+        },
+        {
+          "path": "includes.asm",
+          "deleted": false
+        },
+        {
+          "path": "main.asm",
+          "deleted": false
+        },
+        {
+          "path": "ram/wram0.asm",
+          "deleted": false
+        },
+        {
+          "path": "ram/wramx.asm",
+          "deleted": false
+        },
+        {
+          "path": "tools/layout_preview/ROM_LAYOUT.md",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/dialogue_build.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/dialogue_text.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/layout_configs/summary_blue.json",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/runtime_build.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/stable_runtime.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/strip_assets.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/summary_blue.py",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "name": "polishedcrystal-runtime",
+      "head": "228d5188b3e57b9628c5aa159ac17d57004e3ec5",
+      "changes": [
+        {
+          "path": ".gitignore",
+          "deleted": false
+        },
+        {
+          "path": "constants/zh_encoding.asm",
+          "deleted": false
+        },
+        {
+          "path": "data/zh/move_names.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/battle/core.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/menus/menu.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/dialogue.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/dispatch.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/moves.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/name.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/stream.asm",
+          "deleted": false
+        },
+        {
+          "path": "engine/zh/text.asm",
+          "deleted": false
+        },
+        {
+          "path": "home/text.asm",
+          "deleted": false
+        },
+        {
+          "path": "main.asm",
+          "deleted": false
+        },
+        {
+          "path": "ram/wram0.asm",
+          "deleted": false
+        },
+        {
+          "path": "tools/i18n/catalog.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/i18n/messages.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/i18n/test_rawchar.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/RUNTIME.md",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/encode.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/import_dialogue.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/move_names.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/runtime_build.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/tests/test_ram_name.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/tests/test_stream.py",
+          "deleted": false
+        },
+        {
+          "path": "tools/zh/tests/test_unified_import.py",
+          "deleted": false
+        },
+        {
+          "path": "translations.csv",
+          "deleted": false
+        },
+        {
+          "path": "运行时交接.md",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "name": "polishedcrystal-framework-pr",
+      "head": "62091059b334a6c3c2546bf1c8bd34a3e450ce38",
+      "changes": [
+        {
+          "path": ".gitignore",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "name": "polishedcrystal-summary-pr",
+      "head": "a3b9710eaae871c51dd9f57c211a0d053c89801e",
+      "changes": [
+        {
+          "path": ".gitignore",
+          "deleted": false
+        }
+      ]
+    },
+    {
+      "name": "dialogue-pr-20260928",
+      "head": "7215a7b81d4ae9cc2ea44fcf68ccaeda830d65ce",
+      "changes": []
+    }
+  ],
+  "files": [
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/.gitignore",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/.gitignore",
+      "sha256": "e99725dfa04b1f76105ad578c2394ea293d7bd5418f3f6f7062ec56d717f2d27"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/constants/zh_summary_blue.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/constants/zh_summary_blue.asm",
+      "sha256": "cb1b42928ce7f43ad74dffcdf630e49cb04024663991c8b8f32d2926d117d215"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/data/zh/characters.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/data/zh/characters.asm",
+      "sha256": "7846d3e1af3289f0d147a3c27954b736d892a0f308ebbc60f189b7ffb3f79fdf"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/data/zh/summary_blue.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/data/zh/summary_blue.asm",
+      "sha256": "6e4b94804b15c99a9a80eede6891a303aa233f5cfcc8a3537b349d43395a69af"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/battle/core.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/battle/core.asm",
+      "sha256": "ea2e0946089c0e500e21b47c3ff383e1785469597fca770f1900f2fefc3a74f2"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/battle/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/battle/menu.asm",
+      "sha256": "6243c8b94a9cde7cd0894c9a6fb3c87f6f6c147e87658b9f1abe5d6ee15a7f4d"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/battle_anims/anim_commands.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/battle_anims/anim_commands.asm",
+      "sha256": "06fb17334955e780c8181ed6a2edccabf669e8fc6d4340a9b43d34f9550de765"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/gfx/cgb_layouts.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/gfx/cgb_layouts.asm",
+      "sha256": "c78804ee537c7a699a9713a4403e9def02703a241cddd1e41ad831246fdbd621"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/gfx/load_font.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/gfx/load_font.asm",
+      "sha256": "a18582503197a87ec1099545b2b2859e2fb1743483e488336649fbd49aad1458"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/menus/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/menus/menu.asm",
+      "sha256": "ddc980689b7c7eecaaf6b988dc6615fd248582fccf939e37088f85a730052cbc"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/menus/start_menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/menus/start_menu.asm",
+      "sha256": "de640879f9d35e9dc07b0863b9cdd3b6d8e602a0aaa52efb934e2e9bf29fd9b3"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/pokemon/mon_stats.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/pokemon/mon_stats.asm",
+      "sha256": "f7e7dcca6158603aac2fe4700fee35e32e3b8b554fce1bb8dbaede54b4cb25be"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/pokemon/party_menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/pokemon/party_menu.asm",
+      "sha256": "e0deea7d0ee09ff893a73bb7c5767945bd96667c902a9b481d25e315d21d294e"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/pokemon/summary/pink_page.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/pokemon/summary/pink_page.asm",
+      "sha256": "7fa9392debe032939160929033fec3775e0930db76c4f4bbf00a59e2c05d293f"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/pokemon/summary_screen.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/pokemon/summary_screen.asm",
+      "sha256": "f7554583b477f54792aa65c0e3766e5a0385298e7aefdbcd425eaadeaa2b10f2"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/engine/text/chinese.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/engine/text/chinese.asm",
+      "sha256": "2a49d76e9438d4b0588acde3e42be587f0425c9a4193549f6ca65a88590ba2df"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/home/copy_tilemap.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/home/copy_tilemap.asm",
+      "sha256": "2f185a26482a8d26376d421205af447668a3ac4121daa67c059aa94bbe14cefa"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/home/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/home/menu.asm",
+      "sha256": "d5d6b6d4f3ecb7e93ab270b14a387ee36a75d38bd7ae7f22c1bcbbdf10892ddf"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/home/text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/home/text.asm",
+      "sha256": "0ebba2d6c3c739bf7f652058fb7f658657ce7da1bbee1b5048aa13ee9af45161"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/home/window.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/home/window.asm",
+      "sha256": "1ecff7edeb4574facf946ebafc8bfefc24ea87afafbcab2f5acf2f81538765fb"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/includes.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/includes.asm",
+      "sha256": "28dc9cef8ea98c96d99204b031a4b044154ccd3177cba9a3c8c792edff6f198d"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/main.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/main.asm",
+      "sha256": "10d4ccbc06f340c56b560bd31d80c6ebf99ffa66d47df1fa04f120bcdef00882"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/ram/wram0.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/ram/wram0.asm",
+      "sha256": "44a5d0f4c2a21159a99051b42f9442b08ade6b6e54b28cc199a3dc069c158547"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/ram/wramx.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/ram/wramx.asm",
+      "sha256": "b7c3f5e45b13fa8c98f5d53efee58648782313d2ddbbd1d1f99a59c940d3d6eb"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/layout_preview/ROM_LAYOUT.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/layout_preview/ROM_LAYOUT.md",
+      "sha256": "9d9e2e3115ac0d59ac04dccd23d008b29ec55543ecbadc0975916955ab04e761"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/dialogue_build.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/dialogue_build.py",
+      "sha256": "ef24b604e4404a3f3c82a5b979c38fab9379f3375696c66510557fa5a773ccda"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/dialogue_text.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/dialogue_text.py",
+      "sha256": "a2fab4c6c8790f1bdda7d73f3c296e52b0f11ca7b657ea4cfbbfd66f6d0e3904"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/layout_configs/summary_blue.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/layout_configs/summary_blue.json",
+      "sha256": "7fb28f2597863559acbe818e9e10b98632ddcd1c93be4ba3efe9c2e9b863cacb"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/runtime_build.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/runtime_build.py",
+      "sha256": "ffff50c8f32eb6a70be4e73f41946b525963880c1979e18d55e9893b6edc86ce"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/stable_runtime.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/stable_runtime.py",
+      "sha256": "0c1a95487e593c3cd05357e88ea4c4f1938c1a590eebfcbd5d296fe0314f547f"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/strip_assets.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/strip_assets.py",
+      "sha256": "9b96867558edc7f05d3da0060136ecdb2e299f0c2d0bb122ad50ac8cb15b19ca"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-party-pr/files/tools/zh/summary_blue.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/summary_blue.py",
+      "sha256": "9378aa827b0355a8bd0f795c27c012820d5074157d0e454e43750a2267debdf5"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/control-audit/byte-map.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/control-audit/byte-map.json",
+      "sha256": "0273177350d26cd513e8bcdc1bf343d0a8c04beb25d8d870fd459233ea7340a2"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/local-branches-before-cleanup-20260928.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/local-branches-before-cleanup-20260928.json",
+      "sha256": "aec2085dd33f9bbf8bf4cd892508780b7ee3621938e4f4fc8d09765da3313636"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/local-branches-final-cleanup-20260928.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/local-branches-final-cleanup-20260928.json",
+      "sha256": "bdb56df9e1bc838e4a6d5d60247a78ac442daf826247de1bdd30f216fc4c58bc"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/0-summary_layout_report.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/0-summary_layout_report.json",
+      "sha256": "1975540d7f299b7b32905538c25b69d1f24c315caa2d90e5f5dfcf5467a7729f"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/1-summary_pink.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/1-summary_pink.json",
+      "sha256": "f1eff70222a311a81e1e964da323749e611c91a0c20b774aa2c42f32df48a6cb"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/2-validation.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/2-validation.json",
+      "sha256": "a9b57881e81b66c7f0dd3a6e44e58f08ef8205a5d6d068aa52ccf1534d5c48be"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/3-report.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/3-report.json",
+      "sha256": "142aec0182a35ea036808e2e594d08f3588b0be7e6efa3dc4d94626d2f219c2e"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/4-report.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/4-report.json",
+      "sha256": "130630ae4d47a3473824f59f87b912fb148205e10b7635976f56044f4fe727e8"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/final-en-build.log",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/final-en-build.log",
+      "sha256": "f034c71ecc9184d158bbadd4cfebd16c8fb9adbfc92a29974f9396edf0053994"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/final-en-report.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/final-en-report.json",
+      "sha256": "226329b740975aab63219b2175805533f25d6761bf7f1d918ac9b56d5ea3934b"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/final-zh-build.log",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/final-zh-build.log",
+      "sha256": "3f9e30e2f58ce330f3366833fccb0a3330d99f0f55d34b179b1f4f827fd50aaf"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/final-zh-report.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/final-zh-report.json",
+      "sha256": "48851a0f2158cd09f7fea446eda7718643c3c352b806c56fa35e190c76bc3687"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/manifest.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/manifest.json",
+      "sha256": "361ceffe4c7b8b7aebbec490230f1fcff05ebed76e905cf48d5a335924680752"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/pr-body.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/pr-body.md",
+      "sha256": "2b147ac300a459514b878b719f4abdcf7c74fe743af0ffd0f5e20cedcb18030d"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/pr-summary-pink-report/pre-submit-layout-report.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/pr-summary-pink-report/pre-submit-layout-report.json",
+      "sha256": "1975540d7f299b7b32905538c25b69d1f24c315caa2d90e5f5dfcf5467a7729f"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/stable-codec-pr.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/stable-codec-pr.md",
+      "sha256": "e87cc0898f8513c1eb9cab26c91b5096247a6c55d18d9f7a71e938940e5dcaba"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/tab-review验图提示词审查-20260930.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/tab-review验图提示词审查-20260930.md",
+      "sha256": "f9a60c32c4ecdfd4907292b23d64cfabd971e3a3fe811e4ed43552ec2fbf5f78"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/公共文字恢复计划-20260929.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/公共文字恢复计划-20260929.md",
+      "sha256": "0e1ef895b2a0ee9ba9db2ebf35ad7875e07edb99550ba676d53382e7a77be959"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/公共文字恢复进度-20260929.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/公共文字恢复进度-20260929.md",
+      "sha256": "863e575cb0c686f2bf9ea21ad2d7f51a8f07aa8fab9fec51e6e474dd8ddef17f"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/完整控制码列表.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/完整控制码列表.md",
+      "sha256": "f8cbd66b725464b587c0234cd53c2c5d9ebbc2791d7716df360a8433d0a3c4f5"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/控制码兼容核对.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/控制码兼容核对.md",
+      "sha256": "180dd88b63ede5aef373531a98db9d5104ec46e1c2d6a054941bc6557bca7922"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/新会话交接.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/新会话交接.md",
+      "sha256": "15ff8babac533c4e6f1e7c5ac6fd64c25c4cc589e9fb70dbeddac539b7a68fa2"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/汉化方案审计.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/汉化方案审计.md",
+      "sha256": "05ff8cb869660d72cdec458f167e19fd487323228b471102c8915ef457d90b41"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/汉化问题与解决记录.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/汉化问题与解决记录.md",
+      "sha256": "eaaa943c7b923af9aab54dd600c08646970a788387c49c9d4759ad024560b52f"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/蓝页接入计划.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/蓝页接入计划.md",
+      "sha256": "3406da7dd6cbacc301909379db1735b17920c0c43c8a09896c8d9046ea1d042d"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/蓝页新增内容逐项审查.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/蓝页新增内容逐项审查.md",
+      "sha256": "cc5c3de2c4f9fc936b1cebbe00eb2a43f1ebc34771accf79d7f8e6da2a8c97ee"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/详情页缓存与内存调查.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/详情页缓存与内存调查.md",
+      "sha256": "38db1245a2a01255cf4596a66f7599333a1d5a78b89c22e92ea966abf760a10a"
+    },
+    {
+      "path": "archive/notes/polishedcrystal-party-pr/验图任务模板-20260930.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-docs/验图任务模板-20260930.md",
+      "sha256": "49dec53962e5d63755ad189c42a043c5643351c8da683ee052dff49f719b7fb8"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/.gitignore",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/.gitignore",
+      "sha256": "421eedecf77068d570a03dcf553079a6d62b4169675d26cd47e893e8a9425cb1"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/constants/zh_encoding.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/constants/zh_encoding.asm",
+      "sha256": "0becde67a654c0679c1ada9172250e6d82fb070fd99178a2b6815782113a4766"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/data/zh/move_names.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/data/zh/move_names.asm",
+      "sha256": "9cec5feab2dddfacd81fca78fe63467c1f92fe0d99742de4723f43555803c017"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/battle/core.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/battle/core.asm",
+      "sha256": "57aa55cc087a617fa485d946f2c3dad60557eabb120dff061cc1b738df265bd2"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/menus/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/menus/menu.asm",
+      "sha256": "7baa31e7116f1a1580a0eecb153244705369f2d2a23696482beeac865c0bd46d"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/zh/dialogue.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/zh/dialogue.asm",
+      "sha256": "4121cd883f12775e29c01152fd0e50de307e405ed25cf271813eb625b175335a"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/zh/dispatch.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/zh/dispatch.asm",
+      "sha256": "5d767bde0eb866668264afbc8cc33fce0d66d3810b9dfa5c23717137c55c8617"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/zh/moves.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/zh/moves.asm",
+      "sha256": "5be63ebe5f1dead4c3b24f89d507fc19466237f108928b09a8390cd16fd8dd05"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/zh/name.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/zh/name.asm",
+      "sha256": "7eba8fb3392ed21b76772ca69c3abc611014f369c9ae0ea4aca7633057e00788"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/zh/stream.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/zh/stream.asm",
+      "sha256": "7178911f6db36d04c86cd111954f133abc8a91ee7a205e74bf243d7228f6fa02"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/engine/zh/text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/engine/zh/text.asm",
+      "sha256": "b992025627afb95aafd16f17497f504736c6b766a3eb15cca5e1b0a00bda022d"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/home/text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/home/text.asm",
+      "sha256": "59eaf634da642a01e9a1fdb566ebc5144815ed8fb558f1866ff100f9a4229c86"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/main.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/main.asm",
+      "sha256": "35c7cfba67b8d5367f2b23b601005f05b5d1aae875c66efddf2389602593e2e8"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/ram/wram0.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/ram/wram0.asm",
+      "sha256": "d6e0a655d0986af5b07fcae2ebc89bb8ea7f122e6d02db476dcfe8726bc5a85a"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/i18n/catalog.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/i18n/catalog.py",
+      "sha256": "ccd2a1d9f4624b7a1e3498fe0466d407a46ec2dcf7ba94b00c915a2c42323842"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/i18n/messages.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/i18n/messages.py",
+      "sha256": "728425bc0b040b340f8fe51789e530d0974b3ac631d87697fc3787ee754b50eb"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/i18n/test_rawchar.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/i18n/test_rawchar.py",
+      "sha256": "de44cd3bd8c5c0b2d336d6089c5286124f64d130cfe00c930d34b7d86293d864"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/RUNTIME.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/RUNTIME.md",
+      "sha256": "c6b71a92b85438de3f4c65ac0cac959c1eb3a00f67b074b5f747abc41c8293c2"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/encode.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/encode.py",
+      "sha256": "3c0718203bc09047aa78baba035bab12b707e2d01e6cf442051f282f24668b31"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/import_dialogue.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/import_dialogue.py",
+      "sha256": "90f3735f56e8f074bdf695a85cfd640a8f0f83627e021ca7eac5c245f2777550"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/move_names.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/move_names.py",
+      "sha256": "baed3ec673c4ed427545d9b563fd2e88a005c57a1c4befd005d5d55d057eeea4"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/runtime_build.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/runtime_build.py",
+      "sha256": "50a9336bd3d6a7ac3cc7e14ce928fd45e18263711aa77a3174ea3ea1be27cd8e"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/tests/test_ram_name.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/tests/test_ram_name.py",
+      "sha256": "cbe465066722248b6b288881bc8f9f55d01bb48bda2f4d579d788d57922860d5"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/tests/test_stream.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/tests/test_stream.py",
+      "sha256": "4a77f64e54e078a45b8e67ce29fcd8966a82a1055e4f749c86907a5e850e2c7c"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/tools/zh/tests/test_unified_import.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/tools/zh/tests/test_unified_import.py",
+      "sha256": "a98534ed1b71661ed9122a5e5a1b1ba2b0dec10b1348924bfaf33ed54e4dc226"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/translations.csv",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/translations.csv",
+      "sha256": "0e8a97a800765158b1270c5ee1ca0e792a13854ac0603ce328acd8ea94d3054c"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-runtime/files/运行时交接.md",
+      "source": "/Users/zhaoc/source/polishedcrystal-runtime/运行时交接.md",
+      "sha256": "d148bb1a2fead03f9f4851add0807399d703c3d2b95980395ca6cd03639f2e36"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-framework-pr/files/.gitignore",
+      "source": "/Users/zhaoc/source/polishedcrystal-framework-pr/.gitignore",
+      "sha256": "421eedecf77068d570a03dcf553079a6d62b4169675d26cd47e893e8a9425cb1"
+    },
+    {
+      "path": "archive/worktrees/polishedcrystal-summary-pr/files/.gitignore",
+      "source": "/Users/zhaoc/source/polishedcrystal-summary-pr/.gitignore",
+      "sha256": "421eedecf77068d570a03dcf553079a6d62b4169675d26cd47e893e8a9425cb1"
+    },
+    {
+      "path": "archive/skills/gbc-rom-build-debug/SKILL.md",
+      "source": "/Users/zhaoc/.codex/skills/gbc-rom-build-debug/SKILL.md",
+      "sha256": "14bba7787948f77c6cedb3fbca98d3a619155a16e6e518e725ae68c34e9a171a"
+    },
+    {
+      "path": "archive/skills/gbc-rom-build-debug/references/saves-and-regression.md",
+      "source": "/Users/zhaoc/.codex/skills/gbc-rom-build-debug/references/saves-and-regression.md",
+      "sha256": "fb9486aed0342529b1c22719a9a1c40fbccb747ed9d0b873732b4248d37ec09b"
+    },
+    {
+      "path": "archive/skills/gbc-rom-build-debug/references/workflow.md",
+      "source": "/Users/zhaoc/.codex/skills/gbc-rom-build-debug/references/workflow.md",
+      "sha256": "96a09c6c1683ba582f19b398dcbd8be4be92b82f472606b681738ce04265f4e6"
+    },
+    {
+      "path": "archive/skills/gbc-ui-layout/SKILL.md",
+      "source": "/Users/zhaoc/.codex/skills/gbc-ui-layout/SKILL.md",
+      "sha256": "64ea52bb2efed2709435bfa47a3495b726d2ecce735c350ef9a26a3fa8e2eb93"
+    },
+    {
+      "path": "archive/removed-runtime/engine/battle/core.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/battle/core.asm",
+      "sha256": "70f146f27b7524e67c54f169a67d4519640cfc0206effc050299f421a113efa6"
+    },
+    {
+      "path": "archive/removed-runtime/engine/battle/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/battle/menu.asm",
+      "sha256": "389f9928415bcd69f1e943597a8e51d955951b8bd42bc9c71be403d09b5cabd0"
+    },
+    {
+      "path": "archive/removed-runtime/engine/battle_anims/anim_commands.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/battle_anims/anim_commands.asm",
+      "sha256": "4ec4e6345fd732018c73343045c7e86ee0c1ddb0c4f1a29d90b21601c4e9a561"
+    },
+    {
+      "path": "archive/removed-runtime/engine/gfx/cgb_layouts.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/gfx/cgb_layouts.asm",
+      "sha256": "0200021944e1d0b7de64b8f6f49057cf0895aede65bc886129cdc3558c236a5b"
+    },
+    {
+      "path": "archive/removed-runtime/engine/gfx/load_font.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/gfx/load_font.asm",
+      "sha256": "792d3dc8caeb6e6e36fa51b459656bd9481790f719e68537a21fc4263af23b09"
+    },
+    {
+      "path": "archive/removed-runtime/engine/menus/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/menus/menu.asm",
+      "sha256": "b1f0e5a0aa421103d8c6aa5f9081d86c12197e85b266e78ec652bd4919cac017"
+    },
+    {
+      "path": "archive/removed-runtime/engine/menus/start_menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/menus/start_menu.asm",
+      "sha256": "47e8d30951729e1b8b67feca3f824cb5fb576b16fab4f13ec0b4adb4735c66e2"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/mon_stats.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/mon_stats.asm",
+      "sha256": "950e1ca41834ecac8739a4ca6953ec46fee6a30f4b96d1d47cc8f7488007971e"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/party_menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/party_menu.asm",
+      "sha256": "a920a3e026f187c346ab41bc0d49de78caea1ede29f063c70b8ee70a581af427"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/summary/blue_page.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/summary/blue_page.asm",
+      "sha256": "4dbea0d5cd38cf9cbacaea7b9c2d1c05a31f61811cf2de017624c75a80bd22cc"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/summary/pink_page.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/summary/pink_page.asm",
+      "sha256": "e6f9023a5d1a9d55671be031df147078c7f1f7dbb85d007c24e12568c1088bc6"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/summary/zh_blue.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/summary/zh_blue.asm",
+      "sha256": "c16198bbb8116c211b37aa464553e48b4e8b4338659c6abdebdd5b6acb583cbd"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/summary/zh_pink.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/summary/zh_pink.asm",
+      "sha256": "c26b8f3b6f1d4fa6a1928f532268cd55bf8ebf3c0ec56d274f2fd35be7c38d37"
+    },
+    {
+      "path": "archive/removed-runtime/engine/pokemon/summary_screen.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/pokemon/summary_screen.asm",
+      "sha256": "1afba9c545b98b23db59b0d7fbf2ee3e2dc1040eb279b7208566188cc60cae82"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/battle_hud.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/battle_hud.asm",
+      "sha256": "8501224dabafbad449c05418f30adc47c6b60ef5b8c7f2bb6f102d5771105d80"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/cache.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/cache.asm",
+      "sha256": "f29c6a2cc6eb0f26150f60dc13f9f5d11219447c14e15d4cc840c932d657b825"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/cache_backup.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/cache_backup.asm",
+      "sha256": "5b33a953f1fe89d9f4a6f8fe837ca17d110bb2380a593085ca973f471789f413"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/cache_render.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/cache_render.asm",
+      "sha256": "762e56ec428480e869ef47ebdc0ea78a3597472f4ae2a993f3b040feb5415f9c"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/cache_temp.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/cache_temp.asm",
+      "sha256": "ffb4959f4745f05fed0d43c05104e3e2e4c53e71d0133f9ac188be0e8a98d7f4"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/cache_text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/cache_text.asm",
+      "sha256": "c47d53cf17cc13c4861ffbba064a1afd3271bf2ef3ff320f652cca3d4ad47faf"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/cache_window.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/cache_window.asm",
+      "sha256": "975b578e882f0f5838a2617ba24c37cd7faa0b7ffd496d9d8c95cc4fa8dadf46"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/decode.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/decode.asm",
+      "sha256": "1aef8eff2358b16c2ff7d6de0fdff208fde51b1b8657e62fc50d8f6f76119c20"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/dialogue.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/dialogue.asm",
+      "sha256": "871e3af40ea97c22dc8571eba20f7b192a785139657a5d26a383beb8f217dce9"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/dispatch.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/dispatch.asm",
+      "sha256": "5d767bde0eb866668264afbc8cc33fce0d66d3810b9dfa5c23717137c55c8617"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/glyph_cache.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/glyph_cache.asm",
+      "sha256": "4c406362ee26fd9711fcd5b6523779bb66fc8434c394ece795239b8f76b03c1b"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/moves.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/moves.asm",
+      "sha256": "b5417582f14eb13ccf9f5728776454d997e0a688ae562dd4930a148faa5b559c"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/name.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/name.asm",
+      "sha256": "7eba8fb3392ed21b76772ca69c3abc611014f369c9ae0ea4aca7633057e00788"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/party.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/party.asm",
+      "sha256": "f8038f90196930945576bcae4142cfae017e5556e6a3935d57fcde9a92791a97"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/render.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/render.asm",
+      "sha256": "0732c17a52699eea2088dafae3ed55d398a6f558e4296005de09318823188c01"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/stable_decode.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/stable_decode.asm",
+      "sha256": "efd516d72a53520566b6917f7883240ddce5e836fba2da9aba3403d4f332395d"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/stable_text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/stable_text.asm",
+      "sha256": "e96c2120095feee1ab6c5bb5438c5e19f23589b9d349b20c42fca79095385364"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/start_menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/start_menu.asm",
+      "sha256": "db67f0a53b54b62df610078a966f10d611ffbcf980f731999e88c598bdc97f0d"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/stream.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/stream.asm",
+      "sha256": "7178911f6db36d04c86cd111954f133abc8a91ee7a205e74bf243d7228f6fa02"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/summary.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/summary.asm",
+      "sha256": "290800f42f9b0ae39add98530d847d2bcf5501dbd70a17f9fd45607e16b0fb9f"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/summary_cache.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/summary_cache.asm",
+      "sha256": "7c93043d4679f96b483f2d6c04a04449e02d7d6a256ca34ab737f67956811e45"
+    },
+    {
+      "path": "archive/removed-runtime/engine/zh/text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/engine/zh/text.asm",
+      "sha256": "eb466a1cf7575574089ec5d56a006229dee2e88a0ceb862ec25288727f316621"
+    },
+    {
+      "path": "archive/removed-runtime/home/copy_tilemap.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/home/copy_tilemap.asm",
+      "sha256": "fae4fb930d65580c94e78f15c5f07835f64ea437f7fe29801a23cae99d649d3f"
+    },
+    {
+      "path": "archive/removed-runtime/home/menu.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/home/menu.asm",
+      "sha256": "328b425d947a96811f2c4f1faad5dc11ecefd93a6c1b00b4ffcf30dadcf10c5f"
+    },
+    {
+      "path": "archive/removed-runtime/home/text.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/home/text.asm",
+      "sha256": "355f9fc6cf773576f539f816ee12050ecf4af92be3db99d25541dd72b6fe1427"
+    },
+    {
+      "path": "archive/removed-runtime/home/window.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/home/window.asm",
+      "sha256": "4a86eb1c26b2452a2a369eb82b79adf12ae40d38ddd952cec3bfa3e99fa13564"
+    },
+    {
+      "path": "archive/removed-runtime/includes.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/includes.asm",
+      "sha256": "6e4acfa9377c2b6e6d59b8d64a347895672adf5c136e942e33336ebd397faa27"
+    },
+    {
+      "path": "archive/removed-runtime/main.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/main.asm",
+      "sha256": "152825a2d7dc1e34f97992e9ad09fffcf06d3a4590e94fd7dcd5d64615ce49e8"
+    },
+    {
+      "path": "archive/removed-runtime/manifest.json",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/manifest.json",
+      "sha256": "b19a88084e1640062cd4a8dbedb1d2d85c47ea165814c9085a9dc954515f1e73"
+    },
+    {
+      "path": "archive/removed-runtime/ram/wram0.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/ram/wram0.asm",
+      "sha256": "64e9360abd340fa68b3043ee6ff9359997518aefc6064ba558809197fb8e7837"
+    },
+    {
+      "path": "archive/removed-runtime/ram/wramx.asm",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/ram/wramx.asm",
+      "sha256": "d5ec8007072a0309702bccf3fc9d5e2e112691f64f6f62b0ecad8cb25e0b5139"
+    },
+    {
+      "path": "archive/removed-runtime/tools/zh/stable_runtime.py",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/removed-zh-runtime-20260928/tools/zh/stable_runtime.py",
+      "sha256": "dd715c900f2f3496ae6848ff9e4a15c4279c9247b2378cdc396d6291b6d9cb75"
+    },
+    {
+      "path": "archive/reference-data/translations-full.csv",
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/encoding-deferred/translations-full.csv",
+      "sha256": "1dfdbb7f3dccac6f2b6a44c395c79b638d0306b0c217baa85b232e09dd9c3d05"
+    }
+  ],
+  "active_worktree": {
+    "path": "/Users/zhaoc/source/polishedcrystal-text-restore",
+    "base": "a65534e323c6a575210719b01a38fd3f100afe7b",
+    "changes": "preserved directly in repository tree"
+  }
+}

@@ -1,0 +1,21 @@
+[
+  "fix/ordinary-dialogue-placestring f5d3a6cc32dcc2c6610c6717642c971bb1b481a4",
+  "local/zh-vram-cache 6c02efe97b54419056c7394c9b6377f36defc285",
+  "tools/battle-runtime-framework 62091059b334a6c3c2546bf1c8bd34a3e450ce38",
+  "tools/chinese-dialogue-runtime 228d5188b3e57b9628c5aa159ac17d57004e3ec5",
+  "tools/compact-window-english-fallback 42b6f5ba1436a7160c552eeeb3ba620a2a5006da",
+  "tools/compiled-dialogue-menu-party 40e34e4301b854016ccd94879a96c36896fc31b0",
+  "tools/ignore-local-artifacts 65d1d5f4da21aa4a3c1dffe834747543f9fb417d",
+  "tools/localization-editor 16f26f4f09b03ca359d524290b23c992155411fe",
+  "tools/orange-summary-followup 83f6b93d7052207bd0b7db260d0e413d9456afa3",
+  "tools/party-layout-external-input 0017b4928107e65d9012cae589f78bd735d17224",
+  "tools/party-layout-framework 880fe4d4ab560200770013e4748b4f43971887e7",
+  "tools/pink-orange-summary 6dbea7e06c5c312d2254307de05f3ec24e86b3f7",
+  "tools/playability-audit fc97fa8ef1dca543269f5a315ef33715ea5b5ede",
+  "tools/remove-precomposed-layouts 8426923cac8b182b69c55903993059f57143accd",
+  "tools/shared-text-layout 22777584ba258501c05e74c6d90ba126a07f8f2b",
+  "tools/stable-gb2312-dialogue 7046b01eb68da9ea3af4adb16ff920b712a3dc17",
+  "tools/summary-layout-framework a3b9710eaae871c51dd9f57c211a0d053c89801e",
+  "tools/summary-pink-layout adbd0e5369163fa9c5fd77a3379d7dcccd2be988",
+  "tools/vertical-battle-moves e5c1d1ab3e95417fcef5b5dd45f416d507c84621"
+]

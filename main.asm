@@ -748,4 +748,6 @@ SECTION "MBC30 text extent", ROMX[$7fff], BANK[$ff]
 SECTION "Shared Chinese text", ROMX, BANK[$80]
 INCLUDE "engine/text/chinese.asm"
 INCLUDE "data/zh/characters.asm"
+INCLUDE "data/zh/public_names.asm"
+INCLUDE "data/zh/summary_terms.asm"
 endc

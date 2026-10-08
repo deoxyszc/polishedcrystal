@@ -1,0 +1,12 @@
+diff --git a/.gitignore b/.gitignore
+index 4c0010b69..9e3f92be4 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,6 +1,7 @@
+ # compiled objects
+ *.o
+ *.h.gch
++*.pch
+ 
+ # compiled graphics
+ *.1bpp

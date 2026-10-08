@@ -8,45 +8,18 @@ def main():
  out=a.out.resolve()
  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
  chinese=a.language!='en'
- if chinese:p.error('Chinese runtime has been removed; existing codec is retained, rendering must be reimplemented before Chinese builds')
- if chinese and (not a.font or not a.licenses):p.error('Chinese builds require --font and --licenses resources')
- chars=set(a.characters) if chinese else set()
  if chinese:
-  with (ROOT/'translations.csv').open(encoding='utf-8-sig',newline='') as f:
-   for row in csv.DictReader(f):
-    if row['resource_kind']=='text':chars.update(c for c in row.get('translation_'+a.language,'') if not c.isascii())
-  from summary_pink import CHARACTERS
-  chars.update(CHARACTERS)
-  chars={c for c in chars if not c.isascii()}
-  if not chars:p.error('At least one non-ASCII character is required')
+  if a.language!='zh-Hans':p.error('Traditional Chinese page translations are not available')
+  if not a.font or not a.licenses:p.error('Chinese builds require --font and --licenses')
+  command=[sys.executable,str(ROOT/'tools/zh/dialogue_build.py'),'--pages',
+           '--font',str(a.font),'--licenses',str(a.licenses),'--out',str(out),
+           '--characters',a.characters,'--jobs',str(a.jobs)]
+  if a.layout:command+=['--layout',str(a.layout)]
+  subprocess.run(command,check=True)
+  return
+ chars=set()
  out.mkdir(parents=True);source=out/'source'
  shutil.copytree(ROOT,source,ignore=shutil.ignore_patterns('.git','__pycache__','*.pyc','*.o','*.gbc','*.sym','*.map','local-data','local-docs','*.sav'))
- if chinese:
-  from summary_layout_config import emit as emit_layout, DEFAULT
-  layout_report=emit_layout(a.layout or DEFAULT,source)
-  (out/'layout-input.json').write_bytes((a.layout or DEFAULT).read_bytes())
-  manifest=out/'glyphs.json';manifest.write_text(json.dumps({'glyphs':[{'id':i,'char':c} for i,c in enumerate(sorted(chars))]},ensure_ascii=False))
-  subprocess.run([sys.executable,str(source/'data/zh/font/import_ttf.py'),'--font',str(a.font.resolve()),'--manifest',str(manifest),'--output-root',str(source),'--baseline','10','--license-dir',str(a.licenses.resolve())],check=True)
-  (source/'data/zh/font/count.asm').write_text('DEF ZH_GLYPH_COUNT EQU '+str(len(chars))+chr(10))
-  from strip_assets import StripAssets
-  StripAssets(source,len(chars)).emit()
-  from stable_runtime import emit
-  emit(source,manifest)
-  import summary_pink
-  summary_pink.generate(source,manifest)
-  import party
-  party.generate(source,a.language,manifest)
-  import start_menu
-  start_menu.generate(source,a.language,manifest)
-  import battle_hud
-  battle_hud.generate(source,a.language,manifest)
-  battle_hud.menu(source,a.language,manifest)
-  battle_hud.party_actions(source,a.language,manifest)
-  import move_names
-  move_names.generate(source,a.language,manifest)
-  import import_dialogue
-  imported=import_dialogue.apply(source,a.language,manifest)
-  make=source/'Makefile';s=make.read_text();s=s.replace('MODIFIERS :=','MODIFIERS := -zh',1);s=s.replace('RGBASMFLAGS    =','RGBASMFLAGS    = -DLOCALE_ZH',1);make.write_text(s)
  if not chinese:
   for name in ['font.asm','font_pages.asm','count.asm']:(source/'data/zh/font'/name).write_text('; Disabled in English build'+chr(10))
  log=out/'build.log'

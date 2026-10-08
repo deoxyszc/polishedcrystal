@@ -146,6 +146,15 @@ WaitTop::
 
 DEF HALF_HEIGHT EQU SCREEN_HEIGHT / 2
 
+if DEF(LOCALE_ZH)
+UpdateBGMap::
+ ldh a,[rVBK]
+ push af
+ farcall UpdateChineseBGMap
+ pop af
+ ldh [rVBK],a
+ ret
+else
 UpdateBGMap::
 ; Update the BG Map, in halves, from wTilemap and wAttrmap.
 
@@ -295,6 +304,7 @@ endr
 	pop hl
 	ld sp, hl
 	ret
+endc
 
 LYOverrideStackCopy::
 	ldh a, [hLYOverrideStackCopyAmount]

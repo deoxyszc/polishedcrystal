@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "page": "summary_blue",
+  "stats": [
+    {
+      "key": "Attack",
+      "text": "攻击",
+      "x": 64,
+      "y": 32
+    },
+    {
+      "key": "Defense",
+      "text": "防御",
+      "x": 112,
+      "y": 32
+    },
+    {
+      "key": "SpAtk",
+      "text": "特攻",
+      "x": 64,
+      "y": 52
+    },
+    {
+      "key": "SpDef",
+      "text": "特防",
+      "x": 112,
+      "y": 52
+    },
+    {
+      "key": "Speed",
+      "text": "速度",
+      "x": 64,
+      "y": 72
+    }
+  ]
+}

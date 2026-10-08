@@ -1,4 +1,7 @@
 HDMATransferTileMapToWRAMBank3::
+if DEF(LOCALE_ZH)
+ call HDMATransferAttrMapToWRAMBank3
+endc
 	call StackCallInSafeGFXMode
 
 .Function:

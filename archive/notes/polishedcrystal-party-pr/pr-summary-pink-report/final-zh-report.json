@@ -1,0 +1,16 @@
+{
+  "language": "zh-Hans",
+  "glyph_count": 367,
+  "rom": "/Users/zhaoc/source/summary-pr-final-zh/source/polishedcrystal-zh-3.2.3.gbc",
+  "sha256": "05436ac62891d54e3354f72dbff6edd8e4d6d2e5e35510b40308d21203febc73",
+  "modules": [
+    "font_strips",
+    "glyph_cache",
+    "cache_backup",
+    "place_string",
+    "dialogue",
+    "names"
+  ],
+  "text_insertion": true,
+  "imported_records": 0
+}

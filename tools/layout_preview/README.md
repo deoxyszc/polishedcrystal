@@ -19,3 +19,13 @@ python3 tools/layout_preview/build_preview.py --source /path/to/built/source --s
 占格视图：tile_geometry.js分别统计alpha/字模非空像素覆盖的屏幕8×8格、元素外接区域覆盖、文字补齐到8px宽且16px高的写入模拟覆盖。按绝对坐标floor/ceil计算，负坐标和非8px对齐也计入；计数可能含屏幕外格子，不代表可写入。图像写入范围与VRAM资源数量明确为未知，不把裁片大小冒充显存消耗。选中元素绿色格表示可见覆盖，橙色表示文字写入模拟。JSON同步导出这些统计。
 
 验证：8×16在(0,0)覆盖2格，在(1,1)覆盖6格；透明16×16仅一个像素时可见覆盖1格但外接4格。Edge实测“经验403”从x8到x9，写入模拟12→14格，并提示非对齐适配要求。
+
+## 从记录重建预览（2026-10-01）
+
+build_preview.py现在接受--layout，并输出index.html、原始layout.json、含字模与底板的scene.json、preview.png、preview-6x.png和输入指纹报告。预览是静态布局图，不是模拟器验收。不要用已经改版的中文截图套原英文拆层坐标。
+
+从同一记录重新渲染，无需操作浏览器：
+
+    python3 tools/layout_preview/render_layout.py --scene /path/scene.json --layout /path/layout.json --out /path/replayed.png
+
+使用实际导入的12px字模和原版Latin字模；缺字、缺图像层、越界均报错，不以系统字体代替。原英文底图显式拆层仍只支持粉页；其他页面必须增加对应场景提取器，不能套用粉页裁片。

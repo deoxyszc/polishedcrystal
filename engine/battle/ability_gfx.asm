@@ -349,6 +349,9 @@ DismissAbilityOverlays:
 	ret
 
 .reset_tilemap
+if DEF(LOCALE_ZH)
+ farjp RestoreChineseAbilityRow
+endc
 	; revert tilemap
 	ld d, h
 	ld e, l

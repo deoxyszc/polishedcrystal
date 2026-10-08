@@ -191,7 +191,11 @@ PrintHLNum:
 .got_number
 	add '0'
 .got_value
+if DEF(LOCALE_ZH)
+ farcall PlaceChineseNumberCell
+else
 	ld [hli], a
+endc
 	bit PRINTNUM_DELAY_F, b
 	call nz, .printnum_delay
 	ldh a, [hPrintNum + 4]

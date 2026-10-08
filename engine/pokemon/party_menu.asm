@@ -513,11 +513,17 @@ InitPartyMenuLayout:
 	jmp PlacePartyMenuText
 
 LoadPartyMenuGFX:
+if DEF(LOCALE_ZH)
+ farcall InitializeChineseTextCache
+endc
 	call LoadFontsBattleExtra
 	farcall InitPartyMenuPalettes
 	jmp ClearSpriteAnims2
 
 WritePartyMenuTilemap:
+if DEF(LOCALE_ZH)
+ farcall ClearChineseTextBankAttributes
+endc
 	ld hl, wOptions1
 	ld a, [hl]
 	push af
@@ -585,7 +591,18 @@ PlacePartyNicknames:
 	ld a, b
 	call GetNickname
 	pop hl
-	rst PlaceString
+if DEF(LOCALE_ZH)
+ farcall FindChineseDefaultName
+ jr c,.originalName
+ ld a,BANK(TextTranslatedNames)
+ call FarString
+ jr .nameDone
+.originalName
+ rst PlaceString
+.nameDone
+else
+ rst PlaceString
+endc
 	pop hl
 	ld de, 2 * SCREEN_WIDTH
 	add hl, de

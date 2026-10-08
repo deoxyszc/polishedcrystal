@@ -104,6 +104,9 @@ SummaryScreenInit:
 	; Enter loop
 	call SummaryScreenLoop
 	; Clean up
+if DEF(LOCALE_ZH)
+ farcall InitializeChineseTextCache
+endc
 
 	call ClearSprites
 	call ClearBGPalettes
@@ -140,6 +143,9 @@ SummaryScreenInit:
 INCLUDE "gfx/stats/summary_sprites.pal"
 
 SummaryScreen_InitTiles:
+if DEF(LOCALE_ZH)
+ farcall InitializeChineseTextCache
+endc
 	ld hl, GFX_Summary
 	ld de, vTiles2 tile SUMMARY_TILE_START
 	lb bc, BANK(GFX_Summary), 16
@@ -529,6 +535,49 @@ SummaryScreen_LoadPage:
 	ldh [hBGMapMode], a
 	ldh [hOAMUpdate], a
 	ldh [hCGBPalUpdate], a
+if DEF(LOCALE_ZH)
+ ; The title spans rows11/12. Retire prior text before any new cache use;
+ ; restore the original border before the new title is drawn.
+ hlcoord 0,12
+ ld bc,SCREEN_WIDTH
+ ld a,SUMMARY_TILE_BOTTOM_WINDOW_T
+ rst ByteFill
+ hlcoord 2,11
+ ld bc,3
+ ld a,SUMMARY_TILE_BOTTOM_WINDOW_B
+ rst ByteFill
+ hlcoord 1,12
+ ld a,SUMMARY_TILE_BOTTOM_WINDOW_INNER_CORNER
+ ld [hli],a
+ ld a,' '
+ ld [hli],a
+ ld [hli],a
+ ld [hli],a
+ ld [hl],SUMMARY_TILE_BOTTOM_WINDOW_INNER_CORNER
+ ; Preserve the existing border palettes and only retire cache-bank bits.
+ hlcoord 0,11,wAttrmap
+ ld b,2
+.tabAttrsRow
+ ld c,7
+.tabAttrsCell
+ res B_BG_BANK1,[hl]
+ inc hl
+ dec c
+ jr nz,.tabAttrsCell
+ ld de,SCREEN_WIDTH-7
+ add hl,de
+ dec b
+ jr nz,.tabAttrsRow
+ ; Blue labels live on BG behind the interleaved window. Retire both
+ ; maps before drawing the next page so their cache slots are no longer live.
+ hlcoord 8,4
+ lb bc,7,12
+ call ClearBox
+ hlcoord 8,4,wAttrmap
+ lb bc,7,12
+ ld a,SUMMARY_PAL_SIDE_WINDOW
+ call FillBoxWithByte
+endc
 	call .ClearBox
 	call .PlaceLevelAndGender
 	hlbgcoord 0, 0, wSummaryScreenWindowBuffer
@@ -587,6 +636,12 @@ SummaryScreen_LoadPage:
 	ret
 
 .ClearBox:
+if DEF(LOCALE_ZH)
+ hlcoord 0,13,wAttrmap
+ lb bc,5,20
+ ld a,SUMMARY_PAL_LOWER_WINDOW
+ call FillBoxWithByte
+endc
 	ld a, [wSummaryScreenFlags]
 	and SUMMARY_FLAGS_PAGE_MASK
 	ld c, a
@@ -595,6 +650,16 @@ SummaryScreen_LoadPage:
 	jmp ClearBox
 
 .PlaceLevelAndGender:
+if DEF(LOCALE_ZH)
+ ; Native PrintLevel writes fresh bank0 tiles over the preceding page.
+ hlcoord 1,9,wAttrmap
+ ld b,5
+.levelAttrs
+ res B_BG_BANK1,[hl]
+ inc hl
+ dec b
+ jr nz,.levelAttrs
+endc
 	; Clear item tiles
 	hlcoord 2, 8
 	lb bc, 3, 3
@@ -813,6 +878,11 @@ endr
 	dw .OrangeInterrupts
 
 .PinkInterrupts:
+if DEF(LOCALE_ZH)
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 87,SUMMARY_LCD_HIDE_WINDOW
+ db -1
+else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 23,  SUMMARY_LCD_HIDE_WINDOW
 	db 31,  SUMMARY_LCD_SHOW_WINDOW
@@ -827,7 +897,20 @@ endr
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+endc
 .BlueInterrupts:
+if DEF(LOCALE_ZH)
+ db 15,SUMMARY_LCD_SHOW_WINDOW
+ db 31,SUMMARY_LCD_HIDE_WINDOW
+ db 43,SUMMARY_LCD_SHOW_WINDOW
+ db 51,SUMMARY_LCD_HIDE_WINDOW
+ db 63,SUMMARY_LCD_SHOW_WINDOW
+ db 71,SUMMARY_LCD_HIDE_WINDOW
+ db 83,SUMMARY_LCD_SHOW_WINDOW
+ db 91,SUMMARY_LCD_HIDE_WINDOW
+ db 127,SUMMARY_LCD_SCROLL_BACKGROUND
+ db -1
+else
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW
 	db 35,  SUMMARY_LCD_SHOW_WINDOW
@@ -842,6 +925,7 @@ endr
 	db 91,  SUMMARY_LCD_HIDE_WINDOW
 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
 	db -1
+endc
 .GreenInterrupts:
 	db 22,  SUMMARY_LCD_SHOW_WINDOW
 	db 31,  SUMMARY_LCD_HIDE_WINDOW

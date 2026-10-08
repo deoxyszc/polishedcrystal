@@ -1,0 +1,5522 @@
+diff --git a/.gitignore b/.gitignore
+index 4c4222e10..45d954fbf 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,6 +1,7 @@
+ # compiled objects
+ *.o
+ *.h.gch
++*.pch
+ 
+ # compiled graphics
+ *.1bpp
+diff --git a/engine/battle/core.asm b/engine/battle/core.asm
+index 3d2712a30..158022041 100644
+--- a/engine/battle/core.asm
++++ b/engine/battle/core.asm
+@@ -3976,11 +3976,7 @@ DrawPlayerHUD:
+ 
+ 	; Status icon
+ 	farcall LoadPlayerStatusIcon
+-if DEF(LOCALE_ZH)
+-	hlcoord 10, 10
+-else
+ 	hlcoord 12, 8
+-endc
+ 	ld a, $55
+ 	ld [hli], a
+ 	ld [hl], $56
+@@ -4017,11 +4013,6 @@ CheckDanger:
+ 	ret
+ 
+ PrintPlayerHUD:
+-if DEF(LOCALE_ZH)
+- ld de,wBattleMonNickname
+- hlcoord 7,7
+- farcall ZhBattleHudName
+-else
+ 	ld de, wBattleMonNickname
+ 	hlcoord 11, 7
+ 	ld a, [wBattleMonNickname + MON_NAME_LENGTH - 2]
+@@ -4031,7 +4022,6 @@ else
+ .short_name
+ 	rst PlaceString
+ 
+-endc
+ 	push bc
+ 
+ 	ld a, [wCurBattleMon]
+@@ -4082,18 +4072,10 @@ endr
+ 	inc a ; "<FEMALE>"
+ 
+ .got_gender_char
+-if DEF(LOCALE_ZH)
+-	hlcoord 16, 8
+-else
+ 	hlcoord 18, 8
+-endc
+ 	ld [hl], a
+ 
+-if DEF(LOCALE_ZH)
+-	hlcoord 17, 8
+-else
+ 	hlcoord 15, 8
+-endc
+ 	ld a, [wBattleMonLevel]
+ 	ld [wTempMonLevel], a
+ 	jmp PrintLevel
+@@ -4133,11 +4115,7 @@ DrawEnemyHUD:
+ 	ld de, wEnemyMonNickname
+ .got_nickname
+ 	hlcoord 1, 0
+-if DEF(LOCALE_ZH)
+-	farcall ZhBattleHudName
+-else
+ 	rst PlaceString
+-endc
+ 	ld h, b
+ 	ld l, c
+ 	dec hl
+@@ -4157,11 +4135,7 @@ endr
+ 	farcall CheckShininess
+ 	jr nc, .not_shiny
+ 	ld a, '<SHINY>'
+-if DEF(LOCALE_ZH)
+-	hlcoord 0, 2
+-else
+ 	hlcoord 9, 1
+-endc
+ 	ld [hl], a
+ 
+ .not_shiny
+@@ -4179,34 +4153,10 @@ endc
+ 	inc a ; "<FEMALE>"
+ 
+ .got_gender
+-if DEF(LOCALE_ZH)
+- push af
+- ld a,[wZhHudEnemyWidth]
+- and a
+- jr z,.legacyEnemyMeta
+- inc a
+- ld e,a
+- ld d,0
+- hlcoord 0,1
+- add hl,de
+- pop af
+- ld [hli],a
+- jr .enemyMetaDone
+-.legacyEnemyMeta
+- pop af
+- hlcoord 8,1
+- ld [hl],a
+- hlcoord 5,1
+-.enemyMetaDone
+-else
+ 	hlcoord 8, 1
+ 	ld [hl], a
+-endc
+ 
+-if DEF(LOCALE_ZH)
+-else
+ 	hlcoord 5, 1
+-endc
+ 	ld a, [wEnemyMonLevel]
+ 	ld [wTempMonLevel], a
+ 	call PrintLevel
+@@ -4276,25 +4226,7 @@ endc
+ 	call DrawBattleHPBar
+ 
+ 	farcall LoadEnemyStatusIcon
+-if DEF(LOCALE_ZH)
+- ld a,[wEnemyMonStatus]
+- and a
+- jp z,FinishBattleAnim
+- ld a,[wZhHudEnemyWidth]
+- add 2
+- ld e,a
+- ld d,0
+- hlcoord 0,1
+- add hl,de
+- push hl
+- ld a,$7f
+- ld [hli],a
+- ld [hli],a
+- ld [hl],a
+- pop hl
+-else
+ 	hlcoord 2, 1
+-endc
+ 	ld a, $57
+ 	ld [hli], a
+ 	ld [hl], $58
+@@ -4671,12 +4603,7 @@ BattleMenuPKMN_Loop:
+ 	call MenuBox
+ 	call UpdateSprites
+ 	call PlaceVerticalMenuItems
+-if DEF(LOCALE_ZH)
+- ; Publish the submenu attributes too: the covered footer uses cached tiles.
+- call ApplyAttrAndTilemapInVBlank
+-else
+ 	call ApplyTilemapInVBlank
+-endc
+ 	call CopyMenuData2
+ 	ld a, [wMenuDataFlags]
+ 	bit 7, a
+@@ -4684,15 +4611,7 @@ endc
+ 	call InitVerticalMenuCursor
+ 	ld hl, w2DMenuFlags1
+ 	set 6, [hl]
+-if DEF(LOCALE_ZH)
+- ld a,1
+- ld [wZhPartyActionActive],a
+-endc
+ 	call DoMenuJoypadLoop
+-if DEF(LOCALE_ZH)
+- xor a
+- ld [wZhPartyActionActive],a
+-endc
+ 	ld de, SFX_READ_TEXT_2
+ 	call PlaySFX
+ 	ldh a, [hJoyPressed]
+@@ -4709,25 +4628,17 @@ endc
+ 
+ .MenuHeader:
+ 	db $00 ; flags
+-if DEF(LOCALE_ZH)
+- menu_coords 13,10,19,17
+-else
+ 	menu_coords 10, 11, 19, 17
+-endc
+ 	dw .MenuData
+ 	db 1 ; default option
+ 
+ .MenuData:
+ 	db $c0 ; flags
+ 	db 3 ; items
+-if DEF(LOCALE_ZH)
+- INCLUDE "data/zh/battle_party_actions.asm"
+-else
+ 	db "Switch@"
+ 	db "Summary@"
+ 	db "Cancel@"
+ 
+-endc
+ AI_OpponentCanSwitch:
+ 	call StackCallOpponentTurn
+ AI_UserCanSwitch:
+@@ -5138,34 +5049,6 @@ MoveSelectionScreen:
+ 	assert NO_BG_MAP_TRANSFER == 0
+ 	ldh [hBGMapMode], a
+ 
+-if DEF(LOCALE_ZH)
+- ld a,[wMoveSelectionMenuType]
+- and a
+- jr nz,.legacyMoveList
+- farcall ZhCanDrawMoveList
+- jr c,.legacyMoveList
+- hlcoord 0,8
+- lb bc,8,9
+- call Textbox
+- ; Preserve list-count semantics used by PP, move use, reorder and wrapping.
+- ld hl,wListMoves_MoveIndicesBuffer
+- ld b,0
+-.countMoves
+- ld a,[hli]
+- and a
+- jr z,.countDone
+- inc b
+- ld a,b
+- cp 4
+- jr c,.countMoves
+-.countDone
+- ld a,b
+- dec a
+- ld [wNumMoves],a
+- farcall ZhDrawMoveList
+- jr .moveListDone
+-.legacyMoveList
+-endc
+ 	hlcoord 4, 17 - NUM_MOVES - 1
+ 	ld a, [wMoveSelectionMenuType]
+ 	dec a
+@@ -5185,9 +5068,6 @@ endc
+ 	ld [wListMovesLineSpacing], a
+ 	farcall ListMoves
+ 
+-if DEF(LOCALE_ZH)
+-.moveListDone
+-endc
+ 
+ 	ld a, [wMoveSelectionMenuType]
+ 	dec a
+@@ -5253,23 +5133,7 @@ endc
+ .interpret_joypad
+ 	ld a, TRANSFER_TILEMAP
+ 	ldh [hBGMapMode], a
+-if DEF(LOCALE_ZH)
+- ld a,[wMoveSelectionMenuType]
+- and a
+- jr nz,.gridOff
+- farcall ZhCanDrawMoveList
+- jr c,.gridOff
+- ld a,1
+- ld [wZhMoveListActive],a
+-.gridOff
+-endc
+ 	call DoMenuJoypadLoop
+-if DEF(LOCALE_ZH)
+- push af
+- xor a
+- ld [wZhMoveListActive],a
+- pop af
+-endc
+ 	bit B_PAD_UP, a
+ 	jmp nz, .pressed_up
+ 	bit B_PAD_DOWN, a
+@@ -5625,59 +5489,11 @@ MoveInfoBox:
+ 	assert NO_BG_MAP_TRANSFER == 0
+ 	ldh [hBGMapMode], a
+ 
+-	if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyCoord0
+-if DEF(LOCALE_ZH)
+-hlcoord 10, 12
+-else
+-	hlcoord 10, 12
+-endc
+- jr .coordDone0
+-.legacyCoord0
+-if DEF(LOCALE_ZH)
+-hlcoord 0, 8
+-else
+ 	hlcoord 0, 8
+-endc
+-.coordDone0
+- pop af
+-else
+-if DEF(LOCALE_ZH)
+-hlcoord 0, 8
+-else
+-	hlcoord 0, 8
+-endc
+-endc
+ 	ld a, [hl]
+ 	cp '┌'
+ 	push af
+-	if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyCoord1
+-if DEF(LOCALE_ZH)
+-lb bc, 4, 8
+-else
+-	lb bc, 4, 8
+-endc
+- jr .coordDone1
+-.legacyCoord1
+-if DEF(LOCALE_ZH)
+-lb bc, 3, 9
+-else
+-	lb bc, 3, 9
+-endc
+-.coordDone1
+- pop af
+-else
+-if DEF(LOCALE_ZH)
+-lb bc, 3, 9
+-else
+ 	lb bc, 3, 9
+-endc
+-endc
+ 	call Textbox
+ 
+ 	ld hl, wMenuCursorY
+@@ -5710,55 +5526,13 @@ endc
+ 
+ 	farcall UpdateMoveData
+ 
+-	if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyCoord2
+-if DEF(LOCALE_ZH)
+-hlcoord 11, 14
+-else
+-	hlcoord 11, 14
+-endc
+- jr .coordDone2
+-.legacyCoord2
+-if DEF(LOCALE_ZH)
+-hlcoord 1, 10
+-else
+-	hlcoord 1, 10
+-endc
+-.coordDone2
+- pop af
+-else
+-if DEF(LOCALE_ZH)
+-hlcoord 1, 10
+-else
+ 	hlcoord 1, 10
+-endc
+-endc
+ 	ld de, .PowAcc
+-if DEF(LOCALE_ZH)
+- farcall ZhUseVerticalMoveList
+- jr c,.powAccReady
+- ld de,.VerticalPowAcc
+-.powAccReady
+-endc
+ 	rst PlaceString
+ 
+ 	ld hl, Moves + MOVE_POWER
+ 	call GetCurMoveProperty
+-if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyPower
+- hlcoord 11,14
+- jr .powerCoordDone
+-.legacyPower
+- hlcoord 1,10
+-.powerCoordDone
+- pop af
+-else
+  hlcoord 1,10
+-endc
+ 	cp 2
+ 	jr c, .no_power
+ 	ld [wTextDecimalByte], a
+@@ -5773,31 +5547,7 @@ endc
+ .place_accuracy
+ 	ld hl, Moves + MOVE_ACC
+ 	call GetCurMoveProperty
+-	if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyCoord3
+-if DEF(LOCALE_ZH)
+-hlcoord 15, 14
+-else
+-	hlcoord 15, 14
+-endc
+- jr .coordDone3
+-.legacyCoord3
+-if DEF(LOCALE_ZH)
+-hlcoord 6, 10
+-else
+ 	hlcoord 6, 10
+-endc
+-.coordDone3
+- pop af
+-else
+-if DEF(LOCALE_ZH)
+-hlcoord 6, 10
+-else
+-	hlcoord 6, 10
+-endc
+-endc
+ 	cp -1
+ 	jr nc, .no_acc
+ 	ld [wTextDecimalByte], a
+@@ -5839,31 +5589,7 @@ endc
+ 	ld hl, vTiles2 tile $5b
+ 	lb bc, BANK(TypeIconGFX), 4
+ 	call Request1bpp
+-	if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyCoord4
+-if DEF(LOCALE_ZH)
+-hlcoord 11, 13
+-else
+-	hlcoord 11, 13
+-endc
+- jr .coordDone4
+-.legacyCoord4
+-if DEF(LOCALE_ZH)
+-hlcoord 1, 9
+-else
+ 	hlcoord 1, 9
+-endc
+-.coordDone4
+- pop af
+-else
+-if DEF(LOCALE_ZH)
+-hlcoord 1, 9
+-else
+-	hlcoord 1, 9
+-endc
+-endc
+ 	ld b, 6
+ 	ld a, $59
+ .loop
+@@ -5875,41 +5601,13 @@ endc
+ 	call nz, ApplyTilemap
+ 	ret
+ 
+-if DEF(LOCALE_ZH)
+-.VerticalPowAcc:
+- db "   /   %@"
+-endc
+ .PowAcc:
+ 	db "   <BOLDP>/   %@"
+ .NA:
+ 	db "---@"
+ 
+ .PrintPP:
+-	if DEF(LOCALE_ZH)
+- push af
+- farcall ZhUseVerticalMoveList
+- jr c,.legacyCoord5
+-if DEF(LOCALE_ZH)
+-hlcoord 11, 16
+-else
+-	hlcoord 11, 16
+-endc
+- jr .coordDone5
+-.legacyCoord5
+-if DEF(LOCALE_ZH)
+-hlcoord 2, 11
+-else
+ 	hlcoord 2, 11
+-endc
+-.coordDone5
+- pop af
+-else
+-if DEF(LOCALE_ZH)
+-hlcoord 2, 11
+-else
+-	hlcoord 2, 11
+-endc
+-endc
+ 	ld a, '<BOLDP>'
+ 	ld [hli], a
+ 	ld [hli], a
+diff --git a/engine/battle/menu.asm b/engine/battle/menu.asm
+index 08be25d41..f60382ec6 100644
+--- a/engine/battle/menu.asm
++++ b/engine/battle/menu.asm
+@@ -1,8 +1,4 @@
+ LoadBattleMenu:
+-if DEF(LOCALE_ZH)
+- ld a,1
+- ld [wZhBattleCommandActive],a
+-endc
+ 	ld hl, BattleMenuDataHeader
+ 	jr _BattleMenuCommon
+ 
+@@ -32,10 +28,6 @@ _BattleMenuCommon:
+ .ok2
+ 	ld [wBattleMenuFlags], a
+ 	call _2DMenu
+-if DEF(LOCALE_ZH)
+- xor a
+- ld [wZhBattleCommandActive],a
+-endc
+ 	ld a, [wBattleMenuFlags]
+ 	and QUICK_PACK
+ 	ld [wBattleMenuFlags], a
+@@ -45,35 +37,23 @@ endc
+ 
+ BattleMenuDataHeader:
+ 	db MENU_BACKUP_TILES
+-	if DEF(LOCALE_ZH)
+- menu_coords 6,12,19,17
+-else
+  menu_coords 8,12,19,17
+-endc
+ 	dw .MenuData2
+ 	db 1 ; default option
+ 
+ .MenuData2:
+-	if DEF(LOCALE_ZH)
+- db $c7
+-else
+  db $87
+-endc
+ 	dn 2, 2 ; rows, columns
+ 	db 6 ; spacing
+ 	dba .Strings
+ 	dbw BANK(.MenuData2), 0
+ 
+ .Strings:
+-if DEF(LOCALE_ZH)
+- INCLUDE "data/zh/battle_command.asm"
+-else
+ 	db "Fight@"
+ 	db "<PK><MN>@"
+ 	db "Bag@"
+ 	db "Run@"
+ 
+-endc
+ ContestBattleMenuDataHeader:
+ 	db MENU_BACKUP_TILES
+ 	menu_coords 5, 12, 19, 17
+diff --git a/engine/battle_anims/anim_commands.asm b/engine/battle_anims/anim_commands.asm
+index 67569b91a..0f235a3dc 100644
+--- a/engine/battle_anims/anim_commands.asm
++++ b/engine/battle_anims/anim_commands.asm
+@@ -194,11 +194,7 @@ ClearActorHUD:
+ 	; fallthrough
+ ClearEnemyHUD:
+ 	hlcoord 0, 0
+-if DEF(LOCALE_ZH)
+-	lb bc, 4, 11
+-else
+ 	lb bc, 3, 11
+-endc
+ 	jmp ClearBox
+ 
+ BattleAnimCmd_ClearOpponentHUD:
+@@ -207,29 +203,9 @@ BattleAnimCmd_ClearOpponentHUD:
+ 	jr z, ClearEnemyHUD
+ 	; fallthrough
+ ClearPlayerHUD:
+-if DEF(LOCALE_ZH)
+- ; Name occupies at most eight tiles, ending before gender at x128.
+- hlcoord 8,7
+- lb bc,2,12
+- call ClearBox
+- ; Lower HP/EXP region must not erase the battler picture to its left.
+- hlcoord 8,9
+- lb bc,3,12
+- call ClearBox
+- ; Cleared spaces must use the native bank, not stale glyph/cursor banks.
+- hlcoord 8,7,wAttrmap
+- lb bc,2,12
+- ld a,PAL_BATTLE_BG_TEXT
+- call FillBoxWithByte
+- hlcoord 8,9,wAttrmap
+- lb bc,3,12
+- ld a,PAL_BATTLE_BG_PLAYER_HP
+- call FillBoxWithByte
+-else
+ 	hlcoord 11, 7
+ 	lb bc, 5, 9
+ 	call ClearBox
+-endc
+ 	ld a, ' '
+ 	hlcoord 10, 7
+ 	ld [hl], a
+diff --git a/engine/gfx/cgb_layouts.asm b/engine/gfx/cgb_layouts.asm
+index b12739763..8d2db5125 100644
+--- a/engine/gfx/cgb_layouts.asm
++++ b/engine/gfx/cgb_layouts.asm
+@@ -285,20 +285,12 @@ _CGB_FinishBattleScreenLayout:
+ 	ldcoord_a 8, 1, wAttrmap
+ 	ldcoord_a 18, 8, wAttrmap
+ 
+-if DEF(LOCALE_ZH)
+-	hlcoord 10, 10, wAttrmap
+-else
+ 	hlcoord 12, 8, wAttrmap
+-endc
+ 	lb bc, 1, 2
+ 	ld a, PAL_BATTLE_BG_STATUS
+ 	call FillBoxWithByte
+ 
+-if DEF(LOCALE_ZH)
+-	hlcoord 12, 2, wAttrmap
+-else
+ 	hlcoord 2, 1, wAttrmap
+-endc
+ 	lb bc, 1, 2
+ 	ld a, PAL_BATTLE_BG_STATUS
+ 	call FillBoxWithByte
+@@ -337,10 +329,6 @@ endc
+ 	farcall SetAbilityOverlayAttributes
+ 
+ .apply_attr_map
+-if DEF(LOCALE_ZH)
+- farcall ZhBattleHudMetadataAttrs
+-else
+-endc
+ 	jmp ApplyAttrMap
+ 
+ HPBarInteriorPals:
+@@ -697,9 +685,6 @@ _CGB_PartyMenu:
+ 	lb bc, 11, 1
+ 	ld a, $4
+ 	call FillBoxWithByte
+-if DEF(LOCALE_ZH)
+- farcall ZhPartyAttributes
+-endc
+ 	jmp ApplyAttrMap
+ 
+ PartyMenuBGPals:
+diff --git a/engine/gfx/load_font.asm b/engine/gfx/load_font.asm
+index c3227d1e6..87c76abc9 100644
+--- a/engine/gfx/load_font.asm
++++ b/engine/gfx/load_font.asm
+@@ -12,7 +12,7 @@ _LoadStandardFont::
+ _LoadStandardMaybeOpaqueFont:
+ 	push af
+ if DEF(LOCALE_ZH)
+-	farcall ZhFontCacheInvalidate
++ farcall InitializeChineseTextCache
+ endc
+ 	call LoadStandardFontPointer
+ 	ld d, h
+diff --git a/engine/menus/menu.asm b/engine/menus/menu.asm
+index c07d54dc2..aa567ebf0 100755
+--- a/engine/menus/menu.asm
++++ b/engine/menus/menu.asm
+@@ -448,35 +448,6 @@ Move2DMenuCursor:
+ 	ld a, [wCursorOffCharacter]
+ 	ld [hl], a
+ Place2DMenuCursor:
+-if DEF(LOCALE_ZH)
+- ld a,[wZhMoveListActive]
+- and a
+- jr z,.ordinary
+- farcall ZhMoveCursorCoord
+- push hl
+- call ApplyAttrAndTilemapInVBlank
+- pop hl
+- jr .cursor_on
+-.ordinary
+- ld a,[wZhBattleCommandActive]
+- and a
+- jr z,.notBattleCommand
+- farcall ZhBattleCommandCursor
+- push hl
+- call ApplyAttrAndTilemapInVBlank
+- pop hl
+- jr .cursor_on
+-.notBattleCommand
+- ld a,[wZhPartyActionActive]
+- and a
+- jr z,.notPartyAction
+- farcall ZhPartyActionCursor
+- push hl
+- call ApplyAttrAndTilemapInVBlank
+- pop hl
+- jr .cursor_on
+-.notPartyAction
+-endc
+ 	ld a, [w2DMenuCursorInitY]
+ 	ld b, a
+ 	ld a, [w2DMenuCursorInitX]
+@@ -541,16 +512,6 @@ _PushWindow::
+ 	ld a, [hli]
+ 	ld d, [hl]
+ 	ld e, a
+-if DEF(LOCALE_ZH)
+- ; Reject exhausted stacks before writing even the fixed header/link.
+- ld a,e
+- sub 18
+- ld a,d
+- sbc 0
+- cp HIGH(wWindowStack)
+- ld a,ERR_WINDOW_OVERFLOW
+- jp c,Crash
+-endc
+ 	push de
+ 
+ 	ld b, $10
+@@ -574,20 +535,10 @@ endc
+ 	ld h, [hl]
+ 	ld l, a
+ 	set 0, [hl]
+-if DEF(LOCALE_ZH)
+-	call PushWindow_MenuBoxCoordToTile
+-	call GetTileBackupMenuBoxDims
+-	farcall ZhWindowCheckSpace
+-	ld a, ERR_WINDOW_OVERFLOW
+-	jmp c, Crash
+-	call PushWindow_MenuBoxCoordToTile
+-	call .copy
+-else
+ 	call PushWindow_MenuBoxCoordToTile
+ 	call .copy
+ 	call PushWindow_MenuBoxCoordToAttr
+ 	call .copy
+-endc
+ 	jr .done
+ 
+ .not_bit_6
+@@ -632,14 +583,9 @@ endc
+ 	push hl
+ 
+ .col
+-if DEF(LOCALE_ZH)
+-	farcall ZhWindowBackupCell
+-	inc hl
+-else
+ 	ld a, [hli]
+ 	ld [de], a
+ 	dec de
+-endc
+ 	dec c
+ 	jr nz, .col
+ 
+@@ -675,10 +621,8 @@ PushWindow_MenuBoxCoordToAbsolute:
+ 
+ RestoreTileBackup::
+ 	call PushWindow_MenuBoxCoordToTile
+-if !DEF(LOCALE_ZH)
+ 	call .copy
+ 	call PushWindow_MenuBoxCoordToAttr
+-endc
+ 	; fallthrough
+ 
+ .copy
+@@ -689,16 +633,9 @@ endc
+ 	push hl
+ 
+ .col
+-if DEF(LOCALE_ZH)
+-	farcall ZhWindowRestoreCell
+-	ld a, ERR_WINDOW_UNDERFLOW
+-	jmp c, Crash
+-	inc hl
+-else
+ 	ld a, [de]
+ 	ld [hli], a
+ 	dec de
+-endc
+ 	dec c
+ 	jr nz, .col
+ 
+diff --git a/engine/menus/start_menu.asm b/engine/menus/start_menu.asm
+index 6f7d2225d..0a54a0afa 100755
+--- a/engine/menus/start_menu.asm
++++ b/engine/menus/start_menu.asm
+@@ -171,9 +171,6 @@ StartMenu::
+ 	dw StartMenu_Pokegear, .PokegearString
+ 	dw StartMenu_Quit,     .QuitString
+ 
+-if DEF(LOCALE_ZH)
+-INCLUDE "data/zh/start_menu.asm"
+-else
+ .PokedexString:  db "#dex@"
+ .PartyString:    db "#mon@"
+ .PackString:     db "Bag@"
+@@ -184,7 +181,6 @@ else
+ .PokegearString: db "<PO><KE>gear@"
+ .QuitString:     db "Quit@"
+ 
+-endc
+ 
+ .OpenMenu:
+ 	ld a, [wMenuSelection]
+@@ -192,17 +188,6 @@ endc
+ 	jmp IndirectHL
+ 
+ .MenuString:
+-if DEF(LOCALE_ZH)
+- push de
+- ld a, [wMenuSelection]
+- cp STARTMENUITEM_STATUS
+- jr nz, .fixedString
+- farcall ZhDrawStartMenuPlayer
+- pop de
+- ret
+-.fixedString
+- pop de
+-endc
+ 
+ 	push de
+ 	ld a, [wMenuSelection]
+@@ -213,11 +198,6 @@ endc
+ 	ld d, [hl]
+ 	ld e, a
+ 	pop hl
+-if DEF(LOCALE_ZH)
+- ld bc, (ZH_START_MENU_TOP - 2) * SCREEN_WIDTH + ZH_START_MENU_LEFT - 12
+- add hl, bc
+- farcall ZhPrepareStartMenuText
+-endc
+ 	rst PlaceString
+ 	ret
+ 
+diff --git a/engine/pokemon/mon_stats.asm b/engine/pokemon/mon_stats.asm
+index 9d3ff4df2..ed188215a 100644
+--- a/engine/pokemon/mon_stats.asm
++++ b/engine/pokemon/mon_stats.asm
+@@ -119,6 +119,7 @@ endr
+ 	add hl, de
+ 	ret
+ 
++
+ AllStatNames:
+ 	db   "Health<NEXT>"
+ MostStatNames:
+diff --git a/engine/pokemon/party_menu.asm b/engine/pokemon/party_menu.asm
+index ee3dbf04b..0af8f19d7 100644
+--- a/engine/pokemon/party_menu.asm
++++ b/engine/pokemon/party_menu.asm
+@@ -550,9 +550,6 @@ WritePartyMenuTilemap:
+ 	call PlacePartyMonLevel
+ 	call PlacePartyMonGender
+ 	call PlacePartyMonStatus
+-if DEF(LOCALE_ZH)
+- farcall ZhPartyLayout
+-endc
+ 
+ 	pop af
+ 	ld [wOptions1], a
+@@ -1259,19 +1256,6 @@ PartyMenuSelect:
+ 	ret
+ 
+ PlacePartyMenuText:
+-if DEF(LOCALE_ZH)
+- ld a, [wPartyMenuActionText]
+- and a
+- jr nz, .legacy
+- ld a, [wPartyCount]
+- and a
+- jr z, .legacy
+- hlcoord 0, 14
+- lb bc, 2, 18
+- call Textbox
+- farjp ZhPartyFooter
+-.legacy
+-endc
+ 	hlcoord 0, 14
+ 	lb bc, 2, 18
+ 	call Textbox
+diff --git a/engine/pokemon/summary/pink_page.asm b/engine/pokemon/summary/pink_page.asm
+index 257b1d8fc..2e118cc69 100644
+--- a/engine/pokemon/summary/pink_page.asm
++++ b/engine/pokemon/summary/pink_page.asm
+@@ -190,24 +190,6 @@ SummaryScreen_PinkPage:
+ 	inc a
+ 	ld d, a
+ 	farcall CalcExpAtLevel
+-if DEF(LOCALE_ZH)
+- ; A synthetic/imported record may already exceed the next threshold.
+- ld hl,wTempMonExp
+- ldh a,[hQuotient]
+- cp [hl]
+- jr c,.AlreadyAtMaxLevel
+- jr nz,.subtract
+- inc hl
+- ldh a,[hQuotient+1]
+- cp [hl]
+- jr c,.AlreadyAtMaxLevel
+- jr nz,.subtract
+- inc hl
+- ldh a,[hQuotient+2]
+- cp [hl]
+- jr c,.AlreadyAtMaxLevel
+-.subtract
+-endc
+ 	ld hl, wTempMonExp + 2
+ 	ldh a, [hQuotient + 2]
+ 	sub [hl]
+diff --git a/engine/pokemon/summary/zh_pink.asm b/engine/pokemon/summary/zh_pink.asm
+deleted file mode 100644
+index ea5121fde..000000000
+--- a/engine/pokemon/summary/zh_pink.asm
++++ /dev/null
+@@ -1,335 +0,0 @@
+-ZhSummaryPinkLayout:
+- hlbgcoord 0,2,wSummaryScreenWindowBuffer
+- ld b,12
+-.save2
+- ld a,[hli]
+- push af
+- dec b
+- jr nz,.save2
+- hlbgcoord 0,1,wSummaryScreenWindowBuffer
+- ld b,12
+-.save1
+- ld a,[hli]
+- push af
+- dec b
+- jr nz,.save1
+- ; Retain original type/ball, OT and ID/status rows while opening 16px names.
+- hlbgcoord 0,5,wSummaryScreenWindowBuffer
+- ld de,wSummaryScreenWindowBuffer+ZH_PINK_OT_ID_WY*32
+- ld bc,32
+- rst CopyBytes
+- hlbgcoord 0,4,wSummaryScreenWindowBuffer
+- ld de,wSummaryScreenWindowBuffer+ZH_PINK_OT_WY*32
+- ld bc,32
+- rst CopyBytes
+- hlbgcoord 0,3,wSummaryScreenWindowBuffer
+- ld de,wSummaryScreenWindowBuffer+ZH_PINK_TYPES_WY*32
+- ld bc,32
+- rst CopyBytes
+- hlbgcoord 0,1,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord 16,1,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,SUMMARY_PAL_SIDE_WINDOW
+- rst ByteFill
+- hlbgcoord 0,2,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord 16,2,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,SUMMARY_PAL_SIDE_WINDOW
+- rst ByteFill
+- hlbgcoord ZH_PINK_SPECIES_WX,ZH_PINK_SPECIES_WY,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord ZH_PINK_SPECIES_WX+16,ZH_PINK_SPECIES_WY,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,SUMMARY_PAL_SIDE_WINDOW
+- rst ByteFill
+- hlbgcoord 0,4,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord 16,4,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,SUMMARY_PAL_SIDE_WINDOW
+- rst ByteFill
+- hlbgcoord 0,7,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord 16,7,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,SUMMARY_PAL_SIDE_WINDOW
+- rst ByteFill
+- hlbgcoord 11,1,wSummaryScreenWindowBuffer
+- ld b,12
+-.restore1
+- pop af
+- ld [hld],a
+- dec b
+- jr nz,.restore1
+- hlbgcoord 11,3,wSummaryScreenWindowBuffer
+- ld b,12
+-.restore3
+- pop af
+- ld [hld],a
+- dec b
+- jr nz,.restore3
+- ld a,ZH_PINK_TYPES_Y+16
+- ld [wSummaryScreenOAMSprite04YCoord],a
+- ld [wSummaryScreenOAMSprite05YCoord],a
+- ld [wSummaryScreenOAMSprite06YCoord],a
+- ld [wSummaryScreenOAMSprite07YCoord],a
+- ld a,[wBaseType1]
+- ld b,a
+- ld a,[wBaseType2]
+- cp b
+- jr z,.ball
+- ld a,ZH_PINK_TYPES_Y+16
+- ld [wSummaryScreenOAMSprite08YCoord],a
+- ld [wSummaryScreenOAMSprite09YCoord],a
+- ld [wSummaryScreenOAMSprite10YCoord],a
+- ld [wSummaryScreenOAMSprite11YCoord],a
+-.ball
+- hlbgcoord 8,ZH_PINK_TYPES_WY,wSummaryScreenWindowBuffer
+- ld de,wSummaryScreenWindowBuffer+ZH_PINK_BALL_WY*32+ZH_PINK_BALL_WX
+- ld bc,3
+- rst CopyBytes
+- hlbgcoord 24,ZH_PINK_TYPES_WY,wSummaryScreenWindowBuffer
+- ld de,wSummaryScreenWindowBuffer+ZH_PINK_BALL_WY*32+ZH_PINK_BALL_WX+16
+- ld bc,3
+- rst CopyBytes
+- hlbgcoord 8,ZH_PINK_TYPES_WY,wSummaryScreenWindowBuffer
+- ld bc,3
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord 24,ZH_PINK_TYPES_WY,wSummaryScreenWindowBuffer
+- ld bc,3
+- ld a,SUMMARY_PAL_SIDE_WINDOW
+- rst ByteFill
+- ld a,ZH_PINK_BALL_OAM_Y
+- ld [wSummaryScreenOAMSprite12YCoord],a
+- ld a,ZH_PINK_BALL_OAM_Y+16
+- ld [wSummaryScreenOAMSprite13YCoord],a
+- ld a,ZH_PINK_BALL_OAM_X
+- ld [wSummaryScreenOAMSprite12XCoord],a
+- ld [wSummaryScreenOAMSprite13XCoord],a
+- farcall ZhSummaryNames
+- hlbgcoord ZH_PINK_BALL_WX+17,ZH_PINK_BALL_WY,wSummaryScreenWindowBuffer
+- ld [hl],SUMMARY_PAL_POKEBALL
+- call ZhSummaryPinkLabels
+- ret
+-
+-ZhSummaryPinkLabels::
+- ; Clear native slash, then use the same 16px baseline as the species.
+- hlbgcoord ZH_PINK_SPECIES_WX,ZH_PINK_SPECIES_WY,wSummaryScreenWindowBuffer
+- ld [hl],$7f
+- hlbgcoord ZH_PINK_SPECIES_WX,ZH_PINK_SPECIES_WY,wSummaryScreenWindowBuffer
+- ld de,ZhSummarySlash
+- ld a,BANK(ZhSummarySlash)
+- call FarString
+- ; Live trainer name is retained, only its heading and placement change.
+- hlbgcoord ZH_PINK_OT_WX,ZH_PINK_OT_WY,wSummaryScreenWindowBuffer
+- ld bc,12
+- ld a,$7f
+- rst ByteFill
+- hlbgcoord ZH_PINK_OT_WX,ZH_PINK_OT_WY,wSummaryScreenWindowBuffer
+- call ZhSummaryCombinedOT
+- ; Original experience calculations and bar remain authoritative.
+- hlcoord 0,13
+- ld bc,SCREEN_WIDTH*3
+- ld a,$7f
+- rst ByteFill
+- hlcoord ZH_PINK_EXP_TX,ZH_PINK_EXP_TY
+- ld de,ZhSummaryExp
+- ld a,BANK(ZhSummaryExp)
+- call FarString
+- hlcoord ZH_PINK_EXP_TX+3,ZH_PINK_EXP_TY
+- ld de,wTempMonExp
+- lb bc,PRINTNUM_LEFTALIGN | 3,7
+- call ZhSummaryNumber
+- ld a,[wTempMonLevel]
+- cp MAX_LEVEL
+- jr z,.skipNeeded
+- hlcoord ZH_PINK_NEEDED_TX,ZH_PINK_NEEDED_TY
+- ld de,ZhSummaryNeed
+- ld a,BANK(ZhSummaryNeed)
+- call FarString
+- hlcoord ZH_PINK_NEEDED_TX+3,ZH_PINK_NEEDED_TY
+- ld de,wExpToNextLevel
+- lb bc,PRINTNUM_LEFTALIGN | 3,7
+- call ZhSummaryNumber
+- push hl
+- ld a,[wExpToNextLevel]
+- ld b,a
+- ld a,[wExpToNextLevel+1]
+- or b
+- ld b,a
+- ld a,[wExpToNextLevel+2]
+- or b
+- jr z,.zeroNeeded
+- ld de,ZhSummaryExp
+- ld a,BANK(ZhSummaryExp)
+- call FarString
+-.zeroNeeded
+- pop hl
+-.skipNeeded
+- hlcoord ZH_PINK_NEXT_LEVEL_TX,ZH_PINK_NEXT_LEVEL_TY
+- ld bc,7
+- ld a,$7f
+- rst ByteFill
+- hlcoord ZH_PINK_NEXT_LEVEL_TX,ZH_PINK_NEXT_LEVEL_TY+1
+- ld bc,7
+- ld a,$7f
+- rst ByteFill
+- ld a,[wTempMonLevel]
+- cp MAX_LEVEL
+- jr z,.atMaximum
+- hlcoord ZH_PINK_NEXT_LEVEL_TX,ZH_PINK_NEXT_LEVEL_TY
+- cp MAX_LEVEL-1
+- jr c,.nextFits
+- dec hl
+-.nextFits
+- ld de,ZhSummaryLevelUp
+- ld a,BANK(ZhSummaryLevelUp)
+- call FarString
+- ld a,[wTempMonLevel]
+- cp MAX_LEVEL
+- jr z,.max
+- inc a
+-.max
+- ld [wTextDecimalByte],a
+- hlcoord ZH_PINK_NEXT_LEVEL_TX+3,ZH_PINK_NEXT_LEVEL_TY
+- cp 100
+- jr c,.numberFits
+- dec hl
+-.numberFits
+- ld de,wTextDecimalByte
+- lb bc,PRINTNUM_LEFTALIGN | 1,3
+- call ZhSummaryNumber
+- ld de,ZhSummaryLevel
+- ld a,BANK(ZhSummaryLevel)
+- call FarString
+- jr .levelDone
+-.atMaximum
+- hlcoord ZH_PINK_NEXT_LEVEL_TX,ZH_PINK_NEXT_LEVEL_TY
+- ld de,ZhSummaryMax
+- ld a,BANK(ZhSummaryMax)
+- call FarString
+-.levelDone
+- ; Restore the existing tab edge, clear its old font cells and draw text.
+- xor a
+- ld [wSummaryScreenOAMSprite36YCoord],a
+- ld [wSummaryScreenOAMSprite37YCoord],a
+- ld [wSummaryScreenOAMSprite38YCoord],a
+- ld [wSummaryScreenOAMSprite39YCoord],a
+- hlcoord ZH_PINK_TAB_TX,ZH_PINK_TAB_TY
+- lb bc,2,3
+- call ClearBox
+- hlcoord ZH_PINK_TAB_TX,ZH_PINK_TAB_TY,wAttrmap
+- lb bc,2,3
+- ld a,SUMMARY_PAL_LOWER_WINDOW
+- call FillBoxWithByte
+- jp ZhSummaryDrawTab
+-
+-; Format live numbers using original PrintNum, then draw the resulting bytes.
+-ZhSummaryNumber:
+- push hl
+- ld hl,wStringBuffer2+4
+- call PrintNum
+- ld a,$53
+- ld [hl],a
+- ld a,l
+- sub LOW(wStringBuffer2+4)
+- or $80
+- ld [wStringBuffer2+3],a
+- ld a,10
+- ld [wStringBuffer2],a
+- ld a,130
+- ld [wStringBuffer2+1],a
+- ld a,128
+- ld [wStringBuffer2+2],a
+- pop hl
+- ld de,wStringBuffer2
+- ld a,BANK(ZhSummaryNumber)
+- call FarString
+- ld h,b
+- ld l,c
+- ret
+-
+-ZhSummaryCombinedOT:
+- ld hl,ZhSummaryOT+4
+- ld de,wStringBuffer2+4
+- ld bc,7
+- rst CopyBytes
+- ld hl,wTempMonOT
+- ld b,PLAYER_NAME_LENGTH-1
+- ld c,7
+-.copy
+- ld a,[hli]
+- cp $53
+- jr z,.done
+- ld [de],a
+- inc de
+- inc c
+- dec b
+- jr nz,.copy
+-.done
+- ld a,$53
+- ld [de],a
+- ld a,c
+- or $80
+- ld [wStringBuffer2+3],a
+- ld a,10
+- ld [wStringBuffer2],a
+- ld a,130
+- ld [wStringBuffer2+1],a
+- ld a,128
+- ld [wStringBuffer2+2],a
+- hlbgcoord ZH_PINK_OT_WX,ZH_PINK_OT_WY,wSummaryScreenWindowBuffer
+- ld de,wStringBuffer2
+- ld a,BANK(ZhSummaryCombinedOT)
+- jp FarString
+-
+-ZhSummaryDrawTab:
+- hlcoord ZH_PINK_TAB_TX,ZH_PINK_TAB_TY
+- ld de,ZhSummaryTabKeys
+- ld a,3
+-.loop
+- push af
+- push hl
+- ld h,d
+- ld l,e
+- ld a,[hli]
+- ld c,a
+- ld a,[hli]
+- ld b,a
+- ld a,[hli]
+- ld e,a
+- ld a,[hli]
+- ld d,a
+- push hl
+- ld hl,sp+2
+- ld a,[hli]
+- ld h,[hl]
+- ld l,a
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- farcall ZhPlaceCacheBlock
+- pop af
+- ldh [rWBK],a
+- pop de
+- pop bc
+- pop af
+- dec a
+- jr nz,.loop
+- ret
+-
+-INCLUDE "data/zh/summary_pink.asm"
+diff --git a/engine/pokemon/summary_screen.asm b/engine/pokemon/summary_screen.asm
+index 008caecd3..a1a66bfdd 100644
+--- a/engine/pokemon/summary_screen.asm
++++ b/engine/pokemon/summary_screen.asm
+@@ -38,9 +38,6 @@ SummaryScreenInit:
+ 	ldh [hBGMapAddress], a
+ 
+ 	call UpdateSprites
+-if DEF(LOCALE_ZH)
+- call LoadStandardFont
+-endc
+ 	call LoadFontsBattleExtra
+ 	call SummaryScreen_InitTiles
+ 
+@@ -107,9 +104,6 @@ endc
+ 	; Enter loop
+ 	call SummaryScreenLoop
+ 	; Clean up
+-if DEF(LOCALE_ZH)
+- farcall ZhSummaryCacheExit
+-endc
+ 
+ 	call ClearSprites
+ 	call ClearBGPalettes
+@@ -527,16 +521,6 @@ SummaryScreen_InitLayout:
+ 	db 108, 44, SUMMARY_TILE_OAM_TITLES + 3, $0
+ 
+ SummaryScreen_LoadPage:
+-if DEF(LOCALE_ZH)
+- farcall ZhSummaryCacheInit
+- hlcoord 0,13,wAttrmap
+- ld b,5*SCREEN_WIDTH
+-.zhResetAttrs
+- res B_BG_BANK1,[hl]
+- inc hl
+- dec b
+- jr nz,.zhResetAttrs
+-endc
+ 	ld a, [wCurPartySpecies]
+ 	ld [wTempSpecies], a
+ 	ld [wCurSpecies], a
+@@ -577,19 +561,7 @@ endc
+ 	bit SUMMARY_FLAGS_PLACE_FRONTPIC_F, [hl]
+ 	call nz, SummaryScreen_PlaceFrontpic
+ .frontpic_done
+-if DEF(LOCALE_ZH)
+- ld a,[wTempMonIsEgg]
+- bit MON_IS_EGG_F,a
+- jr nz,.zhDone
+- ld a,[wSummaryScreenFlags]
+- and SUMMARY_FLAGS_PAGE_MASK
+- call z,ZhSummaryPinkLayout
+-.zhDone
+-endc
+ 	call SummaryScreen_SwitchPage
+-if DEF(LOCALE_ZH)
+- farcall HDMATransferAttrMapToWRAMBank3
+-endc
+ 	farcall HDMATransferTileMapToWRAMBank3
+ 	ld a, 7 + 64
+ 	ldh [hWX], a
+@@ -657,9 +629,6 @@ endc
+ 	dw SummaryScreen_GreenPage
+ 	dw SummaryScreen_OrangePage
+ 
+-if DEF(LOCALE_ZH)
+-INCLUDE "engine/pokemon/summary/zh_pink.asm"
+-endc
+ INCLUDE "engine/pokemon/summary/pink_page.asm"
+ INCLUDE "engine/pokemon/summary/blue_page.asm"
+ INCLUDE "engine/pokemon/summary/green_page.asm"
+@@ -844,12 +813,6 @@ endr
+ 	dw .OrangeInterrupts
+ 
+ .PinkInterrupts:
+-if DEF(LOCALE_ZH)
+- db 15,SUMMARY_LCD_SHOW_WINDOW
+- db 87,SUMMARY_LCD_HIDE_WINDOW
+-; Keep all 16 pixels of the last Chinese row visible.
+- db -1
+-else
+ 	db 22,  SUMMARY_LCD_SHOW_WINDOW
+ 	db 23,  SUMMARY_LCD_HIDE_WINDOW
+ 	db 31,  SUMMARY_LCD_SHOW_WINDOW
+@@ -864,7 +827,6 @@ else
+ 	db 91,  SUMMARY_LCD_HIDE_WINDOW
+ 	db 127, SUMMARY_LCD_SCROLL_BACKGROUND
+ 	db -1
+-endc
+ .BlueInterrupts:
+ 	db 22,  SUMMARY_LCD_SHOW_WINDOW
+ 	db 31,  SUMMARY_LCD_HIDE_WINDOW
+diff --git a/engine/zh/battle_hud.asm b/engine/zh/battle_hud.asm
+deleted file mode 100644
+index 51db926ab..000000000
+--- a/engine/zh/battle_hud.asm
++++ /dev/null
+@@ -1,99 +0,0 @@
+-ZhBattleHudName::
+- push hl
+- ld hl,ZhPartyNames
+-.next
+- ld a,[hli]
+- ld c,a
+- ld a,[hli]
+- ld b,a
+- or c
+- jr z,.missing
+- push hl
+- push de
+- ld h,b
+- ld l,c
+- call ZhMatchDefaultName
+- jr c,.mismatch
+- pop de
+- pop bc
+- inc hl ; party bar
+- inc hl ; level header pointer
+- inc hl
+- ld a,[hli]
+- ld d,h
+- ld e,l
+- pop hl
+- push de
+- ld b,a
+- ld a,l
+- cp LOW(wTilemap + 7 * SCREEN_WIDTH)
+- jr c,.enemy
+- ld a,16
+- sub b
+- ld e,a
+- ld d,0
+- hlcoord 0,7
+- add hl,de
+- jr .positioned
+-.enemy
+- ld a,b
+- ld [wZhHudEnemyWidth],a
+- hlcoord 1,0
+-.positioned
+- pop de
+- ld a,1
+- jp ZhPlaceStableName
+-.mismatch
+- pop de
+- pop hl
+- jr .next
+-.missing
+- pop hl
+- xor a
+- ld [wZhHudEnemyWidth],a
+- ld a,l
+- cp LOW(wTilemap + 7 * SCREEN_WIDTH)
+- jr c,.fallbackDraw
+- hlcoord 10,7
+-.fallbackDraw
+- rst PlaceString
+- ret
+-
+-ZhBattleHudMetadataAttrs::
+- hlcoord 1,2,wAttrmap
+- ld b,9
+-.bar
+- ld [hl],PAL_BATTLE_BG_ENEMY_HP
+- inc hl
+- dec b
+- jr nz,.bar
+- hlcoord 16,8,wAttrmap
+- ld [hl],PAL_BATTLE_BG_EXP_GENDER
+- inc hl
+- ld a,PAL_BATTLE_BG_TEXT
+- ld [hli],a
+- ld [hli],a
+- ld [hl],a
+- ld a,[wZhHudEnemyWidth]
+- and a
+- ret z
+- inc a
+- ld e,a
+- ld d,0
+- hlcoord 0,1,wAttrmap
+- add hl,de
+- ld [hl],PAL_BATTLE_BG_EXP_GENDER
+- inc hl
+- ld a,PAL_BATTLE_BG_TEXT
+- ld [hli],a
+- ld [hli],a
+- ld [hl],a
+- dec hl
+- dec hl
+- ld a,[wEnemyMonStatus]
+- and a
+- ret z
+- ld a,PAL_BATTLE_BG_STATUS
+- ld [hli],a
+- ld [hl],a
+- ret
+diff --git a/engine/zh/cache.asm b/engine/zh/cache.asm
+deleted file mode 100644
+index 98614d852..000000000
+--- a/engine/zh/cache.asm
++++ /dev/null
+@@ -1,71 +0,0 @@
+-ZhHideDialogue::
+- push bc
+- push hl
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
+- ld b, ZH_DIALOGUE_STEP + 2
+-.row
+- ld c, ZH_DIALOGUE_WIDTH
+- ld a, $7f
+-.tile
+- ld [hli], a
+- dec c
+- jr nz, .tile
+- rept SCREEN_WIDTH - ZH_DIALOGUE_WIDTH
+- inc hl
+- endr
+- dec b
+- jr nz, .row
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP, wAttrmap
+- ld b, ZH_DIALOGUE_STEP + 2
+-.attrrow
+- ld c, ZH_DIALOGUE_WIDTH
+- ld a, 7
+-.attr
+- ld [hli], a
+- dec c
+- jr nz, .attr
+- rept SCREEN_WIDTH - ZH_DIALOGUE_WIDTH
+- inc hl
+- endr
+- dec b
+- jr nz, .attrrow
+- pop hl
+- pop bc
+- and a
+- ret
+-
+-ZhHideMoveList::
+- push bc
+- push hl
+- hlcoord ZH_MOVE_LIST_LEFT, ZH_MOVE_LIST_TOP
+- ld b, 8
+-.row
+- ld c, 9
+- ld a, $7f
+-.tile
+- ld [hli], a
+- dec c
+- jr nz, .tile
+- rept SCREEN_WIDTH - 9
+- inc hl
+- endr
+- dec b
+- jr nz, .row
+- hlcoord ZH_MOVE_LIST_LEFT, ZH_MOVE_LIST_TOP, wAttrmap
+- ld b, 8
+-.attrrow
+- ld c, 9
+- ld a, 7
+-.attr
+- ld [hli], a
+- dec c
+- jr nz, .attr
+- rept SCREEN_WIDTH - 9
+- inc hl
+- endr
+- dec b
+- jr nz, .attrrow
+- pop hl
+- pop bc
+- and a
+- ret
+diff --git a/engine/zh/cache_backup.asm b/engine/zh/cache_backup.asm
+deleted file mode 100644
+index 91531047c..000000000
+--- a/engine/zh/cache_backup.asm
++++ /dev/null
+@@ -1,151 +0,0 @@
+-; One tile backup record: tile-half/static ID, attr, four-byte strip key.
+-; Static records use an invalid key ($ffffffff). HL=map cell, DE=record.
+-; Caller selects cache WRAM. Preserve HL, advance DE by six.
+-ZhCacheBackupCell::
+- push bc
+- push hl
+- ld a, [hl]
+- ld [de], a
+- inc de
+- ld c, a
+- push de
+- ld de, wAttrmap - wTilemap
+- add hl, de
+- ld a, [hl]
+- pop de
+- ld [de], a
+- inc de
+- push af
+- ld a, [wZhPolicy]
+- and a
+- jr z, .inactive
+- pop af
+- and BG_BANK1
+- rrca
+- rrca
+- rrca
+- call ZhCacheTileSlot
+- jr c, .static
+- push de
+- call ZhGlyphCacheReadKey
+- ld a, b
+- and c
+- and d
+- and e
+- inc a
+- jr z, .invalid
+- ; Copy key via stack while retrieving the destination pointer.
+- push de
+- push bc
+- ld hl, sp + 4
+- ld a, [hli]
+- ld h, [hl]
+- ld l, a
+- pop bc
+- pop de
+- ld [hl], b
+- inc hl
+- ld [hl], c
+- inc hl
+- ld [hl], d
+- inc hl
+- ld [hl], e
+- inc hl
+- pop de
+- ld d, h
+- ld e, l
+- jr .done
+-.invalid
+- pop de
+- jr .static
+-.inactive
+- pop af
+-.static
+- ld a, $ff
+- rept 4
+- ld [de], a
+- inc de
+- endr
+-.done
+- pop hl
+- pop bc
+- ret
+-
+-; HL=map cell, DE=backup record. Preserve HL; DE advances six on success.
+-; Dynamic records regenerate by key, even if their former slot was reused.
+-; Original palette/flip/priority survive; bank and tile ID follow new slot.
+-ZhCacheRestoreCell::
+- push bc
+- push hl
+- push de
+- ld a, [de]
+- push af
+- inc de
+- ld a, [de]
+- push af
+- inc de
+- ld a, [de]
+- ld b, a
+- inc de
+- ld a, [de]
+- ld c, a
+- inc de
+- ld a, [de]
+- push af
+- inc de
+- ld a, [de]
+- ld e, a
+- pop af
+- ld d, a
+- ld a, b
+- and c
+- and d
+- and e
+- inc a
+- jr z, .static
+- call ZhEnsureCacheBlock
+- jr c, .failed
+- call ZhGlyphCacheLocation
+- ld c, a
+- pop af
+- and $ff ^ BG_BANK1
+- bit 0, b
+- jr z, .attr
+- or BG_BANK1
+-.attr
+- ld b, a
+- pop af
+- and 1
+- add c
+- ld c, a
+- jr .publish
+-.static
+- pop af
+- ld b, a
+- pop af
+- ld c, a
+-.publish
+- pop de
+- pop hl
+- push hl
+- ld [hl], c
+- push de
+- ld de, wAttrmap - wTilemap
+- add hl, de
+- ld [hl], b
+- pop de
+- rept 6
+- inc de
+- endr
+- pop hl
+- pop bc
+- and a
+- ret
+-.failed
+- pop af
+- pop af
+- pop de
+- pop hl
+- pop bc
+- scf
+- ret
+diff --git a/engine/zh/cache_render.asm b/engine/zh/cache_render.asm
+deleted file mode 100644
+index 76fdec664..000000000
+--- a/engine/zh/cache_render.asm
++++ /dev/null
+@@ -1,326 +0,0 @@
+-; Fixed 16-bit strip IDs: compiled pixel identity; $ffff is an empty strip.
+-; BC=left strip, DE=right strip. Output wZhCachePixels (8x16, 2bpp).
+-; Caller selects cache WRAM. Preserves BC/DE/HL, carry on invalid ID.
+-ZhComposeCacheBlock::
+- ld a,b
+- cp $f8
+- jr c,.strips
+- cp $fc
+- jp c,ZhComposeLegacyLiteral
+-.strips
+- push bc
+- push de
+- push hl
+- push de
+- push bc
+- ld hl, wZhCachePixels
+- ld bc, 32
+- xor a
+- rst ByteFill
+- pop bc
+- call ZhReadFontStrip
+- jr c, .badLeft
+- ld hl, wZhCachePixels
+- call .left
+- pop bc
+- call ZhReadFontStrip
+- jr c,.badRight
+- ld hl,wZhCachePixels
+- call .right
+- pop hl
+- pop de
+- pop bc
+- and a
+- ret
+-.badLeft
+- pop de
+-.badRight
+- pop hl
+- pop de
+- pop bc
+- scf
+- ret
+-.left
+- ld de,wZhStripPixels
+- ld b,8
+-.leftRows
+- ld a,[de]
+- inc de
+- ld c,a
+- and $f0
+- ld [hli],a
+- ld a,[de]
+- inc de
+- ld [wZhStripPlane],a
+- and $f0
+- ld [hli],a
+- ld a,c
+- swap a
+- and $f0
+- ld [hli],a
+- ld a,[wZhStripPlane]
+- swap a
+- and $f0
+- ld [hli],a
+- dec b
+- jr nz,.leftRows
+- ret
+-.right
+- ld de,wZhStripPixels
+- ld b,8
+-.rightRows
+- ld a,[de]
+- inc de
+- ld c,a
+- swap a
+- and $0f
+- or [hl]
+- ld [hli],a
+- ld a,[de]
+- inc de
+- ld [wZhStripPlane],a
+- swap a
+- and $0f
+- or [hl]
+- ld [hli],a
+- ld a,c
+- and $0f
+- or [hl]
+- ld [hli],a
+- ld a,[wZhStripPlane]
+- and $0f
+- or [hl]
+- ld [hli],a
+- dec b
+- jr nz,.rightRows
+- ret
+-
+-; BC=compiled 4x16 strip ID. Coordinates/vertical alignment are baked
+-; into individual strips at build time; no page/style selection here.
+-ZhReadFontStrip::
+- push bc
+- push de
+- push hl
+- ld a, b
+- and c
+- inc a
+- jr z, .blank
+- ld a, b
+- cp HIGH(ZH_COMPILED_STRIP_COUNT)
+- jr c, .valid
+- jr nz, .invalid
+- ld a, c
+- cp LOW(ZH_COMPILED_STRIP_COUNT)
+- jr nc, .invalid
+-.valid
+- ld l, b
+- ld h, 0
+- add hl, hl
+- ld e, b
+- ld d, 0
+- add hl, de
+- ld de, ZhCompiledStripPages
+- add hl, de
+- ld a, [hli]
+- push af
+- ld a, [hli]
+- ld d, [hl]
+- ld e, a
+- ld l, c
+- ld h, 0
+- add hl, hl
+- add hl, hl
+- add hl, hl
+- add hl, hl
+- add hl, de
+- pop bc
+- ld de, wZhStripPixels
+- ld c, 16
+-.copy
+- ld a, b
+- call GetFarByte
+- ld [de], a
+- inc de
+- inc hl
+- dec c
+- jr nz, .copy
+- jr .done
+-.blank
+- ld hl, wZhStripPixels
+- ld bc, 16
+- xor a
+- rst ByteFill
+-.done
+- pop hl
+- pop de
+- pop bc
+- and a
+- ret
+-.invalid
+- pop hl
+- pop de
+- pop bc
+- scf
+- ret
+-
+-; BC/DE=strip key. Return A=slot with pixels ready before any map reference.
+-; Preserves BC/DE/HL and VBK. Caller selects cache WRAM; no map publication.
+-ZhEnsureCacheBlock::
+- call ZhGlyphCacheFind
+- ret nc
+- call ZhComposeCacheBlock
+- ret c
+- call ZhGlyphCacheAlloc
+- jr nc, .upload
+- ; Commit the current maps before reusing slots no longer referenced there.
+- push bc
+- push de
+- push hl
+- call ZhSummaryDisplayActive
+- jr c,.summaryRecovery
+- call ApplyAttrAndTilemapInVBlank
+-.summaryRecovery
+- pop hl
+- pop de
+- pop bc
+- call ZhGlyphCacheRecover
+- call ZhGlyphCacheAlloc
+- ret c
+- push af
+- call ZhComposeCacheBlock
+- pop af
+-.upload
+- push bc
+- push de
+- push hl
+- push af
+- call ZhGlyphCacheLocation
+- ld l, a
+- ld h, 0
+- add hl, hl
+- add hl, hl
+- add hl, hl
+- add hl, hl
+- ld de, $8000
+- add hl, de
+- ldh a, [rVBK]
+- push af
+- ld a, b
+- ldh [rVBK], a
+- ld de, wZhCachePixels
+- ld b, BANK(ZhEnsureCacheBlock)
+- ld c, 2
+- call Get2bpp
+- pop af
+- ldh [rVBK], a
+- pop af
+- pop hl
+- pop de
+- pop bc
+- and a
+- ret
+-
+-; BC/DE=strip pair, HL=upper map cell. Output HL=next upper cell.
+-; Preserve input key. Palette is taken from destination, bank is replaced.
+-; This is the only cache-to-map publication path, shared with restoration.
+-ZhPlaceCacheBlock::
+- ld a, b
+- and c
+- and d
+- and e
+- inc a
+- jr z, .blank
+- call ZhEnsureCacheBlock
+- ret c
+- push bc
+- push de
+- call ZhGlyphCacheLocation
+- ld c, a
+- ld a, b
+- and a
+- ld b, 0
+- jr z, .bank
+- ld b, BG_BANK1
+-.bank
+- ld [hl], c
+- push hl
+- call ZhSummaryRowStride
+- add hl, de
+- inc c
+- ld [hl], c
+- call ZhSummaryAttrStride
+- add hl, de
+- ld a, [hl]
+- and $ff ^ BG_BANK1
+- or b
+- ld [hl], a
+- call ZhSummaryPreviousRow
+- add hl, de
+- ld a, [hl]
+- and $ff ^ BG_BANK1
+- or b
+- ld [hl], a
+- pop hl
+- inc hl
+- pop de
+- pop bc
+- and a
+- ret
+-.blank
+- push bc
+- push de
+- push hl
+- ld [hl], $7f
+- call ZhSummaryRowStride
+- add hl, de
+- ld [hl], $7f
+- call ZhSummaryAttrStride
+- add hl, de
+- res B_BG_BANK1, [hl]
+- call ZhSummaryPreviousRow
+- add hl, de
+- res B_BG_BANK1, [hl]
+- pop hl
+- inc hl
+- pop de
+- pop bc
+- and a
+- ret
+-
+-ZhSummaryRowStride:
+- ld de,SCREEN_WIDTH
+- call ZhIsSummaryDestination
+- ret nc
+- ld de,32
+- ret
+-ZhSummaryPreviousRow:
+- ld de,-SCREEN_WIDTH
+- call ZhIsSummaryDestination
+- ret nc
+- ld de,-32
+- ret
+-ZhSummaryAttrStride:
+- ld de,wAttrmap-wTilemap
+- call ZhIsSummaryDestination
+- ret nc
+- ld de,16
+- ret
+-ZhIsSummaryDestination:
+- push af
+- ld a,h
+- cp HIGH(wSummaryScreenWindowBuffer)
+- jr c,.no
+- cp HIGH(wSummaryScreenWindowBuffer+320)
+- jr c,.yes
+- jr nz,.no
+- ld a,l
+- cp LOW(wSummaryScreenWindowBuffer+320)
+- jr nc,.no
+-.yes
+- pop af
+- scf
+- ret
+-.no
+- pop af
+- and a
+- ret
+diff --git a/engine/zh/cache_temp.asm b/engine/zh/cache_temp.asm
+deleted file mode 100644
+index 0902631e4..000000000
+--- a/engine/zh/cache_temp.asm
++++ /dev/null
+@@ -1,94 +0,0 @@
+-; Preserve legacy temp tilemap for engine readers; sidecar stores attr/key.
+-; Tile half comes from the original map, so each sidecar cell is five bytes.
+-ZhBackupTempMap::
+- ld a, BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- ld hl, wTilemap
+- ld de, wZhTempKeys
+- ld bc, SCREEN_AREA
+-.cell
+- push bc
+- push de
+- ld de, wZhBackupCell
+- call ZhCacheBackupCell
+- pop de
+- push hl
+- ld bc, wTempTileMap - wTilemap
+- add hl, bc
+- ld a, [wZhBackupCell]
+- ld b, a
+- ld a, BANK(wTempTileMap)
+- ldh [rWBK], a
+- ld [hl], b
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- ld hl, wZhBackupCell + 1
+- ld c, 5
+-.copy
+- ld b, [hl]
+- ld a, BANK(wZhTempKeys)
+- ldh [rWBK], a
+- ld a, b
+- ld [de], a
+- inc de
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- inc hl
+- dec c
+- jr nz, .copy
+- pop hl
+- inc hl
+- pop bc
+- dec bc
+- ld a, b
+- or c
+- jr nz, .cell
+- ret
+-
+-ZhRestoreTempMap::
+- ld a, BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- ld hl, wTilemap
+- ld de, wZhTempKeys
+- ld bc, SCREEN_AREA
+-.cell
+- push bc
+- push hl
+- ld bc, wTempTileMap - wTilemap
+- add hl, bc
+- ld a, BANK(wTempTileMap)
+- ldh [rWBK], a
+- ld b, [hl]
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- ld a, b
+- ld [wZhBackupCell], a
+- ld hl, wZhBackupCell + 1
+- ld c, 5
+-.copy
+- ld a, BANK(wZhTempKeys)
+- ldh [rWBK], a
+- ld a, [de]
+- ld b, a
+- inc de
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- ld [hl], b
+- inc hl
+- dec c
+- jr nz, .copy
+- pop hl
+- push de
+- ld de, wZhBackupCell
+- call ZhCacheRestoreCell
+- pop de
+- pop bc
+- ret c
+- inc hl
+- dec bc
+- ld a, b
+- or c
+- jr nz, .cell
+- ret
+diff --git a/engine/zh/cache_text.asm b/engine/zh/cache_text.asm
+deleted file mode 100644
+index 91cc44a26..000000000
+--- a/engine/zh/cache_text.asm
++++ /dev/null
+@@ -1,209 +0,0 @@
+-; Dynamic names alone are paired at runtime; ordinary text is precompiled.
+-; DE=validated WRAM0 name, HL=upper tile. Return both advanced.
+-MACRO zh_dynamic_name
+-\1::
+- ld a, [de]
+- cp $53
+- jr z, .done
+- push de
+- push hl
+- cp $7f
+- jr z, .space
+- sub $80
+- ld l, a
+- ld h, 0
+- add hl, hl
+- add hl, hl
+- ld de, \2
+- add hl, de
+- ld b, [hl]
+- inc hl
+- ld c, [hl]
+- inc hl
+- ld d, [hl]
+- inc hl
+- ld e, [hl]
+- pop hl
+- push hl
+- jr .draw
+-.space
+- ld bc, $ffff
+- ld de, $ffff
+-.draw
+- ldh a, [rWBK]
+- push af
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- call ZhPlaceCacheBlock
+- pop bc
+- ld a, b
+- ldh [rWBK], a
+- jr c, .bad
+- pop bc
+- pop de
+- inc de
+- jr \1
+-.bad
+- pop hl
+- pop de
+- scf
+- ret
+-.done
+- and a
+- ret
+-ENDM
+-zh_dynamic_name ZhPlaceDynamicName, ZhDialogueLatinStrips
+-zh_dynamic_name ZhPlaceStartMenuName, ZhStartMenuLatinStrips
+-
+-; Original one-byte strings keep their 8x8 cells, line controls and endpoint.
+-; Key ($f800 + font-index*128 + character),$ffff identifies original fonts.
+-; No lower map cell is touched. Static symbols/numerals retain bank0 IDs.
+-ZhPlaceLegacyLiteral::
+- push af
+- call ZhSummaryDisplayActive
+- jr nc,.notSummary
+- pop af
+- ld [hli],a
+- and a
+- ret
+-.notSummary
+- pop af
+- call ZhIsSummaryDestination
+- jr nc,.normal
+- ld [hli],a
+- and a
+- ret
+-.normal
+- push bc
+- push de
+- cp $80
+- jr c,.static
+- cp ZH_CACHE_END_TILE
+- jr nc,.static
+- push hl
+- sub $80
+- ld c,a
+- ld a,[wOptions2]
+- and FONT_MASK
+- ld b,a
+- srl a
+- add $f8
+- ld d,a
+- ld a,b
+- and 1
+- rrca
+- or c
+- ld c,a
+- ld b,d
+- ld de,$ffff
+- pop hl
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- ld a,[wZhPolicy]
+- and a
+- jr nz,.active
+- ld a,ZH_VRAM_BOTH
+- call ZhGlyphCacheInit
+-.active
+- call ZhEnsureCacheBlock
+- jr c,.failed
+- push hl
+- call ZhGlyphCacheLocation
+- ld [hl],a
+- ld de,wAttrmap-wTilemap
+- add hl,de
+- ld a,[hl]
+- and $ff ^ BG_BANK1
+- bit 0,b
+- jr z,.attr
+- or BG_BANK1
+-.attr
+- ld [hl],a
+- pop hl
+- inc hl
+- pop af
+- ldh [rWBK],a
+- pop de
+- pop bc
+- and a
+- ret
+-.failed
+- pop af
+- ldh [rWBK],a
+- pop de
+- pop bc
+- scf
+- ret
+-.static
+- ld [hli],a
+- push hl
+- ld bc,wAttrmap-wTilemap-1
+- add hl,bc
+- res B_BG_BANK1,[hl]
+- pop hl
+- pop de
+- pop bc
+- and a
+- ret
+-
+-; Reserved tagged key, original font selection compiled as a pointer table.
+-; B=$f8..$fb, C contains the low seven character bits and one font bit.
+-ZhComposeLegacyLiteral::
+- push bc
+- push de
+- push hl
+- ld a,c
+- and $7f
+- ld l,a
+- ld h,0
+- add hl,hl
+- add hl,hl
+- add hl,hl
+- push hl
+- ld a,c
+- rlca
+- and 1
+- ld c,a
+- ld a,b
+- sub $f8
+- add a
+- or c
+- add a
+- ld c,a
+- ld b,0
+- ld hl,.fonts
+- add hl,bc
+- ld a,[hli]
+- ld h,[hl]
+- ld l,a
+- pop de
+- add hl,de
+- ld de,wZhCachePixels
+- ld c,8
+-.row
+- ld a,BANK(FontTiles)
+- call GetFarByte
+- inc hl
+- ld [de],a
+- inc de
+- ld [de],a
+- inc de
+- dec c
+- jr nz,.row
+- xor a
+- ld c,16
+-.blank
+- ld [de],a
+- inc de
+- dec c
+- jr nz,.blank
+- pop hl
+- pop de
+- pop bc
+- and a
+- ret
+-.fonts
+- dw FontNormal,FontNarrow,FontBold,FontItalic
+- dw FontSerif,FontChicago,FontMICR,FontUnown
+diff --git a/engine/zh/cache_window.asm b/engine/zh/cache_window.asm
+deleted file mode 100644
+index 62aff0f6e..000000000
+--- a/engine/zh/cache_window.asm
++++ /dev/null
+@@ -1,178 +0,0 @@
+-; Descending window stack: tile, attribute, optional four-byte key.
+-; Bit4 is a storage tag only, never copied to the live attribute map.
+-; Static records use 2 bytes; dynamic records retain the 6-byte payload.
+-ZhWindowPrepareRecord::
+- push de
+- ld de,wZhBackupCell
+- call ZhCacheBackupCell
+- pop de
+- ld hl,wZhBackupCell + 1
+- res 4,[hl]
+- ld hl,wZhBackupCell + 2
+- ld a,[hli]
+- and [hl]
+- inc hl
+- and [hl]
+- inc hl
+- and [hl]
+- inc a
+- ld c,2
+- ret z
+- ld hl,wZhBackupCell + 1
+- set 4,[hl]
+- ld c,6
+- ret
+-
+-; HL=map cell, DE=stack pointer; BC/HL preserved, DE decremented by size.
+-ZhWindowBackupCell::
+- ld a,BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- push bc
+- push hl
+- call ZhWindowPrepareRecord
+- ld hl,wZhBackupCell
+-.copy
+- ld b,[hl]
+- ld a,BANK(wWindowStack)
+- ldh [rWBK],a
+- ld a,b
+- ld [de],a
+- dec de
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- inc hl
+- dec c
+- jr nz,.copy
+- pop hl
+- pop bc
+- ret
+-
+-ZhWindowRestoreCell::
+- ld a,BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- push bc
+- push hl
+- ld hl,wZhBackupCell
+- ; Read the fixed header before deciding whether a key follows.
+- call .read
+- call .read
+- ld a,[wZhBackupCell + 1]
+- bit 4,a
+- jr z,.static
+- and $ef
+- ld [wZhBackupCell + 1],a
+- ld c,4
+-.dynamic
+- call .read
+- dec c
+- jr nz,.dynamic
+- jr .restore
+-.static
+- ld a,$ff
+- rept 4
+- ld [hli],a
+- endr
+-.restore
+- pop hl
+- push de
+- ld de,wZhBackupCell
+- call ZhCacheRestoreCell
+- pop de
+- pop bc
+- ret
+-.read
+- ld a,BANK(wWindowStack)
+- ldh [rWBK],a
+- ld a,[de]
+- ld b,a
+- dec de
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- ld [hl],b
+- inc hl
+- ret
+-
+-; Exact preflight: inspect precisely the same cells/keys as the encoder.
+-; HL=top-left cell, BC=rectangle, DE=stack after menu header.
+-; No stack writes, cache mutation or allocation. Preserve BC/DE/HL.
+-ZhWindowCheckSpace::
+- ld a,BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- push hl
+- push bc
+- push de
+- ; Reserve two bytes for the trailing window link first.
+- dec de
+- dec de
+-.row
+- push bc
+- push hl
+-.col
+- push bc
+- push hl
+- call ZhWindowPrepareRecord
+- ld a,e
+- sub c
+- ld e,a
+- ld a,d
+- sbc 0
+- ld d,a
+- cp HIGH(wWindowStack)
+- pop hl
+- pop bc
+- jr c,.overflow
+- inc hl
+- dec c
+- jr nz,.col
+- pop hl
+- push bc
+- ld bc,SCREEN_WIDTH
+- add hl,bc
+- pop bc
+- pop bc
+- dec b
+- jr nz,.row
+- and a
+- jr .done
+-.overflow
+- pop hl
+- pop bc
+- scf
+-.done
+- pop de
+- pop bc
+- pop hl
+- ret
+-
+-ZhGetMenuBoxDims::
+-	ld a, [wMenuBorderTopCoord]
+-	ld b, a
+-	ld a, [wMenuBorderBottomCoord]
+-	sub b
+-	jr nc, .positive
+-	cpl
+-.positive
+-	ld b, a
+-	ld a, [wMenuBorderLeftCoord]
+-	ld c, a
+-	ld a, [wMenuBorderRightCoord]
+-	sub c
+-	ld c, a
+-	ret nc
+-	cpl
+-	ld c, a
+-	ret
+-
+-
+-; Standard font reload overwrites the font/cache area. Invalidate at that
+-; shared resource boundary rather than adding page-specific reset hooks.
+-ZhFontCacheInvalidate::
+- ld a, BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- ; Resource reload invalidates content, not the enclosing policy scope.
+- ; Saved encoded windows may need to regenerate after this call.
+- jp ZhGlyphCacheClear
+diff --git a/engine/zh/decode.asm b/engine/zh/decode.asm
+deleted file mode 100644
+index b1ad1b34c..000000000
+--- a/engine/zh/decode.asm
++++ /dev/null
+@@ -1,68 +0,0 @@
+-; Input HL = escape address, DE = exclusive end in the same mapped bank.
+-; Success BC = glyph ID, HL += 3, carry clear. Failure HL unchanged, carry set.
+-; DE preserved, AF/BC clobbered; no memory writes, bank changes or frame waits.
+-; Caller guarantees a readable mapped interval [HL, DE); wrapped ranges rejected.
+-ZhDecodeGlyph::
+-	push hl
+-	ld a,e
+-	sub l
+-	ld c,a
+-	ld a,d
+-	sbc h
+-	jr c,.invalid
+-	and a
+-	jr nz,.enough
+-	ld a,c
+-	cp 3
+-	jr c,.invalid
+-.enough
+-if DEF(LOCALE_ZH)
+- call ZhReadStableByte
+- inc hl
+-else
+- ld a,[hli]
+-endc
+-	cp ZH_ESCAPE
+-	jr nz,.invalid
+-if DEF(LOCALE_ZH)
+- call ZhReadStableByte
+- inc hl
+-else
+- ld a,[hli]
+-endc
+-	bit 7,a
+-	jr z,.invalid
+-	and $7f
+-	ld b,a
+-if DEF(LOCALE_ZH)
+- call ZhReadStableByte
+- inc hl
+-else
+- ld a,[hli]
+-endc
+-	bit 7,a
+-	jr z,.invalid
+-	and $7f
+-	ld c,a
+-	; Convert two seven-bit payloads to a 14-bit BC value.
+-	srl b
+-	jr nc,.count
+-	set 7,c
+-.count
+-	ld a,b
+-	cp HIGH(ZH_GLYPH_COUNT)
+-	jr c,.valid
+-	jr nz,.invalid
+-	ld a,c
+-	cp LOW(ZH_GLYPH_COUNT)
+-	jr nc,.invalid
+-.valid
+-	; Discard saved HL without clobbering decoded BC or end DE.
+-	inc sp
+-	inc sp
+-	and a
+-	ret
+-.invalid
+-	pop hl
+-	scf
+-	ret
+diff --git a/engine/zh/dialogue.asm b/engine/zh/dialogue.asm
+deleted file mode 100644
+index b52013399..000000000
+--- a/engine/zh/dialogue.asm
++++ /dev/null
+@@ -1,51 +0,0 @@
+-; Dialogue uses bank0 font area; numbers, <LV>, symbols and borders stay static.
+-; Caller opens textbox and loads its font before this entry.
+-ZhShowDialogue::
+- push hl
+- push de
+- call ZhHideDialogue
+- call ApplyAttrAndTilemapInVBlank
+- ldh a, [rWBK]
+- push af
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- call ZhEnterFontText
+- ; Preserve other visible font cells until their owners remove them.
+- call ZhGlyphCacheRecover
+- pop af
+- ldh [rWBK], a
+- pop de
+- pop hl
+- call ZhRunText
+- push af
+- call ApplyAttrAndTilemapInVBlank
+- ldh a, [rWBK]
+- push af
+- ld a, BANK(wBattleMode)
+- ldh [rWBK], a
+- ld a, [wBattleMode]
+- ld b, a
+- pop af
+- ldh [rWBK], a
+- ld a, b
+- and a
+- jr z, .done
+- ld a, [wZhTextControl]
+- cp ZH_CTRL_PROMPT
+- call nz, WaitButton
+- call ZhHideDialogue
+- call ApplyAttrAndTilemapInVBlank
+-.done
+- pop af
+- ret
+-
+-; Keep keys for surviving parent windows. Only a font reload starts a new
+-; epoch; another dialogue/menu must not erase metadata for visible glyphs.
+-ZhEnterFontText::
+- ld a, [wZhPolicy]
+- and a
+- ld a, ZH_VRAM_BANK0_ONLY
+- jp z, ZhGlyphCacheInit
+- ld [wZhPolicy], a
+- and a
+- ret
+diff --git a/engine/zh/dispatch.asm b/engine/zh/dispatch.asm
+deleted file mode 100644
+index fdd357509..000000000
+--- a/engine/zh/dispatch.asm
++++ /dev/null
+@@ -1,31 +0,0 @@
+-; Shared text-engine command. HL points after ZH_STREAM_COMMAND in the
+-; original bank. Descriptor contains little-endian [start,end) in bank $80.
+-; Preserve caller coordinates and advance HL past the descriptor.
+-ZhDispatchText::
+- push bc
+- ld a,b
+- call GetFarByte
+- inc hl
+- ld c,a
+- ld a,b
+- call GetFarByte
+- inc hl
+- push af
+- ld a,b
+- call GetFarByte
+- inc hl
+- ld e,a
+- ld a,b
+- call GetFarByte
+- inc hl
+- ld d,a
+- pop af
+- push hl
+- ld h,a
+- ld l,c
+- call ZhShowDialogue
+- pop hl
+- pop bc
+- ld a,1
+- ldh [hStopPrintingString],a
+- ret
+diff --git a/engine/zh/glyph_cache.asm b/engine/zh/glyph_cache.asm
+deleted file mode 100644
+index e74175dfb..000000000
+--- a/engine/zh/glyph_cache.asm
++++ /dev/null
+@@ -1,351 +0,0 @@
+-; Caller selects BANK(wZhCacheKeys). All policies are fixed at build time.
+-; Reset at a scene boundary after ending all old physical references.
+-; A=root policy. Preserve BC/DE/HL; invalid policy leaves state unchanged.
+-ZhGlyphCacheInit::
+- cp ZH_VRAM_BOTH + 1
+- jr nc, ZhVramPolicyError
+- and a
+- jr z, ZhVramPolicyError
+- ld [wZhPolicy], a
+- xor a
+- ld [wZhPolicyDepth], a
+- jp ZhGlyphCacheClear
+-
+-; Public policy calls preserve BC/DE/HL; carry = refused without mutation.
+-ZhVramPolicyPush::
+- cp ZH_VRAM_BOTH + 1
+- jr nc, ZhVramPolicyError
+- and a
+- jr z, ZhVramPolicyError
+- push hl
+- push bc
+- ld b, a
+- ld a, [wZhPolicyDepth]
+- cp ZH_VRAM_POLICY_DEPTH
+- jr nc, .full
+- ld c, a
+- inc a
+- ld [wZhPolicyDepth], a
+- ld a, c
+- ld hl, wZhPolicyStack
+- add l
+- ld l, a
+- jr nc, .address
+- inc h
+-.address
+- ld a, [wZhPolicy]
+- ld [hl], a
+- ld a, b
+- ld [wZhPolicy], a
+- pop bc
+- pop hl
+- and a
+- ret
+-.full
+- pop bc
+- pop hl
+-ZhVramPolicyError:
+- scf
+- ret
+-ZhVramPolicyPop::
+- ld a, [wZhPolicyDepth]
+- and a
+- jr z, ZhVramPolicyError
+- dec a
+- ld [wZhPolicyDepth], a
+- push hl
+- ld hl, wZhPolicyStack
+- add l
+- ld l, a
+- jr nc, .address
+- inc h
+-.address
+- ld a, [hl]
+- ld [wZhPolicy], a
+- pop hl
+- and a
+- ret
+-
+-; Clear mappings only. Caller has ended/rebuilt old tile references.
+-; Policy stack is deliberately unchanged.
+-ZhGlyphCacheClear::
+- push hl
+- push bc
+- ld hl, wZhCacheKeys
+- ld bc, ZH_CACHE_BLOCKS * ZH_CACHE_KEY_SIZE
+- ld a, $ff
+- rst ByteFill
+- ld hl, wZhCacheUsed
+- ld bc, ZH_CACHE_BLOCKS
+- xor a
+- rst ByteFill
+- pop bc
+- pop hl
+- ret
+-
+-; A=bank (0/1), C=tile. Return slot index in A, carry on non-pool tile.
+-; BC/HL preserved. Both upper and lower tile resolve to the same block.
+-ZhCacheTileSlot::
+- cp 2
+- jr nc, .invalid
+- push bc
+- ld b, a
+- ld a, c
+- sub ZH_CACHE_FIRST_TILE
+- jr c, .bad
+- cp ZH_CACHE_END_TILE - ZH_CACHE_FIRST_TILE
+- jr nc, .bad
+- srl a
+- bit 0, b
+- jr z, .done
+- add ZH_CACHE_BLOCKS_PER_BANK
+-.done
+- pop bc
+- and a
+- ret
+-.bad
+- pop bc
+-.invalid
+- scf
+- ret
+-
+-; Rebuild liveness from the current WRAM picture. Encoded window backups
+-; are restored by key, not pinned physical IDs. Does not reclaim engine GFX.
+-ZhGlyphCacheRecover::
+- push bc
+- push de
+- push hl
+- ld hl, wZhCacheUsed
+- ld bc, ZH_CACHE_BLOCKS
+- xor a
+- rst ByteFill
+- ld hl, wTilemap
+- ld de, wAttrmap
+- ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+-.scan
+- push bc
+- ld c, [hl]
+- ld a, [de]
+- and BG_BANK1
+- rrca
+- rrca
+- rrca
+- call ZhCacheTileSlot
+- jr c, .next
+- push hl
+- ld hl, wZhCacheUsed
+- add l
+- ld l, a
+- jr nc, .mark
+- inc h
+-.mark
+- ld [hl], 1
+- pop hl
+-.next
+- pop bc
+- inc hl
+- inc de
+- dec bc
+- ld a, b
+- or c
+- jr nz, .scan
+- call ZhSummaryMarkWindow
+- pop hl
+- pop de
+- pop bc
+- ret
+-
+-; BC/DE=4-byte combination key. Return A=slot, carry on miss.
+-; Search only currently allowed banks; preserve input key and HL.
+-ZhGlyphCacheFind::
+- ld a, b
+- and c
+- and d
+- and e
+- inc a ; only the all-empty key is reserved; left padding is valid
+- jr z, .invalid
+- push hl
+- push bc
+- push de
+- ld hl, wZhCacheKeys
+- xor a
+-.slot
+- push af
+- cp ZH_CACHE_BLOCKS_PER_BANK
+- ld a, ZH_VRAM_BANK0_ONLY
+- jr c, .policy
+- ld a, ZH_VRAM_BANK1_ONLY
+-.policy
+- push hl
+- ld hl, wZhPolicy
+- and [hl]
+- pop hl
+- jr z, .skip4
+- ld a, [hli]
+- cp b
+- jr nz, .skip3
+- ld a, [hli]
+- cp c
+- jr nz, .skip2
+- ld a, [hli]
+- cp d
+- jr nz, .skip1
+- ld a, [hl]
+- cp e
+- jr nz, .skip1
+- pop af
+- push af
+- ld hl, wZhCacheUsed
+- add l
+- ld l, a
+- jr nc, .mark
+- inc h
+-.mark
+- ld [hl], 1
+- pop af
+- pop de
+- pop bc
+- pop hl
+- and a
+- ret
+-.skip4
+- inc hl
+-.skip3
+- inc hl
+-.skip2
+- inc hl
+-.skip1
+- inc hl
+- pop af
+- inc a
+- cp ZH_CACHE_BLOCKS
+- jr c, .slot
+- pop de
+- pop bc
+- pop hl
+-.invalid
+- scf
+- ret
+-
+-; BC/DE=key. Reserve unused slot and store key. Caller uploads before publish.
+-; Carry on full; never silently overwrite a live slot. Preserves BC/DE/HL.
+-ZhGlyphCacheAlloc::
+- ld a, b
+- and c
+- and d
+- and e
+- inc a
+- jr z, .invalid
+- push hl
+- push bc
+- push de
+- ld hl, wZhCacheUsed
+- xor a
+-.slot
+- push af
+- ; Static NA dash may be referenced after the initial scene scan.
+- cp (CHARVAL("-") - ZH_CACHE_FIRST_TILE) / 2
+- jr z, .next
+- cp ZH_CACHE_BLOCKS_PER_BANK
+- ld a, ZH_VRAM_BANK0_ONLY
+- jr c, .policy
+- ld a, ZH_VRAM_BANK1_ONLY
+-.policy
+- push hl
+- ld hl, wZhPolicy
+- and [hl]
+- pop hl
+- jr z, .next
+- bit 0, [hl]
+- jr nz, .next
+- ld [hl], 1
+- pop af
+- push af
+- ld l, a
+- ld h, 0
+- add hl, hl
+- add hl, hl
+- push de
+- ld de, wZhCacheKeys
+- add hl, de
+- pop de
+- ld [hl], b
+- inc hl
+- ld [hl], c
+- inc hl
+- ld [hl], d
+- inc hl
+- ld [hl], e
+- pop af
+- pop de
+- pop bc
+- pop hl
+- and a
+- ret
+-.next
+- inc hl
+- pop af
+- inc a
+- cp ZH_CACHE_BLOCKS
+- jr c, .slot
+- pop de
+- pop bc
+- pop hl
+-.invalid
+- scf
+- ret
+-
+-; Find, then reserve, then recover and retry exactly once.
+-; A=slot, carry=failure. BC/DE key and HL preserved.
+-; Caller must complete pending display updates before invoking recovery.
+-ZhGlyphCacheResolve::
+- call ZhGlyphCacheFind
+- ret nc
+- call ZhGlyphCacheAlloc
+- ret nc
+- call ZhGlyphCacheRecover
+- jp ZhGlyphCacheAlloc
+-
+-; A=slot -> A=tile ID, B=VRAM bank. Carry rejects invalid slots.
+-ZhGlyphCacheLocation::
+- cp ZH_CACHE_BLOCKS
+- jr nc, .bad
+- ld b, 0
+- cp ZH_CACHE_BLOCKS_PER_BANK
+- jr c, .tile
+- sub ZH_CACHE_BLOCKS_PER_BANK
+- inc b
+-.tile
+- add a
+- add ZH_CACHE_FIRST_TILE
+- and a
+- ret
+-.bad
+- scf
+- ret
+-
+-; A=slot -> BC/DE=combination key. Encoded backup must retain tile half
+-; and palette separately. Never store the physical slot as the backup key.
+-ZhGlyphCacheReadKey::
+- cp ZH_CACHE_BLOCKS
+- jr nc, .bad
+- push hl
+- ld l, a
+- ld h, 0
+- add hl, hl
+- add hl, hl
+- ld de, wZhCacheKeys
+- add hl, de
+- ld b, [hl]
+- inc hl
+- ld c, [hl]
+- inc hl
+- ld d, [hl]
+- inc hl
+- ld e, [hl]
+- pop hl
+- and a
+- ret
+-.bad
+- scf
+- ret
+diff --git a/engine/zh/moves.asm b/engine/zh/moves.asm
+deleted file mode 100644
+index 3534c5980..000000000
+--- a/engine/zh/moves.asm
++++ /dev/null
+@@ -1,209 +0,0 @@
+-; Carry set when a move exceeds the 64px vertical-list text region.
+-ZhCanDrawMoveList::
+- ; Reordering uses the original list and its original swap-marker geometry.
+- ld a,[wMoveSwapBuffer]
+- and a
+- jr nz,.wide
+- ld hl,wListMoves_MoveIndicesBuffer
+- ld b,4
+-.loop
+- ld a,[hli]
+- and a
+- jr z,.ok
+- push hl
+- push bc
+- ld e,a
+- ld d,0
+- ld hl,ZhMoveNameWidths
+- add hl,de
+- ld a,BANK(ZhMoveNameWidths)
+- call GetFarByte
+- ld e,a
+- pop bc
+- pop hl
+- ld a,e
+- cp 65
+- jr nc,.wide
+- dec b
+- jr nz,.loop
+-.ok
+- and a
+- ret
+-.wide
+- scf
+- ret
+-
+-; Four vertical slots, with independent 16px line spacing.
+-ZhDrawMoveList::
+- call ZhHideMoveList
+- call ApplyAttrAndTilemapInVBlank
+- ldh a, [rWBK]
+- push af
+- ld a, BANK(wZhCacheKeys)
+- ldh [rWBK], a
+- call ZhEnterFontText
+- call ZhGlyphCacheRecover
+- pop af
+- ldh [rWBK], a
+- xor a
+- ld [wZhMoveIndex], a
+-.next
+- ld a, [wZhMoveIndex]
+- ld e, a
+- ld d, 0
+- ld hl, wListMoves_MoveIndicesBuffer
+- add hl, de
+- ld c, [hl]
+- ld b, 0
+- ld hl, ZhMoveNames
+- add hl, bc
+- add hl, bc
+- ld a, BANK(ZhMoveNames)
+- call GetFarByte
+- ld e, a
+- inc hl
+- ld a, BANK(ZhMoveNames)
+- call GetFarByte
+- ld d, a
+- push de
+- ld a,[wZhMoveIndex]
+- hlcoord 2,9
+- ld bc,SCREEN_WIDTH * 2
+- rst AddNTimes
+- pop de
+-.draw
+- ld a, BANK(ZhMoveNames)
+- call FarString
+- ld hl, wZhMoveIndex
+- inc [hl]
+- ld a, [hl]
+- cp 4
+- jr c, .next
+- jp ApplyAttrAndTilemapInVBlank
+-
+-; Return physical cursor location from original 1-based linear move selection.
+-ZhMoveCursorCoord::
+- hlcoord 1,9
+- ld b,8
+-.clear
+- ld [hl],$7f
+- ld de,SCREEN_WIDTH
+- add hl,de
+- dec b
+- jr nz,.clear
+- ld a,[wMenuCursorY]
+- dec a
+- hlcoord 1,9
+- ld bc,SCREEN_WIDTH * 2
+- rst AddNTimes
+- push hl
+- hlcoord 11,13,wAttrmap
+- ld b,6
+-.infoAttrs
+- ld [hl],PAL_BATTLE_BG_TYPE_CAT
+- inc hl
+- dec b
+- jr nz,.infoAttrs
+- pop hl
+-ZhDrawTallBattleCursor::
+- push hl
+- ld [hl],$c8
+- ld bc,SCREEN_WIDTH
+- add hl,bc
+- ld [hl],$c9
+- pop hl
+- push hl
+- ld bc,wAttrmap-wTilemap
+- add hl,bc
+- ld [hl],$0f
+- ld bc,SCREEN_WIDTH
+- add hl,bc
+- ld [hl],$0f
+- ; Dedicated 8x16 cursor: center y8 matches 12px text at offset2.
+- ldh a,[rVBK]
+- push af
+- ld a,1
+- ldh [rVBK],a
+- ld hl,$8c80
+- ld de,ZhMoveCursorTiles
+- ld b,BANK(ZhMoveCursorTiles)
+- ld c,2
+- call Get2bpp
+- pop af
+- ldh [rVBK],a
+- pop hl
+- ret
+-
+-ZhMoveCursorTiles:
+- db 0,0,0,0,0,0,0,0,0,0,$80,$80,$c0,$c0,$e0,$e0
+- db $f0,$f0,$e0,$e0,$c0,$c0,$80,$80,0,0,0,0,0,0,0,0
+-
+-; Preserve coordinate and move-property registers; carry selects legacy geometry.
+-ZhUseVerticalMoveList::
+- push bc
+- push de
+- push hl
+- ld a,[wMoveSelectionMenuType]
+- and a
+- scf
+- jr nz,.done
+- call ZhCanDrawMoveList
+-.done
+- pop hl
+- pop de
+- pop bc
+- ret
+-
+-ZhBattleCommandCursor::
+- hlcoord 7,13
+- ld b,4
+-.clear
+- ld [hl],$7f
+- push hl
+- ld de,6
+- add hl,de
+- ld [hl],$7f
+- pop hl
+- push hl
+- ld de,wAttrmap-wTilemap
+- add hl,de
+- ld [hl],PAL_BATTLE_BG_TEXT
+- ld de,6
+- add hl,de
+- ld [hl],PAL_BATTLE_BG_TEXT
+- pop hl
+- ld de,SCREEN_WIDTH
+- add hl,de
+- dec b
+- jr nz,.clear
+- hlcoord 7,13
+- ld a,[wMenuCursorY]
+- dec a
+- ld bc,2 * SCREEN_WIDTH
+- rst AddNTimes
+- ld a,[wMenuCursorX]
+- dec a
+- ld bc,6
+- rst AddNTimes
+- jp ZhDrawTallBattleCursor
+-
+-ZhPartyActionCursor::
+- hlcoord 14,11
+- ld b,6
+-.clear
+- ld [hl],$7f
+- push hl
+- ld de,wAttrmap-wTilemap
+- add hl,de
+- ld [hl],PAL_BATTLE_BG_TEXT
+- pop hl
+- ld de,SCREEN_WIDTH
+- add hl,de
+- dec b
+- jr nz,.clear
+- hlcoord 14,11
+- ld a,[wMenuCursorY]
+- dec a
+- ld bc,2 * SCREEN_WIDTH
+- rst AddNTimes
+- jp ZhDrawTallBattleCursor
+diff --git a/engine/zh/name.asm b/engine/zh/name.asm
+deleted file mode 100644
+index 0a60d5b8e..000000000
+--- a/engine/zh/name.asm
++++ /dev/null
+@@ -1,94 +0,0 @@
+-; D1 explicit English display-name staging; no save-format or token changes.
+-; A=0 player, 1 rival. Success HL=wZhNameBuffer, BC=length excluding @,
+-; carry clear. Failure carry set, destination untouched. AF/BC/DE/HL clobber.
+-; rWBK restored. Caller provides 12-byte WRAM0 wZhNameBuffer.
+-; Source names may not be mutated concurrently during this synchronous call.
+-ZhStageEnglishName::
+- cp 2
+- jr nc,.invalidSource
+- ld hl,wPlayerName
+- and a
+- jr z,.selected
+- ld hl,wRivalName
+-.selected
+- ASSERT BANK(wPlayerName) == BANK(wRivalName)
+- ASSERT NAME_LENGTH == 11
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wPlayerName)
+- ldh [rWBK],a
+- push hl
+- ld b,NAME_LENGTH
+- ld c,0
+-.validate
+- ld a,[hli]
+- cp $53
+- jr z,.valid
+- cp $7f
+- jr c,.invalid
+- cp $f2
+- jr nc,.invalid
+- inc c
+- dec b
+- jr nz,.validate
+-.invalid
+- pop hl
+- pop af
+- ldh [rWBK],a
+-.invalidSource
+- scf
+- ret
+-.valid
+- pop hl
+- ld de,wZhNameBuffer
+- ld b,c
+- inc b ; copy terminator too
+-.copy
+- ld a,[hli]
+- ld [de],a
+- inc de
+- dec b
+- jr nz,.copy
+- pop af
+- ldh [rWBK],a
+- ld hl,wZhNameBuffer
+- ld b,0
+- and a
+- ret
+-
+-; HL=RAM name, B=WRAM bank; bounded to NAME_LENGTH including terminator.
+-; Validated source banks and ranges are enforced by the generator.
+-ZhStageRAMName::
+- ldh a,[rWBK]
+- push af
+- ld a,b
+- ldh [rWBK],a
+- ld de,wZhNameBuffer
+- ld b,NAME_LENGTH
+- ld c,0
+-.loop
+- ld a,[hli]
+- cp $53
+- jr z,.done
+- cp $7f
+- jr c,.bad
+- cp $f2
+- jr nc,.bad
+- ld [de],a
+- inc de
+- inc c
+- dec b
+- jr nz,.loop
+-.bad
+- pop af
+- ldh [rWBK],a
+- scf
+- ret
+-.done
+- ld [de],a
+- pop af
+- ldh [rWBK],a
+- ld hl,wZhNameBuffer
+- ld b,0
+- and a
+- ret
+diff --git a/engine/zh/party.asm b/engine/zh/party.asm
+deleted file mode 100644
+index 06a5be574..000000000
+--- a/engine/zh/party.asm
++++ /dev/null
+@@ -1,641 +0,0 @@
+-; Ordinary party display only. Original save data, numbers and actions.
+-ZhPartyLayout::
+- ld hl,wZhPartyWidths
+- ld bc,12
+- xor a
+- rst ByteFill
+- ld a,[wPartyMenuActionText]
+- and a
+- ret nz
+- xor a
+- ld [wZhPartyIndex],a
+-.next
+- ld a,[wPartyCount]
+- ld b,a
+- ld a,[wZhPartyIndex]
+- cp b
+- jp nc,.done
+- ld hl,wPartyMon1IsEgg
+- call GetPartyLocation
+- bit MON_IS_EGG_F,[hl]
+- jp nz,.skip
+- ld a,[wZhPartyIndex]
+- ld hl,wPartyMonNicknames
+- call GetNickname
+- ld hl,ZhPartyNames
+-.search
+- ld a,[hli]
+- ld c,a
+- ld a,[hli]
+- ld b,a
+- or c
+- jp z,.skip
+- push hl
+- ld h,b
+- ld l,c
+- ld de,wStringBuffer1
+- call ZhMatchDefaultName
+- jp c,.mismatch
+- pop bc
+- ld a,[hli] ; compile-time choice: six-tile bar for 2/3 CJK names
+- push hl
+- push af
+- ld a,[wZhPartyIndex]
+- ld e,a
+- ld d,0
+- ld hl,wZhPartyWidths
+- add hl,de
+- pop af
+- ld [hl],a
+- pop hl
+- ld a,[hli]
+- ld [wZhPartyLevelKeys],a
+- ld a,[hli]
+- ld [wZhPartyLevelKeys+1],a
+- inc hl ; shared HUD width
+- push hl ; encoded name
+- ; Preserve the real engine-formatted metadata before clearing its old cells.
+- call .coord
+- ld bc,2 * SCREEN_WIDTH + 8
+- add hl,bc
+- ld a,[hl]
+- ld [wZhPartyGender],a
+- call .coord
+- ld bc,2 * SCREEN_WIDTH + 5
+- add hl,bc
+- ld de,wZhPartyLevel
+- ld bc,3
+- rst CopyBytes
+- call .coord
+- ld bc,SCREEN_WIDTH + 11
+- add hl,bc
+- ld de,wZhPartyHP
+- ld bc,7
+- rst CopyBytes
+- ; Remove this row's old legacy fields, including its previous lower row.
+- call .coord
+- ld bc,SCREEN_WIDTH + 1
+- add hl,bc
+- ld bc,17
+- ld a,$7f
+- rst ByteFill
+- call .coord
+- ld bc,2 * SCREEN_WIDTH + 1
+- add hl,bc
+- ld bc,17
+- ld a,$7f
+- rst ByteFill
+- ; Neutral text attrs before shared cache publishes bank bits.
+- call .coord
+- ld bc,wAttrmap-wTilemap
+- add hl,bc
+- lb bc,2,18
+- xor a
+- call FillBoxWithByte
+- ld a,BANK(wZhCacheKeys)
+- call .policy
+-
+- pop de
+- call .coord
+- xor a
+- call ZhPlaceStableName
+- call .coord
+- ld bc,8
+- add hl,bc
+- ld a,[wZhPartyGender]
+- ld [hl],a
+- call .coord
+- ld bc,SCREEN_WIDTH + 8
+- add hl,bc
+- call ZhPartyShortShift
+- ld d,h
+- ld e,l
+- ld hl,wZhPartyLevel
+- ; Right-align the original level output against the HP label.
+- ; Keep :L / digits intact; move only unused trailing cells to the left.
+- ld bc,3
+- ld a,[wZhPartyLevel + 2]
+- cp $7f
+- jr nz,.levelReady
+- inc de
+- dec c
+- ld a,[wZhPartyLevel + 1]
+- cp $7f
+- jr nz,.levelReady
+- inc de
+- dec c
+-.levelReady
+- rst CopyBytes
+- call .coord
+- ld bc,11
+- add hl,bc
+- ld d,h
+- ld e,l
+- ld hl,wZhPartyHP
+- ld bc,7
+- rst CopyBytes
+- call .coord
+- ld bc,SCREEN_WIDTH + 11
+- add hl,bc
+- call ZhPartyShortShift
+- push hl
+- ld a,[wZhPartyIndex]
+- ld b,a
+- farcall PlacePartymonHPBar
+- call ZhPartyBarLength
+- cp 6
+- jr z,.fullbar
+- ld a,e
+- add a
+- ld b,0
+-.scale
+- cp 3
+- jr c,.scaled
+- sub 3
+- inc b
+- jr .scale
+-.scaled
+- ld e,b
+- ld d,4
+- jr .drawbar
+-.fullbar
+- ld d,6
+-.drawbar
+- pop hl
+- call DrawBattleHPBar
+- call ZhPartyCompactLevel
+- call ZhPartyDrawHP
+- call ZhPartyStatus
+-.skip
+- ld hl,wZhPartyIndex
+- inc [hl]
+- jp .next
+-.mismatch
+- pop hl
+- jp .search
+-.done
+- call ZhPartyAttributes
+- jp ApplyAttrAndTilemapInVBlank
+-.coord
+- hlcoord 2,0
+- ld a,[wZhPartyIndex]
+- ld bc,2 * SCREEN_WIDTH
+- rst AddNTimes
+- ret
+-.policy
+- call StackCallInWRAMBankA
+-.bank
+- ld a,ZH_VRAM_BOTH
+- ld [wZhPolicy],a
+- ret
+-
+-ZhPartyFooter::
+- ld a,BANK(wZhCacheKeys)
+- call .policy
+- jr .draw
+-.policy
+- call StackCallInWRAMBankA
+-.bank
+- ld a,ZH_VRAM_BOTH
+- ld [wZhPolicy],a
+- ret
+-.draw
+- ; Cancel has a dedicated two-tile row preceding the unchanged textbox.
+- hlcoord 1,0
+- ld a,[wPartyCount]
+- ld bc,2 * SCREEN_WIDTH
+- rst AddNTimes
+- push hl
+- lb bc,2,18
+- call ClearBox
+- pop hl
+- ld de,ZhPartyCancel
+- rst PlaceString
+- hlcoord 1,15
+- ld de,ZhPartyPrompt
+- rst PlaceString
+- jp ApplyAttrAndTilemapInVBlank
+-
+-ZhPartyAttributes::
+- ld a,[wPartyMenuActionText]
+- and a
+- ret nz
+- xor a
+- ld [wZhPartyIndex],a
+-.loop
+- ld a,[wZhPartyIndex]
+- ld e,a
+- ld d,0
+- ld hl,wZhPartyWidths
+- add hl,de
+- ld a,[hl]
+- and a
+- jr z,.skip
+- hlcoord 10,1,wAttrmap
+- ld a,[wZhPartyIndex]
+- ld bc,2*SCREEN_WIDTH
+- rst AddNTimes
+- call ZhPartyShortShift
+- ld c,3
+-.levelattr
+- ld a,[hl]
+- and 8
+- ld [hli],a
+- dec c
+- jr nz,.levelattr
+- hlcoord 10,0,wAttrmap
+- ld a,[wZhPartyIndex]
+- ld bc,2*SCREEN_WIDTH
+- rst AddNTimes
+- ld [hl],4
+- ld bc,SCREEN_WIDTH
+- add hl,bc
+- ld a,[hl]
+- and 8
+- ld [hl],a
+- ; Original HP palette is selected from the live HP calculation.
+- ld a,[wZhPartyIndex]
+- ld e,a
+- ld d,0
+- ld hl,wHPPals
+- add hl,de
+- ld a,[hl]
+- inc a
+- push af
+- hlcoord 13,1,wAttrmap
+- ld a,[wZhPartyIndex]
+- ld bc,2*SCREEN_WIDTH
+- rst AddNTimes
+- pop af
+- ld b,a
+- push hl
+- push bc
+- call ZhPartyBarLength
+- cp 6
+- jr nz,.labeldone
+- dec hl
+- dec hl
+- pop bc
+- ld [hl],b
+- inc hl
+- ld [hl],b
+- push bc
+-.labeldone
+- pop bc
+- pop hl
+- push hl
+- ld de,-SCREEN_WIDTH
+- add hl,de
+- call .hpattrs
+- pop hl
+- call .hpattrs
+-.skip
+- ld hl,wZhPartyIndex
+- inc [hl]
+- ld a,[hl]
+- cp 6
+- jp c,.loop
+- jp ZhPartyStatusAttrs
+-.hpattrs
+- ld c,7
+-.attrcell
+- ld a,[hl]
+- and 8
+- or b
+- ld [hli],a
+- dec c
+- jr nz,.attrcell
+- ret
+-
+-ZhPartyStatus:
+- ld a,[wZhPartyIndex]
+- ld hl,wPartyMon1Status
+- call GetPartyLocation
+- ld d,h
+- ld e,l
+- farcall GetStatusConditionOrFaintIndex
+- push af
+- ld c,a
+- ld b,0
+- ld hl,wZhPartyStatuses
+- ld a,[wZhPartyIndex]
+- ld e,a
+- ld d,0
+- add hl,de
+- ld [hl],c
+- pop af
+- and a
+- jr nz,.status
+- ; Healthy shiny members keep the original shiny symbol beside gender.
+- ld a,[wZhPartyIndex]
+- ld hl,wPartyMon1Shiny
+- call GetPartyLocation
+- ld a,[hl]
+- and SHINY_MASK
+- ret z
+- call .coord
+- ld [hl],'<SHINY>'
+- ret
+-.status
+- ld hl,StatusIconGFX
+- ld bc,32
+- rst AddNTimes
+- ld de,wZhPartyStatusTiles
+- ld c,16
+-.copy
+- ld a,BANK(StatusIconGFX)
+- call GetFarByte
+- inc hl
+- ld b,a
+- ld a,BANK(StatusIconGFX)
+- call GetFarByte
+- inc hl
+- push hl
+- ld l,a
+- ld a,[wZhPartyIndex]
+- and 1
+- ld a,b
+- jr z,.ordered
+- ld a,l
+- ld l,b
+-.ordered
+- ld [de],a
+- inc de
+- ld a,l
+- ld [de],a
+- inc de
+- pop hl
+- dec c
+- jr nz,.copy
+- ld a,[wZhPartyIndex]
+- add a
+- add $e0
+- ld l,a
+- ld h,0
+- add hl,hl
+- add hl,hl
+- add hl,hl
+- add hl,hl
+- ld bc,$8000
+- add hl,bc
+- ldh a,[rVBK]
+- push af
+- ld a,1
+- ldh [rVBK],a
+- ld de,wZhPartyStatusTiles
+- ld c,2
+- ldh a,[hROMBank]
+- ld b,a
+- call Get2bpp
+- pop af
+- ldh [rVBK],a
+- call .coord
+- ld a,[wZhPartyIndex]
+- add a
+- add $e0
+- ld [hli],a
+- inc a
+- ld [hl],a
+- ret
+-.coord
+- hlcoord 11,0
+- ld a,[wZhPartyIndex]
+- ld bc,2 * SCREEN_WIDTH
+- rst AddNTimes
+- ret
+-
+-ZhPartyStatusAttrs::
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wBGPals1)
+- ldh [rWBK],a
+- ld hl,PartyMenuBGPals
+- ld de,wBGPals1 palette 5
+- ld bc,8
+- ld a,BANK(PartyMenuBGPals)
+- call FarCopyBytes
+- ld hl,PartyMenuBGPals
+- ld de,wBGPals1 palette 6
+- ld bc,8
+- ld a,BANK(PartyMenuBGPals)
+- call FarCopyBytes
+- ld hl,PartyMenuBGPals
+- ld de,wBGPals1 palette 7
+- ld bc,8
+- ld a,BANK(PartyMenuBGPals)
+- call FarCopyBytes
+- xor a
+- ld [wZhPartyIndex],a
+-.loop
+- ld a,[wZhPartyIndex]
+- ld e,a
+- ld d,0
+- ld hl,wZhPartyWidths
+- add hl,de
+- ld a,[hl]
+- and a
+- jr z,.next
+- ld hl,wZhPartyStatuses
+- add hl,de
+- ld a,[hl]
+- and a
+- jr z,.healthy
+- add a
+- ld c,a
+- ld b,0
+- ld hl,StatusIconPals
+- add hl,bc
+- push hl
+- ld a,[wZhPartyIndex]
+- ld b,a
+- srl a
+- add a
+- add a
+- add a
+- ld e,a
+- ld d,0
+- ld hl,wBGPals1 palette 5 color 1
+- add hl,de
+- bit 0,b
+- jr z,.color
+- inc hl
+- inc hl
+-.color
+- ld d,h
+- ld e,l
+- pop hl
+- ld bc,2
+- ld a,BANK(StatusIconPals)
+- call FarCopyBytes
+- ld a,[wZhPartyIndex]
+- srl a
+- add 13
+- jr .attr
+-.healthy
+- ld a,4
+-.attr
+- push af
+- hlcoord 11,0,wAttrmap
+- ld a,[wZhPartyIndex]
+- ld bc,2 * SCREEN_WIDTH
+- rst AddNTimes
+- pop af
+- ld [hli],a
+- ld [hl],a
+-.next
+- ld hl,wZhPartyIndex
+- inc [hl]
+- ld a,[hl]
+- cp 6
+- jp c,.loop
+- pop af
+- ldh [rWBK],a
+- ret
+-
+-; Format stays with PrintNum. Combine each formatted digit with its native
+-; bar tile using compile-time keys; digit y+2, bar y+8, real HP palette.
+-ZhPartyDrawHP::
+- ld a,BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- hlcoord 13,0
+- ld a,[wZhPartyIndex]
+- ld bc,2*SCREEN_WIDTH
+- rst AddNTimes
+- ld a,7
+-.loop
+- push af
+- push hl
+- ld a,[hl]
+- cp $7f
+- ld b,0
+- jr z,.digit
+- ld a,[hl]
+- cp $dc
+- ld b,1
+- jr z,.digit
+- sub $e0
+- add 2
+- ld b,a
+-.digit
+- ld de,SCREEN_WIDTH
+- add hl,de
+- ld a,[hl]
+- sub $63
+- ld c,a
+- ld a,b
+- ld hl,ZhPartyHPKeys
+- ld de,48
+-.times
+- and a
+- jr z,.bar
+- add hl,de
+- dec a
+- jr .times
+-.bar
+- ld b,0
+- sla c
+- rl b
+- sla c
+- rl b
+- add hl,bc
+- ld b,[hl]
+- inc hl
+- ld c,[hl]
+- inc hl
+- ld d,[hl]
+- inc hl
+- ld e,[hl]
+- pop hl
+- call ZhPlaceCacheBlock
+- pop af
+- dec a
+- jr nz,.loop
+- ret
+-
+-; Layout choice is stored in the compiled name record, never measured here.
+-ZhPartyBarLength::
+- push hl
+- push de
+- ld a,[wZhPartyIndex]
+- ld e,a
+- ld d,0
+- ld hl,wZhPartyWidths
+- add hl,de
+- ld a,[hl]
+- pop de
+- pop hl
+- ret
+-ZhPartyShortShift::
+- call ZhPartyBarLength
+- cp 6
+- ret nz
+- dec hl
+- dec hl
+- ret
+-
+-; The original PrintNum output selects a precompiled shared-cell key.
+-; No runtime font measuring, shifting or glyph rasterization.
+-ZhPartyCompactLevel::
+- ld a,[wZhPartyLevelKeys]
+- ld l,a
+- ld a,[wZhPartyLevelKeys+1]
+- ld h,a
+- ld a,[hli]
+- ld b,a
+- ld a,[wZhPartyLevel]
+- cp $d6
+- jr nz,.hundred
+- ld a,[wZhPartyLevel+2]
+- cp $7f
+- jr nz,.pairReady
+- ld de,8
+- add hl,de
+- ld a,9 ; one digit: compact L at x72
+- jr .destination
+-.hundred
+- ld a,b
+- and a
+- ret z ; unshared 100 stays native
+- ld de,4
+- add hl,de
+-.pairReady
+- ld a,8 ; first shared level cell x64
+-.destination
+- push af
+- call ZhPartyBarLength
+- cp 6
+- jr z,.shortLevel
+- pop af
+- add 2
+- push af
+-.shortLevel
+- ld b,[hl]
+- inc hl
+- ld c,[hl]
+- inc hl
+- ld d,[hl]
+- inc hl
+- ld e,[hl]
+- push bc
+- push de
+- hlcoord 0,0
+- ld a,[wZhPartyIndex]
+- ld bc,2*SCREEN_WIDTH
+- rst AddNTimes
+- pop de
+- pop bc
+- pop af
+- push bc
+- add SCREEN_WIDTH
+- ld c,a
+- ld b,0
+- add hl,bc
+- ; Cache upper cell is one row above the native level.
+- ld bc,-SCREEN_WIDTH
+- add hl,bc
+- pop bc
+- ld a,BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.draw
+- jp ZhPlaceCacheBlock
+diff --git a/engine/zh/render.asm b/engine/zh/render.asm
+deleted file mode 100644
+index 661700905..000000000
+--- a/engine/zh/render.asm
++++ /dev/null
+@@ -1,101 +0,0 @@
+-; BC=glyph ID, HL=64-byte row-major 2bpp destination. Preserves BC/DE/HL.
+-; Three 4x12 strips, high nibble first row; 512 glyphs per ROM page.
+-assert ZH_GLYPH_COUNT > 0 && ZH_GLYPH_COUNT <= $4000
+-ZhRasterGlyph::
+- ld a, b
+- cp HIGH(ZH_GLYPH_COUNT)
+- jr c, .valid
+- jp nz, .invalid
+- ld a, c
+- cp LOW(ZH_GLYPH_COUNT)
+- jp nc, .invalid
+-.valid
+- push bc
+- push de
+- push hl
+- push bc
+- push hl
+- ld bc, 64
+- xor a
+- rst ByteFill
+- pop de
+- pop bc
+- push de
+- ld a, b
+- srl a
+- ld l, a
+- ld h, 0
+- ld d, h
+- ld e, l
+- add hl, hl
+- add hl, de
+- ld de, ZhFontPages
+- add hl, de
+- ld a, [hli]
+- push af
+- ld a, [hli]
+- ld e, a
+- ld d, [hl]
+- ld a, b
+- and 1
+- ld h, a
+- ld l, c
+- add hl, hl
+- push hl
+- add hl, hl
+- add hl, hl
+- add hl, hl
+- pop bc
+- add hl, bc
+- add hl, de
+- pop af
+- ld b, a
+- pop de
+- ; Resolve strip/row offsets at assembly time, never in a runtime descriptor.
+- DEF previous = 0
+- for strip, 3
+-  for row, 0, 12, 2
+-   ld a, b
+-   call GetFarByte
+-   inc hl
+-   ld c, a
+-   for half, 2
+-    DEF target = ((row + half) / 8) * 32 + (strip / 2) * 16 + ((row + half) % 8) * 2
+-    if target != previous
+-     push hl
+-     ld hl, target - previous
+-     add hl, de
+-     ld d, h
+-     ld e, l
+-     pop hl
+-    endc
+-    REDEF previous = target
+-    ld a, c
+-    if half
+-     swap a
+-    endc
+-    and $f0
+-    if strip == 1
+-     swap a
+-    endc
+-    push hl
+-    ld h, a
+-    ld a, [de]
+-    or h
+-    ld [de], a
+-    inc de
+-    ld [de], a
+-    dec de
+-    pop hl
+-   endr
+-  endr
+- endr
+- PURGE previous, target
+- pop hl
+- pop de
+- pop bc
+- and a
+- ret
+-.invalid
+- scf
+- ret
+diff --git a/engine/zh/stable_decode.asm b/engine/zh/stable_decode.asm
+deleted file mode 100644
+index 5cc40eddf..000000000
+--- a/engine/zh/stable_decode.asm
++++ /dev/null
+@@ -1,70 +0,0 @@
+-; Stable two-byte codec -> manifested glyph ID. Same bank directory.
+-; HL=cursor, DE=exclusive end. Success: HL+=2, BC=glyph, carry clear.
+-; Failure: HL unchanged, DE preserved, carry set. No WRAM allocation.
+-ZhDecodeStableGlyph::
+- push hl
+- ld a,d
+- cp h
+- jr c,.bad
+- jr nz,.length
+- ld a,e
+- sub l
+- jr c,.bad
+- cp 2
+- jr c,.bad
+- jr .read
+-.length
+- ; Check 16-bit remaining length, including low-byte borrow.
+- ld a,e
+- sub l
+- ld a,d
+- sbc h
+- jr c,.bad
+- jr nz,.read
+- ld a,e
+- sub l
+- cp 2
+- jr c,.bad
+-.read
+-if DEF(LOCALE_ZH)
+- call ZhReadStableByte
+- inc hl
+- ld b,a
+- call ZhReadStableByte
+- ld c,a
+-else
+- ld a,[hli]
+- ld b,a
+- ld c,[hl]
+-endc
+- push de
+- ld de,0
+- ld hl,ZhStableGlyphDirectory
+-.loop
+- ld a,[hli]
+- and a
+- jr z,.missing
+- cp b
+- jr nz,.skip
+- ld a,[hli]
+- cp c
+- jr nz,.skipID
+- ld b,d
+- ld c,e
+- pop de
+- pop hl
+- inc hl
+- inc hl
+- and a
+- ret
+-.skip
+- inc hl
+-.skipID
+- inc de
+- jr .loop
+-.missing
+- pop de
+-.bad
+- pop hl
+- scf
+- ret
+diff --git a/engine/zh/stable_text.asm b/engine/zh/stable_text.asm
+deleted file mode 100644
+index cf6c5e1f5..000000000
+--- a/engine/zh/stable_text.asm
++++ /dev/null
+@@ -1,401 +0,0 @@
+-; Bounded dialogue stable glyph run. Uses existing 12-byte name staging
+-; only while no dynamic-name call is active; no new WRAM allocation.
+-; HL=destination; wZhTextCursor/end own source. Same ROM bank.
+-ZhIsStableTextByte::
+- cp ZH_ESCAPE
+- jr z,.yes
+- cp $7f
+- jr c,.han
+- cp $f2
+- jr nc,.no
+-.yes
+- scf
+- ret
+-.han
+- jp ZhIsStableLead
+-.no
+- and a
+- ret
+-
+-ZhPlaceStableRun::
+- ld a,BANK(ZhStableDialogueStrips)
+- ld [wZhNameBuffer+11],a
+- ld a,BANK(ZhPlaceStableRun)
+- ld [wZhNameBuffer+10],a
+- push hl
+- ld hl,ZhStableDialogueStrips
+- ld a,l
+- ld [wZhNameBuffer],a
+- ld a,h
+- ld [wZhNameBuffer+1],a
+- ld hl,ZhDialogueLatinStrips
+- ld a,l
+- ld [wZhNameBuffer+2],a
+- ld a,h
+- ld [wZhNameBuffer+3],a
+- pop hl
+- xor a
+- jp ZhStableRunStart
+-
+-; DE=length-prefixed same-bank name, HL=destination. A=0 party, 1 HUD.
+-ZhPlaceStableName::
+- push af
+- ld a,BANK(ZhStableDialogueStrips)
+- ld [wZhNameBuffer+11],a
+- pop af
+- push af
+- ld a,BANK(ZhPlaceStableName)
+- ld [wZhNameBuffer+10],a
+- pop af
+- push hl
+- push af
+- ld a,[de]
+- inc de
+- ld h,d
+- ld l,e
+- ld b,0
+- ld c,a
+- ld a,l
+- ld [wZhTextCursor],a
+- ld a,h
+- ld [wZhTextCursor+1],a
+- add hl,bc
+- ld a,l
+- ld [wZhTextEnd],a
+- ld a,h
+- ld [wZhTextEnd+1],a
+- pop af
+- push af
+- cp 2
+- jr z,.summaryTables
+- and a
+- ld hl,ZhStableDialogueStrips
+- ld de,ZhDialogueLatinStrips
+- jr z,.tables
+- ld hl,ZhStableHudStrips
+- ld de,ZhStableHudLatin
+- jr .tables
+-.summaryTables
+- ld a,BANK(ZhSummaryGlyphStrips)
+- ld [wZhNameBuffer+11],a
+- ld hl,ZhSummaryGlyphStrips
+- ld de,ZhSummaryLatinStrips
+-.tables
+- ld a,l
+- ld [wZhNameBuffer],a
+- ld a,h
+- ld [wZhNameBuffer+1],a
+- ld a,e
+- ld [wZhNameBuffer+2],a
+- ld a,d
+- ld [wZhNameBuffer+3],a
+- pop af
+- and a
+- ld a,0
+- jr nz,.noPad
+- inc a
+-.noPad
+- pop hl
+- ld b,a
+- ld a,$ff
+- ld [wZhNameBuffer+4],a
+- ld [wZhNameBuffer+5],a
+- ld a,b
+-ZhStableRunStart::
+- ld [wZhNameBuffer+9],a
+- push hl
+- ld a,[wZhTextCursor]
+- ld b,a
+- ld a,[wZhTextEnd]
+- cp b
+- jr nz,.nonempty
+- ld a,[wZhTextCursor+1]
+- ld b,a
+- ld a,[wZhTextEnd+1]
+- cp b
+-.nonempty
+- pop hl
+- ret z
+-.loop
+- push hl
+- ld a,[wZhTextCursor]
+- ld l,a
+- ld a,[wZhTextCursor+1]
+- ld h,a
+- ld a,[wZhTextEnd]
+- ld e,a
+- ld a,[wZhTextEnd+1]
+- ld d,a
+- call ZhReadStableByte
+- cp ZH_ESCAPE
+- jr z,.escape
+- cp $7f
+- jr nc,.latin
+- call ZhDecodeStableGlyph
+- jr .decoded
+-.escape
+- call ZhDecodeGlyph
+-.decoded
+- jp c,.bad
+- ld a,l
+- ld [wZhTextCursor],a
+- ld a,h
+- ld [wZhTextCursor+1],a
+- ; Each glyph has a tagged sequential key or an exception pointer.
+- ld h,b
+- ld l,c
+- add hl,hl
+- ld a,[wZhNameBuffer+0]
+- ld e,a
+- ld a,[wZhNameBuffer+1]
+- ld d,a
+- add hl,de
+- call ZhReadSummaryStripByte
+- inc hl
+- ld [wZhNameBuffer+7],a
+- call ZhReadSummaryStripByte
+- ld [wZhNameBuffer+8],a
+- ld a,3
+- ld [wZhNameBuffer+6],a
+- pop hl
+- jr .strip
+-.latin
+- inc hl
+- ld a,l
+- ld [wZhTextCursor],a
+- ld a,h
+- ld [wZhTextCursor+1],a
+- dec hl
+- call ZhReadStableByte
+- cp $7f
+- jr z,.space
+- sub $80
+- ld l,a
+- ld h,0
+- add hl,hl
+- add hl,hl
+- ld a,[wZhNameBuffer+2]
+- ld e,a
+- ld a,[wZhNameBuffer+3]
+- ld d,a
+- add hl,de
+- jr .latinPointer
+-.space
+- ld hl,$ffff
+-.latinPointer
+- ld a,l
+- ld [wZhNameBuffer+7],a
+- ld a,h
+- ld [wZhNameBuffer+8],a
+- ld a,2
+- ld [wZhNameBuffer+6],a
+- pop hl
+-.strip
+- push hl
+- ld a,[wZhNameBuffer+7]
+- ld l,a
+- ld a,[wZhNameBuffer+8]
+- ld h,a
+- ld a,h
+- cp $ff
+- jr nz,.notBlankStrip
+- ld bc,$ffff
+- jr .advanceStrip
+-.notBlankStrip
+- bit 7,h
+- jr z,.indirectStrip
+- ld b,h
+- res 7,b
+- ld c,l
+- inc hl
+- jr .advanceStrip
+-.indirectStrip
+- call ZhReadSummaryStripByte
+- ld b,a
+- inc hl
+- call ZhReadSummaryStripByte
+- ld c,a
+- inc hl
+-.advanceStrip
+- ld a,l
+- ld [wZhNameBuffer+7],a
+- ld a,h
+- ld [wZhNameBuffer+8],a
+- pop hl
+- ld a,[wZhNameBuffer+9]
+- and a
+- jr nz,.pair
+- ld a,b
+- ld [wZhNameBuffer+4],a
+- ld a,c
+- ld [wZhNameBuffer+5],a
+- ld a,1
+- ld [wZhNameBuffer+9],a
+- jr .nextStrip
+-.pair
+- ld d,b
+- ld e,c
+- ld a,[wZhNameBuffer+4]
+- ld b,a
+- ld a,[wZhNameBuffer+5]
+- ld c,a
+- call .draw
+- ret c
+- xor a
+- ld [wZhNameBuffer+9],a
+-.nextStrip
+- ld a,[wZhNameBuffer+6]
+- dec a
+- ld [wZhNameBuffer+6],a
+- jr nz,.strip
+- push hl
+- ld a,[wZhTextCursor]
+- ld l,a
+- ld a,[wZhTextCursor+1]
+- ld h,a
+- ld a,[wZhTextEnd+1]
+- cp h
+- jr nz,.peek
+- ld a,[wZhTextEnd]
+- cp l
+- jr z,.finish
+-.peek
+- call ZhReadStableByte
+- call ZhIsStableTextByte
+- jr nc,.finish
+- pop hl
+- jp .loop
+-.finish
+- pop hl
+- ld a,[wZhNameBuffer+9]
+- and a
+- ret z
+- ld a,[wZhNameBuffer+4]
+- ld b,a
+- ld a,[wZhNameBuffer+5]
+- ld c,a
+- ld de,$ffff
+-.draw
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- call ZhPlaceCacheBlock
+- pop bc
+- ld a,b
+- ldh [rWBK],a
+- ret
+-.bad
+- pop hl
+- scf
+- ret
+-.blank
+- dw $ffff,$ffff
+-
+-; HL=record with a pointer to the original ten-byte name, DE=nickname.
+-; Advances HL past pointer on success; carry on mismatch.
+-ZhMatchDefaultName::
+- ld a,[hli]
+- ld b,[hl]
+- inc hl
+- push hl
+- ld l,a
+- ld h,b
+- ld c,10
+-.loop
+- ld a,BANK(PokemonNames)
+- call GetFarByte
+- ld b,a
+- ld a,[de]
+- cp b
+- jr nz,.bad
+- inc hl
+- inc de
+- dec c
+- jr nz,.loop
+- pop hl
+- and a
+- ret
+-.bad
+- pop hl
+- scf
+- ret
+-
+-; A=source bank, DE=header, HL=destination. Preserve BC, return DE at @.
+-ZhPlaceStableMenu::
+- ld [wZhNameBuffer+10],a
+- ld a,BANK(ZhStableDialogueStrips)
+- ld [wZhNameBuffer+11],a
+- push bc
+- push hl
+- ld h,d
+- ld l,e
+- inc hl
+- call ZhReadStableByte
+- and $7f
+- push af
+- inc hl
+- call ZhReadStableByte
+- and $7f
+- ld b,a
+- inc hl
+- call ZhReadStableByte
+- and $7f
+- ld c,a
+- ld a,b
+- and 1
+- rrca
+- or c
+- ld c,a
+- srl b
+- inc hl
+- ld a,l
+- ld [wZhTextCursor],a
+- ld a,h
+- ld [wZhTextCursor+1],a
+- add hl,bc
+- ld a,l
+- ld [wZhTextEnd],a
+- ld a,h
+- ld [wZhTextEnd+1],a
+- pop af
+- cp 2
+- jr z,.summaryTables
+- ld hl,ZhStableDialogueStrips
+- ld de,ZhDialogueLatinStrips
+- and a
+- jr z,.tables
+- ld hl,ZhStableHudStrips
+- ld de,ZhStableHudLatin
+- jr .tables
+-.summaryTables
+- ld a,BANK(ZhSummaryGlyphStrips)
+- ld [wZhNameBuffer+11],a
+- ld hl,ZhSummaryGlyphStrips
+- ld de,ZhSummaryLatinStrips
+-.tables
+- ld a,l
+- ld [wZhNameBuffer],a
+- ld a,h
+- ld [wZhNameBuffer+1],a
+- ld a,e
+- ld [wZhNameBuffer+2],a
+- ld a,d
+- ld [wZhNameBuffer+3],a
+- pop hl
+- xor a
+- call ZhStableRunStart
+- ld a,[wZhTextCursor]
+- ld e,a
+- ld a,[wZhTextCursor+1]
+- ld d,a
+- pop bc
+- ret
+-
+-ZhReadStableByte::
+- ld a,[wZhNameBuffer+10]
+- jp GetFarByte
+-
+-ZhReadSummaryStripByte::
+- ld a,[wZhNameBuffer+11]
+- jp GetFarByte
+diff --git a/engine/zh/start_menu.asm b/engine/zh/start_menu.asm
+deleted file mode 100644
+index a2ad0bd0d..000000000
+--- a/engine/zh/start_menu.asm
++++ /dev/null
+@@ -1,25 +0,0 @@
+-ASSERT ZH_START_MENU_STEP == 2 ; original menu cursor and row advance
+-ASSERT ZH_START_MENU_WIDTH == 19 - ZH_START_MENU_LEFT
+-; The original menu owns item selection and 16px row spacing.
+-; Only this consumer uses START_MENU strips, never dialogue placement.
+-ZhPrepareStartMenuText::
+- ld a, BANK(wZhCacheKeys)
+- call StackCallInWRAMBankA
+-.bank
+- jp ZhEnterFontText
+-
+-; DE=original row anchor. Player name remains live save data.
+-ZhDrawStartMenuPlayer::
+- push de
+- xor a
+- call ZhStageEnglishName
+- pop de
+- ret c
+- push hl
+- ld h, d
+- ld l, e
+- ld bc, (ZH_START_MENU_TOP - 2) * SCREEN_WIDTH + ZH_START_MENU_LEFT - 12
+- add hl, bc
+- call ZhPrepareStartMenuText
+- pop de
+- jp ZhPlaceStartMenuName
+diff --git a/engine/zh/stream.asm b/engine/zh/stream.asm
+deleted file mode 100644
+index 9d5e98fc5..000000000
+--- a/engine/zh/stream.asm
++++ /dev/null
+@@ -1,97 +0,0 @@
+-; T1 bounded uncompressed ROM tokenizer; never executes commands.
+-; HL=cursor, DE=exclusive end in same mapped bank.
+-; Success A=ZH_TOKEN_*, BC=payload, HL advanced, DE preserved, carry clear.
+-; At exclusive end: END/BC=0 without read or advance.
+-; Failure carry set, HL unchanged; AF/BC clobbered, DE preserved.
+-; RAM/FAR/ASM/Huffman/dynamic tokens deliberately unsupported.
+-ZhReadToken::
+- ld a,h
+- cp d
+- jr c,.read
+- jr nz,.error
+- ld a,l
+- cp e
+- jr c,.read
+- jr nz,.error
+- ld bc,0
+- xor a
+- ret
+-.read
+- ld a,[hl]
+- cp ZH_ESCAPE
+- jr z,.glyph
+- ld b,0
+- ld c,a
+- cp ZH_CTRL_AT
+- jr z,.end
+- cp ZH_CTRL_DONE
+- jr z,.end
+- cp ZH_CTRL_PROMPT
+- jr z,.end
+- cp ZH_CTRL_CONT
+- jr z,.control
+- cp ZH_CTRL_NEXT
+- jr z,.control
+- cp ZH_CTRL_LINE
+- jr z,.control
+- cp ZH_CTRL_PARA
+- jr z,.control
+- cp ZH_CTRL_WAIT
+- jr z,.control
+- cp ZH_CTRL_RAM
+- jr z,.ram
+- cp ZH_CTRL_PLAYER
+- jr z,.control
+- cp ZH_CTRL_RIVAL
+- jr z,.control
+- cp $7f
+- jr c,.error
+- cp $f2
+- jr nc,.error
+- inc hl
+- ld a,ZH_TOKEN_LITERAL
+- and a
+- ret
+-.ram
+- push hl
+- ld bc,4
+- add hl,bc
+- jr c,.ramError
+- ld a,h
+- cp d
+- jr c,.ramValid
+- jr nz,.ramError
+- ld a,l
+- cp e
+- jr c,.ramValid
+- jr z,.ramValid
+-.ramError
+- pop hl
+- scf
+- ret
+-.ramValid
+- pop hl
+- inc hl
+- ld bc,ZH_CTRL_RAM
+- ld a,ZH_TOKEN_CONTROL
+- and a
+- ret
+-
+-.end
+- inc hl
+- xor a
+- ret
+-.control
+- inc hl
+- ld a,ZH_TOKEN_CONTROL
+- and a
+- ret
+-.glyph
+- call ZhDecodeGlyph
+- ret c
+- ld a,ZH_TOKEN_GLYPH
+- and a
+- ret
+-.error
+- scf
+- ret
+diff --git a/engine/zh/summary.asm b/engine/zh/summary.asm
+deleted file mode 100644
+index d9e16be9f..000000000
+--- a/engine/zh/summary.asm
++++ /dev/null
+@@ -1,76 +0,0 @@
+-ZhSummaryNames::
+- ld de,wTempMonNickname
+- hlbgcoord ZH_PINK_NICKNAME_WX,ZH_PINK_NICKNAME_WY,wSummaryScreenWindowBuffer
+- call .name
+- call GetPartyPokemonName
+- ld de,wStringBuffer1
+- hlbgcoord ZH_PINK_SPECIES_WX+1,ZH_PINK_SPECIES_WY,wSummaryScreenWindowBuffer
+-.name
+- push hl
+- ld hl,ZhPartyNames
+-.next
+- ld a,[hli]
+- ld c,a
+- ld a,[hli]
+- ld b,a
+- or c
+- jr z,.missing
+- push hl
+- push de
+- ld h,b
+- ld l,c
+- call ZhMatchDefaultName
+- jr c,.mismatch
+- pop de
+- pop bc
+- inc hl
+- inc hl
+- inc hl
+- inc hl
+- ld d,h
+- ld e,l
+- pop hl
+- push hl
+- push de
+- ld a,l
+- cp LOW(wSummaryScreenWindowBuffer+ZH_PINK_SPECIES_WY*32+ZH_PINK_SPECIES_WX+1)
+- ld bc,8
+- jr nz,.clearName
+- ld bc,11
+-.clearName
+- ld a,$7f
+- rst ByteFill
+- pop de
+- pop hl
+- ld a,2
+- call ZhPlaceStableName
+- ret
+-.mismatch
+- pop de
+- pop hl
+- jr .next
+-.missing
+- pop hl
+- ret
+-
+-ZhSummaryCacheInit::
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- ld a,ZH_VRAM_BANK1_ONLY
+- call ZhGlyphCacheInit
+- pop af
+- ldh [rWBK],a
+- ret
+-
+-ZhSummaryCacheExit::
+- ldh a,[rWBK]
+- push af
+- ld a,BANK(wZhCacheKeys)
+- ldh [rWBK],a
+- ld a,ZH_VRAM_BOTH
+- call ZhGlyphCacheInit
+- pop af
+- ldh [rWBK],a
+- ret
+diff --git a/engine/zh/summary_cache.asm b/engine/zh/summary_cache.asm
+deleted file mode 100644
+index 1f25f7a67..000000000
+--- a/engine/zh/summary_cache.asm
++++ /dev/null
+@@ -1,81 +0,0 @@
+-; Detect the summary-owned LCD handler without allocating persistent state.
+-; Carry set while its display pipeline owns the screen; preserve registers.
+-ZhSummaryDisplayActive::
+- push hl
+- push de
+- ld a,[hLCDInterruptFunctionTargetLo]
+- ld l,a
+- ld a,[hLCDInterruptFunctionTargetHi]
+- ld h,a
+- ld de,LCDSummaryScreenHideWindow
+- call .equal
+- jr z,.yes
+- ld de,LCDSummaryScreenShowWindow
+- call .equal
+- jr z,.yes
+- ld de,LCDSummaryScreenScrollBackground
+- call .equal
+- jr z,.yes
+- pop de
+- pop hl
+- and a
+- ret
+-.yes
+- pop de
+- pop hl
+- scf
+- ret
+-.equal
+- ld a,h
+- cp d
+- ret nz
+- ld a,l
+- cp e
+- ret
+-
+-; Include the 12 visible cells in each interleaved window row.
+-; Cache WRAM bank is selected by the caller.
+-ZhSummaryMarkWindow::
+- call ZhSummaryDisplayActive
+- ret nc
+- push bc
+- push de
+- push hl
+- ld hl,wSummaryScreenWindowBuffer
+- ld b,10
+-.row
+- ld c,12
+-.cell
+- push bc
+- ld c,[hl]
+- push hl
+- ld de,16
+- add hl,de
+- ld a,[hl]
+- and BG_BANK1
+- rrca
+- rrca
+- rrca
+- call ZhCacheTileSlot
+- jr c,.skip
+- ld hl,wZhCacheUsed
+- add l
+- ld l,a
+- jr nc,.mark
+- inc h
+-.mark
+- ld [hl],1
+-.skip
+- pop hl
+- pop bc
+- inc hl
+- dec c
+- jr nz,.cell
+- ld de,20
+- add hl,de
+- dec b
+- jr nz,.row
+- pop hl
+- pop de
+- pop bc
+- ret
+diff --git a/engine/zh/text.asm b/engine/zh/text.asm
+deleted file mode 100644
+index 9f8d948e6..000000000
+--- a/engine/zh/text.asm
++++ /dev/null
+@@ -1,187 +0,0 @@
+-; Compiled dialogue runs use the shared PlaceString pair command.
+-; Runtime work is limited to controls and names that depend on save data.
+-ZhRunText::
+- ld a, l
+- ld [wZhTextCursor], a
+- ld a, h
+- ld [wZhTextCursor + 1], a
+- ld a, e
+- ld [wZhTextEnd], a
+- ld a, d
+- ld [wZhTextEnd + 1], a
+- xor a
+- ld [wZhTextSlot], a
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
+-.next
+- push hl
+- ld a, [wZhTextCursor]
+- ld l, a
+- ld a, [wZhTextCursor + 1]
+- ld h, a
+- ld a, [wZhTextEnd]
+- ld e, a
+- ld a, [wZhTextEnd + 1]
+- ld d, a
+- ld a, h
+- cp d
+- jr c, .read
+- jp nz, .bad
+- ld a, l
+- cp e
+- jp nc, .bad
+-.read
+- ld a, [hli]
+- ld [wZhTextControl], a
+- call ZhIsStableTextByte
+- jr nc,.notStable
+- dec hl
+- call .saveCursor
+- pop hl
+- call ZhPlaceStableRun
+- ret c
+- jp .next
+-.notStable
+- cp ZH_CTRL_AT
+- jr z, .advance
+- cp ZH_CTRL_RAM
+- jp z, .ram
+- cp ZH_CTRL_PLAYER
+- jp z, .player
+- cp ZH_CTRL_RIVAL
+- jp z, .rival
+-.advance
+- call .saveCursor
+- pop hl
+- ld a, [wZhTextControl]
+- cp ZH_CTRL_AT
+- jr z, .next
+- cp ZH_CTRL_DONE
+- ret z
+- cp ZH_CTRL_PROMPT
+- jp z, .prompt
+- cp ZH_CTRL_WAIT
+- jr z, .wait
+- cp ZH_CTRL_NEXT
+- jr z, .bottom
+- cp ZH_CTRL_LINE
+- jr z, .bottom
+- cp ZH_CTRL_PARA
+- jr z, .page
+- cp ZH_CTRL_CONT
+- jp z, .scroll
+- scf
+- ret
+-.wait
+- push hl
+- call ApplyAttrAndTilemapInVBlank
+- call WaitButton
+- pop hl
+- jp .next
+-.bottom
+- ld a, 1
+- ld [wZhTextSlot], a
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP
+- jp .next
+-.page
+- call ApplyAttrAndTilemapInVBlank
+- call WaitButton
+- call ZhHideDialogue
+- call ApplyAttrAndTilemapInVBlank
+- xor a
+- ld [wZhTextSlot], a
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
+- jp .next
+-.scroll
+- call ApplyAttrAndTilemapInVBlank
+- call WaitButton
+- ; Shift IDs and attributes together; surviving glyphs stay live.
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP
+- decoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP
+- call .scrollMap
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP, wAttrmap
+- decoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP, wAttrmap
+- call .scrollMap
+- hlcoord ZH_DIALOGUE_LEFT, ZH_DIALOGUE_TOP + ZH_DIALOGUE_STEP
+- lb bc, 2, ZH_DIALOGUE_WIDTH
+- call ClearBox
+- call ApplyAttrAndTilemapInVBlank
+- jp .bottom
+-.scrollMap
+- ld b, 2
+-.row
+- ld c, ZH_DIALOGUE_WIDTH
+-.cell
+- ld a, [hli]
+- ld [de], a
+- inc de
+- dec c
+- jr nz, .cell
+- rept SCREEN_WIDTH - ZH_DIALOGUE_WIDTH
+- inc hl
+- inc de
+- endr
+- dec b
+- jr nz, .row
+- ret
+-.prompt
+- call ApplyAttrAndTilemapInVBlank
+- call WaitButton
+- and a
+- ret
+-.bad
+- pop hl
+- scf
+- ret
+-.saveCursor
+- ld a, l
+- ld [wZhTextCursor], a
+- ld a, h
+- ld [wZhTextCursor + 1], a
+- ret
+-.player
+- call .saveCursor
+- xor a
+- jr .name
+-.rival
+- call .saveCursor
+- ld a, 1
+-.name
+- call ZhStageEnglishName
+- jr c, .bad
+- jr .nameReady
+-.ram
+- push hl
+- ld bc, 3
+- add hl, bc
+- jr c, .badRam
+- ld a, h
+- cp d
+- jr c, .ramReady
+- jr nz, .badRam
+- ld a, l
+- cp e
+- jr c, .ramReady
+- jr z, .ramReady
+-.badRam
+- pop hl
+- jp .bad
+-.ramReady
+- pop hl
+- ld b, [hl]
+- inc hl
+- ld a, [hli]
+- ld e, a
+- ld d, [hl]
+- inc hl
+- call .saveCursor
+- ld h, d
+- ld l, e
+- call ZhStageRAMName
+- jr c, .bad
+-.nameReady
+- ld d, h
+- ld e, l
+- pop hl
+- call ZhPlaceDynamicName
+- ret c
+- jp .next
+diff --git a/home/copy_tilemap.asm b/home/copy_tilemap.asm
+index edf0a5423..d740820d8 100644
+--- a/home/copy_tilemap.asm
++++ b/home/copy_tilemap.asm
+@@ -1,17 +1,10 @@
+ LoadTileMapToTempTileMap::
+-if DEF(LOCALE_ZH)
+-	farjp ZhBackupTempMap
+-else
+ ; Load wTilemap into wTempTileMap
+ 	hlcoord 0, 0
+ 	decoord 0, 0, wTempTileMap
+ 	jr _ContinueLoadTileMap
+-endc
+ 
+ LoadTempTileMapToTileMap::
+-if DEF(LOCALE_ZH)
+-	farjp ZhRestoreTempMap
+-else
+ ; Load wTempTileMap into wTilemap
+ 	hlcoord 0, 0, wTempTileMap
+ 	decoord 0, 0
+@@ -25,4 +18,3 @@ _ContinueLoadTileMap::
+ 	pop af
+ 	ldh [rWBK], a
+ 	ret
+-endc
+diff --git a/home/menu.asm b/home/menu.asm
+index 81bdfaaa3..60204debc 100644
+--- a/home/menu.asm
++++ b/home/menu.asm
+@@ -46,9 +46,6 @@ PopWindow::
+ 	ret
+ 
+ GetMenuBoxDims::
+-if DEF(LOCALE_ZH)
+-    farjp ZhGetMenuBoxDims
+-else
+ 	ld a, [wMenuBorderTopCoord]
+ 	ld b, a
+ 	ld a, [wMenuBorderBottomCoord]
+@@ -67,7 +64,6 @@ else
+ 	ld c, a
+ 	ret
+ 
+-endc
+ 
+ CopyMenuData2::
+ 	push hl
+diff --git a/home/text.asm b/home/text.asm
+index ace972c1f..a3392f29c 100644
+--- a/home/text.asm
++++ b/home/text.asm
+@@ -1,6 +1,10 @@
+ ClearSpeechBox::
++if DEF(LOCALE_ZH)
++ farjp ClearChineseSpeechBox
++else
+ 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
+ 	lb bc, TEXTBOX_INNERH - 1, TEXTBOX_INNERW
++endc
+ ClearBox::
+ ; Fill a c*b box at hl with blank tiles.
+ 	ld a, ' '
+@@ -178,30 +182,20 @@ _PlaceString::
+ SpaceChar::
+ 	ld a, ' '
+ _PlaceLiteralChar:
+-if DEF(LOCALE_ZH)
+- farcall ZhPlaceLegacyLiteral
+- ld a,ERR_WINDOW_OVERFLOW
+- jp c,Crash
+-else
+  ld [hli],a
+-endc
+ 	call PrintLetterDelay
+ NextChar::
+ 	inc de
+ PlaceNextChar::
+ 	; charmap order: commands, then ngrams, then specials, then literals
+-	ld a, [de]
+ if DEF(LOCALE_ZH)
+-	cp ZH_ESCAPE
+-	jr nz, .legacy
+-	ldh a, [hROMBank]
+-	farcall ZhPlaceStableMenu
+-	ld a, ERR_WINDOW_OVERFLOW
+-	jmp c, Crash
+-	call PrintLetterDelay
+-	jr PlaceNextChar
+-.legacy
++ ldh a,[hROMBank]
++ farcall PlaceStringChinese
++ jr c,.notChinese
++ jp PlaceNextChar
++.notChinese
+ endc
++	ld a, [de]
+ 	cp BATTLEEXTRA_GFX_START
+ 	jr nc, _PlaceLiteralChar
+ 	cp SPECIALS_START
+@@ -521,8 +515,12 @@ TextScroll::
+ 	push af
+ 	ld c, TEXTBOX_INNERW
+ .row
+-	ld a, [hli]
+-	ld [de], a
++if DEF(LOCALE_ZH)
++ farcall ScrollTextCell
++else
++ ld a,[hli]
++ ld [de],a
++endc
+ 	inc de
+ 	dec c
+ 	jr nz, .row
+@@ -537,6 +535,9 @@ TextScroll::
+ 	ld a, ' '
+ 	ld bc, TEXTBOX_INNERW
+ 	rst ByteFill
++if DEF(LOCALE_ZH)
++ farcall ClearScrolledTextAttributes
++endc
+ 	ld c, 5
+ 	jmp DelayFrames
+ 
+@@ -546,7 +547,11 @@ Text_WaitBGMap::
+ 	push af
+ 	ld a, 1
+ 	ldh [hOAMUpdate], a
++if DEF(LOCALE_ZH)
++	call ApplyAttrAndTilemapInVBlank
++else
+ 	call ApplyTilemapInVBlank
++endc
+ 	pop af
+ 	ldh [hOAMUpdate], a
+ 	pop bc
+@@ -581,17 +586,6 @@ DoTextUntilTerminator::
+ 	and a
+ 	ret nz
+ 	ld a, [hli]
+-if DEF(LOCALE_ZH)
+-	cp ZH_STREAM_COMMAND
+-	jr nz, .legacy
+-	push bc
+-	ldh a, [hROMBank]
+-	ld b, a
+-	farcall ZhDispatchText
+-	pop bc
+-	ret
+-.legacy
+-endc
+ 	call CheckTerminatorChar
+ 	ret z
+ 	call .TextCommand
+diff --git a/home/window.asm b/home/window.asm
+index bf06a9140..ade489d76 100644
+--- a/home/window.asm
++++ b/home/window.asm
+@@ -36,9 +36,6 @@ CloseText::
+ 	ret
+ 
+ .CloseText:
+-if DEF(LOCALE_ZH)
+- call LoadStandardFont
+-endc
+ 	call ClearWindowData
+ 	xor a
+ 	assert NO_BG_MAP_TRANSFER == 0
+diff --git a/includes.asm b/includes.asm
+index 7cd60660e..eeed6f5c3 100644
+--- a/includes.asm
++++ b/includes.asm
+@@ -17,13 +17,6 @@ INCLUDE "macros/scripts/audio.asm"
+ INCLUDE "macros/scripts/maps.asm"
+ INCLUDE "macros/scripts/events.asm"
+ INCLUDE "macros/scripts/text.asm"
+-if DEF(LOCALE_ZH)
+-INCLUDE "constants/zh_encoding.asm"
+-INCLUDE "constants/zh_layout.asm"
+-INCLUDE "data/zh/font/compiled_count.asm"
+-INCLUDE "constants/zh_vram.asm"
+-INCLUDE "macros/zh_text.asm"
+-endc
+ INCLUDE "macros/scripts/movement.asm"
+ INCLUDE "macros/scripts/battle_anims.asm"
+ INCLUDE "macros/scripts/trade_anims.asm"
+diff --git a/main.asm b/main.asm
+index c6c278fed..25b4ed89e 100644
+--- a/main.asm
++++ b/main.asm
+@@ -1,6 +1,3 @@
+-if DEF(LOCALE_ZH)
+-INCLUDE "constants/zh_summary_layout.asm"
+-endc
+ SECTION "bank1", ROMX
+ 
+ INCLUDE "engine/init.asm"
+@@ -746,40 +743,9 @@ SECTION "LureMenu", ROMX
+ INCLUDE "engine/menus/lure_menu.asm"
+ 
+ if DEF(LOCALE_ZH)
+-SECTION "MBC30 runtime extent", ROMX[$7fff], BANK[$ff]
+- db $ff
+-SECTION "Language runtime", ROMX, BANK[$80]
+-INCLUDE "engine/zh/decode.asm"
+-INCLUDE "engine/zh/stable_decode.asm"
+-INCLUDE "engine/zh/stable_text.asm"
+-INCLUDE "data/zh/stable.asm"
+-INCLUDE "engine/zh/stream.asm"
+-INCLUDE "engine/zh/name.asm"
+-INCLUDE "engine/zh/render.asm"
+-INCLUDE "engine/zh/cache.asm"
+-INCLUDE "engine/zh/glyph_cache.asm"
+-INCLUDE "engine/zh/cache_render.asm"
+-INCLUDE "engine/zh/cache_backup.asm"
+-INCLUDE "engine/zh/cache_window.asm"
+-INCLUDE "engine/zh/cache_temp.asm"
+-INCLUDE "engine/zh/cache_text.asm"
+-INCLUDE "engine/zh/summary.asm"
+-INCLUDE "engine/zh/summary_cache.asm"
+-INCLUDE "engine/zh/text.asm"
+-INCLUDE "engine/zh/dialogue.asm"
+-INCLUDE "engine/zh/dispatch.asm"
+-INCLUDE "engine/zh/moves.asm"
+-INCLUDE "engine/zh/battle_hud.asm"
+-INCLUDE "data/zh/battle_hud.asm"
+-INCLUDE "engine/zh/start_menu.asm"
+-INCLUDE "engine/zh/party.asm"
+-INCLUDE "data/zh/party.asm"
+-SECTION "Chinese compiled move names", ROMX
+-INCLUDE "data/zh/move_names.asm"
+-SECTION "Chinese font directory", ROMX, BANK[$80]
+-INCLUDE "data/zh/font/font.asm"
+-INCLUDE "data/zh/font/font_pages.asm"
+-SECTION "Compiled strip directory", ROMX, BANK[$80]
+-INCLUDE "data/zh/font/compiled.asm"
+-INCLUDE "data/zh/font/compiled_pages.asm"
++SECTION "MBC30 text extent", ROMX[$7fff], BANK[$ff]
++ db 0
++SECTION "Shared Chinese text", ROMX, BANK[$80]
++INCLUDE "engine/text/chinese.asm"
++INCLUDE "data/zh/characters.asm"
+ endc
+diff --git a/ram/wram0.asm b/ram/wram0.asm
+index f8a153526..82e6e4dac 100644
+--- a/ram/wram0.asm
++++ b/ram/wram0.asm
+@@ -1503,36 +1503,10 @@ wPaletteSwapNeedsReload:: db
+ wPaletteSwapReloadMask:: db
+ 
+ if DEF(LOCALE_ZH)
+-SECTION "ZH bounded text state", WRAM0
+-wZhTextCursor:: dw
+-wZhTextEnd:: dw
+-wZhTextSlot:: db
+-wZhTextControl:: db
+-wZhNameBuffer:: ds 12
+-wZhMoveListActive:: db
+-wZhMoveIndex:: db
+-wZhPartyIndex:: db
+-wZhPartyWidths:: ds 6
+-wZhPartyStatuses:: ds 6
+-wZhPartyStatusTiles:: ds 32
+-wZhPartyGender:: db
+-wZhPartyLevel:: ds 3
+-wZhPartyHP:: ds 7
+-wZhPartyLevelKeys:: dw
+-
+-
+-endc
+-
+-if DEF(LOCALE_ZH)
+-wZhHudEnemyWidth:: db
+-endc
+-
+-if DEF(LOCALE_ZH)
+-wZhBattleCommandActive:: db
+-endc
+-
+-
+-
+-if DEF(LOCALE_ZH)
+-wZhPartyActionActive:: db
++SECTION "Shared text cursor", WRAM0
++wTextSourceBank:: db
++wTextSource:: dw
++wTextPending:: dw
++wTextFragments:: dw
++wTextFragmentCount:: db
+ endc
+diff --git a/ram/wramx.asm b/ram/wramx.asm
+index ba7d78c7d..ce80757ea 100644
+--- a/ram/wramx.asm
++++ b/ram/wramx.asm
+@@ -1955,18 +1955,9 @@ SECTION "Window Stack", WRAMX
+ wWindowStack:: ds $1000 - 1
+ wWindowStackBottom:: db
+ 
+-
+ if DEF(LOCALE_ZH)
+-SECTION "ZH glyph cache", WRAMX
+-wZhCacheKeys:: ds ZH_CACHE_BLOCKS * ZH_CACHE_KEY_SIZE
+-wZhCacheUsed:: ds ZH_CACHE_BLOCKS
+-wZhPolicy:: db
+-wZhPolicyDepth:: db
+-wZhPolicyStack:: ds ZH_VRAM_POLICY_DEPTH
+-wZhCachePixels:: ds 2 tiles
+-wZhStripPixels:: ds 16
+-wZhStripPlane:: db
+-wZhBackupCell:: ds 6
+-SECTION "ZH temporary map keys", WRAMX
+-wZhTempKeys:: ds SCREEN_AREA * 5
++SECTION "Shared text cache", WRAMX
++wTextGlyphKeys:: ds 43*4
++wTextGlyphUsed:: ds 43
++wTextGlyphPixels:: ds 32
+ endc
+diff --git a/tools/layout_preview/ROM_LAYOUT.md b/tools/layout_preview/ROM_LAYOUT.md
+index f2f316209..3084d10b6 100644
+--- a/tools/layout_preview/ROM_LAYOUT.md
++++ b/tools/layout_preview/ROM_LAYOUT.md
+@@ -22,3 +22,11 @@ python3 tools/zh/runtime_build.py --language zh-Hans --layout /path/summary-pink
+ 6. 把通过的JSON保存为页面配置，再更新交接。不得手抄坐标绕过配置。
+ 
+ 当前工作流版本锁定模板文字与字形偏移，避免产生不可构建的设计；未来可扩展受控数据样例选择。
++
++## 蓝页数字与汉字分离（2026-09-28）
++
++蓝页使用独立tools/zh/layout_configs/summary_blue.json，当前支持固定两列、20px行距的上下布局。标签通过字符流绘制到背景，原PrintTempMonStats直接向最终详情窗口坐标输出数字，特训符号保持原8px图块并直接定位；不再先绘制旧布局再搬运；窗口仅在HP区与三条数字行显示。显示区间切换代替预组合标签和数字，不生成数值组合表，不扩充窗口缓冲。
++
++标签坐标为(64/112,32/52/72)，数字与标记显示在其下方；每列48px，三位数24px＋标记8px可独立放下。第二行汉字使用现有4px偏移字符样式，保持20px行距。粉页布局不变。
++
++蓝页配置由构建器校验并生成标签坐标常量；当前图形编辑器仍只支持粉页，不宣称已可编辑蓝页。改变蓝页固定坐标需先扩展显隐映射及校验，不能静默取整。特性名称与说明暂走原英文回退，页签已中文化。
+diff --git a/tools/zh/runtime_build.py b/tools/zh/runtime_build.py
+index bdeb4ba13..8b03d459d 100644
+--- a/tools/zh/runtime_build.py
++++ b/tools/zh/runtime_build.py
+@@ -8,6 +8,7 @@ def main():
+  out=a.out.resolve()
+  if out.exists() or out.is_relative_to(ROOT):p.error('Output must be new and outside source')
+  chinese=a.language!='en'
++ if chinese:p.error('Chinese runtime has been removed; existing codec is retained, rendering must be reimplemented before Chinese builds')
+  if chinese and (not a.font or not a.licenses):p.error('Chinese builds require --font and --licenses resources')
+  chars=set(a.characters) if chinese else set()
+  if chinese:
+@@ -16,6 +17,8 @@ def main():
+     if row['resource_kind']=='text':chars.update(c for c in row.get('translation_'+a.language,'') if not c.isascii())
+   from summary_pink import CHARACTERS
+   chars.update(CHARACTERS)
++  from summary_blue import CHARACTERS as BLUE_CHARACTERS
++  chars.update(BLUE_CHARACTERS)
+   chars={c for c in chars if not c.isascii()}
+   if not chars:p.error('At least one non-ASCII character is required')
+  out.mkdir(parents=True);source=out/'source'
+@@ -33,6 +36,8 @@ def main():
+   emit(source,manifest)
+   import summary_pink
+   summary_pink.generate(source,manifest)
++  import summary_blue
++  summary_blue.generate(source,manifest)
+   import party
+   party.generate(source,a.language,manifest)
+   import start_menu
+diff --git a/tools/zh/stable_runtime.py b/tools/zh/stable_runtime.py
+index ff821ba84..9c455ea06 100644
+--- a/tools/zh/stable_runtime.py
++++ b/tools/zh/stable_runtime.py
+@@ -18,10 +18,7 @@ def emit(source, manifest):
+     strips=maps['dialogue']['glyphs']
+     rows=sorted((codes[e['char']],e['id']) for e in glyphs if e['char'] in codes)
+     leads=sorted({code[0] for code,glyph in rows})
+-    lines=['; A=byte; carry set exactly for manifested stable lead bytes.', 'ZhIsStableLead:']
+-    for lead in leads:
+-        lines += [f' cp {lead}', ' jr z,.yes']
+-    lines += [' and a', ' ret', '.yes', ' scf', ' ret', 'ZhStableGlyphDirectory:']
++    lines=['ZhStableGlyphDirectory:']
+     for entry in glyphs:
+         code=codes.get(entry['char'],bytes((255,255)))
+         lines += [' db '+','.join(map(str,code))]
+@@ -29,13 +26,18 @@ def emit(source, manifest):
+     for name,label in [('dialogue','ZhStableDialogueStrips'),('battle_hud','ZhStableHudStrips')]:
+         lines += [label+':']
+         exceptions=[]
++        shared={}
+         for i,row in enumerate(maps[name]['glyphs']):
+             if row == list(range(row[0],row[0]+3)) and row[2]<0x8000:
+                 lines += [f' dw ${0x8000|row[0]:04x}']
+             else:
+-                target=label+'Exception'+str(i)
++                identity=tuple(row)
++                target=shared.get(identity)
++                if target is None:
++                    target=label+'Exception'+str(i)
++                    shared[identity]=target
++                    exceptions += [target+':',' db '+','.join(str(b) for key in row for b in (key>>8,key&255))]
+                 lines += [' dw '+target]
+-                exceptions += [target+':',' db '+','.join(str(b) for key in row for b in (key>>8,key&255))]
+         lines += exceptions
+     (source/'data/zh/stable.asm').write_text('\n'.join(lines)+'\n')
+     return len(glyphs)
+diff --git a/tools/zh/strip_assets.py b/tools/zh/strip_assets.py
+index e393b207b..121b36813 100644
+--- a/tools/zh/strip_assets.py
++++ b/tools/zh/strip_assets.py
+@@ -71,6 +71,14 @@ class StripAssets:
+                         keys.append(self.add(bytes(pixels)))
+                 self.maps['summary_tab']={'keys':keys}
+ 
++        if manifest.exists() and all(c in ids for c in '特性'):
++            keys=[]
++            for c in '特性':
++                for i in range(3):
++                    pixels=bytearray(position_strip(raw[ids[c]*18+i*6:ids[c]*18+i*6+6],3))
++                    pixels[0] |= 0xf0
++                    keys.append(self.add(bytes(pixels)))
++            self.maps['summary_blue_tab']={'keys':keys}
+         blob = b"".join(self.strips)
+         directory = ["ZhCompiledStripPages::"]
+         sections = []
+@@ -80,7 +88,13 @@ class StripAssets:
+             (source/path).write_bytes(blob[page*4096:(page+1)*4096])
+             directory += [f" db BANK({label})", f" dw {label}"]
+             sections += [f'SECTION "Compiled font strips {page}", ROMX', label+"::", f' INCBIN "{path}"']
++        latin_tables={}
+         for name,label in [("dialogue","ZhDialogueLatinStrips"),("start_menu","ZhStartMenuLatinStrips"),("battle_hud","ZhStableHudLatin")]:
++            identity=tuple(self.maps[name]["latin"])
++            if identity in latin_tables:
++                directory.insert(directory.index(latin_tables[identity]+'::'),label+'::')
++                continue
++            latin_tables[identity]=label
+             directory += [label+"::"]
+             for code in range(114):
+                 pair = self.maps[name]["latin"][code*2:code*2+2]

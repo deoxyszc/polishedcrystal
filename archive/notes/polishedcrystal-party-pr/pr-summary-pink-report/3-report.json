@@ -1,0 +1,68 @@
+{
+  "records": {
+    "zh": {
+      "rom_sha256": "3ce64259f0f84ec9f79c0dbb54d8a0b5b9f44c54fe3ca5446b3b5ce93d0af27d",
+      "writes": [
+        "write dcd6 4c",
+        "write dceb 2",
+        "write dcf5 64",
+        "write dcde 19",
+        "write dcdf 6",
+        "write dce0 40",
+        "write de38 87",
+        "write de39 a4",
+        "write de3a b1",
+        "write de3b a0",
+        "write de3c a2",
+        "write de3d b1",
+        "write de3e ae",
+        "write de3f b2",
+        "write de40 b2",
+        "write de41 53",
+        "write de42 53",
+        "write ddf6 8e",
+        "write ddf7 93",
+        "write ddf8 53",
+        "write ddf9 53",
+        "write ddfa 53",
+        "write ddfb 53",
+        "write ddfc 53",
+        "write ddfd 53"
+      ]
+    },
+    "en": {
+      "rom_sha256": "469d08907d0ef474d174d87d84d25e108b86ca481131b41fa291bd8aae97c29b",
+      "writes": [
+        "write dcd6 4c",
+        "write dceb 2",
+        "write dcf5 64",
+        "write dcde 19",
+        "write dcdf 6",
+        "write dce0 40",
+        "write de38 87",
+        "write de39 a4",
+        "write de3a b1",
+        "write de3b a0",
+        "write de3c a2",
+        "write de3d b1",
+        "write de3e ae",
+        "write de3f b2",
+        "write de40 b2",
+        "write de41 53",
+        "write de42 53",
+        "write ddf6 8e",
+        "write ddf7 93",
+        "write ddf8 53",
+        "write ddf9 53",
+        "write ddfa 53",
+        "write ddfb 53",
+        "write ddfc 53",
+        "write ddfd 53"
+      ]
+    }
+  },
+  "save_sha256": "44ab2f2599e18db2eea67465dff814b33562b33d0a69a85be0b1142978ae7347",
+  "runner_sha256": "f0b541f2bf114f76beec067dba126e7c155d9e389f436752bc368ebe38d63a30",
+  "fixture": "RAM Golem species 0x4c, Alolan form2, nickname Heracross, exp1640000, level100; Chinese OT 小锯鳄 display-only isolated source patch; no save writes",
+  "not_validated": "natural acquisition, stats recalculation, Chinese save/input encoding"
+}

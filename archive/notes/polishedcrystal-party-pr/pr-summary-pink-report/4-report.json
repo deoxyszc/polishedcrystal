@@ -1,0 +1,334 @@
+{
+  "pink": {
+    "original_wram_bank": 254,
+    "policy": 2,
+    "used_bank0": 0,
+    "used_bank1": 39,
+    "bg_refs": 15,
+    "window_refs": 26,
+    "window_refs_missing_from_bg": [
+      [
+        0,
+        14
+      ],
+      [
+        0,
+        42
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        1,
+        10
+      ],
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        1,
+        13
+      ],
+      [
+        1,
+        14
+      ],
+      [
+        1,
+        15
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        1,
+        18
+      ],
+      [
+        1,
+        19
+      ],
+      [
+        1,
+        20
+      ],
+      [
+        1,
+        21
+      ],
+      [
+        1,
+        22
+      ],
+      [
+        1,
+        23
+      ]
+    ],
+    "unmarked_window_refs": [
+      [
+        0,
+        14
+      ],
+      [
+        0,
+        42
+      ]
+    ],
+    "union_refs": 41
+  },
+  "blue": {
+    "original_wram_bank": 249,
+    "policy": 2,
+    "used_bank0": 0,
+    "used_bank1": 0,
+    "bg_refs": 19,
+    "window_refs": 13,
+    "window_refs_missing_from_bg": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "unmarked_window_refs": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        14
+      ],
+      [
+        0,
+        16
+      ],
+      [
+        0,
+        17
+      ],
+      [
+        0,
+        18
+      ],
+      [
+        0,
+        21
+      ],
+      [
+        0,
+        22
+      ],
+      [
+        0,
+        23
+      ],
+      [
+        0,
+        25
+      ]
+    ],
+    "union_refs": 22
+  },
+  "return": {
+    "original_wram_bank": 249,
+    "policy": 2,
+    "used_bank0": 0,
+    "used_bank1": 39,
+    "bg_refs": 15,
+    "window_refs": 26,
+    "window_refs_missing_from_bg": [
+      [
+        0,
+        14
+      ],
+      [
+        0,
+        42
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        1,
+        10
+      ],
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        1,
+        13
+      ],
+      [
+        1,
+        14
+      ],
+      [
+        1,
+        15
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        17
+      ],
+      [
+        1,
+        18
+      ],
+      [
+        1,
+        19
+      ],
+      [
+        1,
+        20
+      ],
+      [
+        1,
+        21
+      ],
+      [
+        1,
+        22
+      ],
+      [
+        1,
+        23
+      ]
+    ],
+    "unmarked_window_refs": [
+      [
+        0,
+        14
+      ],
+      [
+        0,
+        42
+      ]
+    ],
+    "union_refs": 41
+  },
+  "inputs": {
+    "/Users/zhaoc/source/summary-stress-golem/source/polishedcrystal-zh-3.2.3.gbc": "3151fc30823d9ea61c8005397d878b0496878e8f09003da11165b27467d57603",
+    "/Users/zhaoc/Documents/Codex/2026-09-16/ban/work/r1-test/runner": "f0b541f2bf114f76beec067dba126e7c155d9e389f436752bc368ebe38d63a30",
+    "/Users/zhaoc/source/polishedcrystal-party-pr/local-data/scenes/saves/\u5409\u82b1\u5e02PC\u95e8\u53e3_\u6ee1\u516d\u53ea\u961f\u4f0d_\u5e03\u5c40\u6d4b\u8bd5.sav": "44ab2f2599e18db2eea67465dff814b33562b33d0a69a85be0b1142978ae7347"
+  }
+}

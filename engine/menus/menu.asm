@@ -514,6 +514,11 @@ _PushWindow::
 	ld e, a
 	push de
 
+if DEF(LOCALE_ZH)
+ ; Reserve the header and trailing link before the first store.
+ ld a,18
+ call CheckTextWindowSpace
+endc
 	ld b, $10
 	ld hl, wMenuFlags
 .loop
@@ -536,9 +541,13 @@ _PushWindow::
 	ld l, a
 	set 0, [hl]
 	call PushWindow_MenuBoxCoordToTile
-	call .copy
-	call PushWindow_MenuBoxCoordToAttr
-	call .copy
+if DEF(LOCALE_ZH)
+ farcall BackupChineseWindow
+else
+ call .copy
+ call PushWindow_MenuBoxCoordToAttr
+ call .copy
+endc
 	jr .done
 
 .not_bit_6
@@ -550,6 +559,10 @@ _PushWindow::
 	res 0, [hl]
 
 .done
+if DEF(LOCALE_ZH)
+ ld a,2
+ call CheckTextWindowSpace
+endc
 	pop hl
 	ld a, h
 	ld [de], a
@@ -620,6 +633,10 @@ PushWindow_MenuBoxCoordToAbsolute:
 	ret
 
 RestoreTileBackup::
+if DEF(LOCALE_ZH)
+ call PushWindow_MenuBoxCoordToTile
+ farjp RestoreChineseWindow
+endc
 	call PushWindow_MenuBoxCoordToTile
 	call .copy
 	call PushWindow_MenuBoxCoordToAttr
@@ -757,3 +774,39 @@ _InitVerticalMenuCursor::
 	ld [hli], a
 	ld [hli], a
 	ret
+
+if DEF(LOCALE_ZH)
+; DE is the next descending stack address. A bytes must fit, with the
+; resulting pointer still inside the stack for GetWindowStackTop.
+CheckTextWindowSpace:
+ push hl
+ push bc
+ ld h,d
+ ld l,e
+ ld c,a
+ ld b,0
+ ; LR35902 has no SBC HL,BC: subtract low then propagate borrow.
+ ld a,l
+ sub c
+ ld l,a
+ ld a,h
+ sbc b
+ ld h,a
+ ld a,[wWindowStack+1]
+ cp h
+ jr c,.fits
+ jr nz,.overflow
+ ld a,[wWindowStack]
+ cp l
+ jr c,.fits
+ jr z,.fits
+.overflow
+ pop bc
+ pop hl
+ ld a,ERR_WINDOW_OVERFLOW
+ jp Crash
+.fits
+ pop bc
+ pop hl
+ ret
+endc

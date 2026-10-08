@@ -70,6 +70,9 @@ _Init::
 	ldh [hROMBank], a
 
 	call ClearWRAM
+if DEF(LOCALE_ZH)
+ farcall InitializeChineseTempBackup
+endc
 	ld a, 1
 	ldh [rWBK], a
 	call ClearVRAM

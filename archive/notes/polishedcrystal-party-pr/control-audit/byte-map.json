@@ -1,0 +1,5237 @@
+[
+  {
+    "byte": "00",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<START>",
+        "line": 5
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<NULL>",
+        "line": 5
+      }
+    ],
+    "reference_active": [
+      "<NULL>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "01",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<RAM>",
+        "line": 6
+      }
+    ],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "02",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<WAIT>",
+        "line": 7
+      }
+    ],
+    "reference": [],
+    "reference_active": [],
+    "zh": "ZH WAIT",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "03",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<ASM>",
+        "line": 8
+      }
+    ],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "04",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<NUM>",
+        "line": 9
+      }
+    ],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "05",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<PAUSE>",
+        "line": 10
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ガ",
+        "line": 229
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "06",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<SOUND>",
+        "line": 11
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ギ",
+        "line": 230
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "07",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<DAY>",
+        "line": 12
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "グ",
+        "line": 231
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "08",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<FAR>",
+        "line": 13
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ゲ",
+        "line": 232
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "09",
+    "kind": "脚本指令",
+    "polished": [
+      {
+        "symbol": "<PLURAL>",
+        "line": 14
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ゴ",
+        "line": 233
+      },
+      {
+        "symbol": "\\t",
+        "line": 427
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "0A",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ザ",
+        "line": 234
+      },
+      {
+        "symbol": "\\n",
+        "line": 428
+      }
+    ],
+    "reference_active": [],
+    "zh": "外层描述符4参数字节 / E1字形2参数字节",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "0B",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ジ",
+        "line": 235
+      }
+    ],
+    "reference_active": [],
+    "zh": "ZH PLAYER",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "0C",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ズ",
+        "line": 236
+      }
+    ],
+    "reference_active": [],
+    "zh": "ZH RIVAL",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "0D",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ゼ",
+        "line": 237
+      },
+      {
+        "symbol": "\\r",
+        "line": 429
+      }
+    ],
+    "reference_active": [],
+    "zh": "ZH RAM:bank+LE16地址",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "0E",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ゾ",
+        "line": 238
+      }
+    ],
+    "reference_active": [],
+    "zh": "分片命令:两个BE16 ID",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "0F",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ダ",
+        "line": 239
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "10",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ヂ",
+        "line": 240
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "11",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ヅ",
+        "line": 241
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "12",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "デ",
+        "line": 242
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "13",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ド",
+        "line": 243
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "14",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<PLAY_G>",
+        "line": 6
+      }
+    ],
+    "reference_active": [
+      "<PLAY_G>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "15",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<MOBILE>",
+        "line": 7
+      }
+    ],
+    "reference_active": [
+      "<MOBILE>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "16",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<CR>",
+        "line": 8
+      }
+    ],
+    "reference_active": [
+      "<CR>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "17",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "18",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<JP_18>",
+        "line": 214
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "19",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "バ",
+        "line": 245
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "1A",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ビ",
+        "line": 246
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "1B",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ブ",
+        "line": 247
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "1C",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ボ",
+        "line": 248
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "1D",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<NI>",
+        "line": 215
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "1E",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<TTE>",
+        "line": 216
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "1F",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BSP>",
+        "line": 9
+      },
+      {
+        "symbol": "<WO>",
+        "line": 217
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "20",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "21",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "22",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<LF>",
+        "line": 10
+      },
+      {
+        "symbol": "<TA!>",
+        "line": 218
+      }
+    ],
+    "reference_active": [
+      "<LF>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "23",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<KOUGEKI>",
+        "line": 219
+      }
+    ],
+    "reference_active": [
+      "<KOUGEKI>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "24",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<POKE>",
+        "line": 11
+      },
+      {
+        "symbol": "<WA>",
+        "line": 220
+      }
+    ],
+    "reference_active": [
+      "<POKE>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "25",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<WBR>",
+        "line": 12
+      },
+      {
+        "symbol": "<NO>",
+        "line": 221
+      }
+    ],
+    "reference_active": [
+      "<WBR>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "26",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "が",
+        "line": 250
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "27",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぎ",
+        "line": 251
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "28",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぐ",
+        "line": 252
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "29",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "げ",
+        "line": 253
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "2A",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ご",
+        "line": 254
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "2B",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ざ",
+        "line": 255
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "2C",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "じ",
+        "line": 256
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "2D",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ず",
+        "line": 257
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "2E",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぜ",
+        "line": 258
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": true,
+    "dfs_trail": true
+  },
+  {
+    "byte": "2F",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぞ",
+        "line": 259
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "30",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "だ",
+        "line": 260
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "31",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぢ",
+        "line": 261
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "32",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "づ",
+        "line": 262
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "33",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "で",
+        "line": 263
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "34",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ど",
+        "line": 264
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "35",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<ROUTE>",
+        "line": 222
+      }
+    ],
+    "reference_active": [
+      "<ROUTE>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "36",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<WATASHI>",
+        "line": 223
+      }
+    ],
+    "reference_active": [
+      "<WATASHI>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "37",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<KOKO_WA>",
+        "line": 224
+      }
+    ],
+    "reference_active": [
+      "<KOKO_WA>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "38",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<RED>",
+        "line": 13
+      }
+    ],
+    "reference_active": [
+      "<RED>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "39",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<GREEN>",
+        "line": 14
+      }
+    ],
+    "reference_active": [
+      "<GREEN>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "3A",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ば",
+        "line": 266
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "3B",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "び",
+        "line": 267
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "3C",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぶ",
+        "line": 268
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "3D",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "べ",
+        "line": 269
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "3E",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぼ",
+        "line": 270
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "3F",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<ENEMY>",
+        "line": 15
+      },
+      {
+        "symbol": "⁂",
+        "line": 97
+      }
+    ],
+    "reference_active": [
+      "<ENEMY>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "40",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "パ",
+        "line": 272
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "41",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ピ",
+        "line": 273
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "42",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "プ",
+        "line": 274
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "43",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ポ",
+        "line": 275
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "44",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぱ",
+        "line": 276
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "45",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぴ",
+        "line": 277
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "46",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぷ",
+        "line": 278
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "47",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぺ",
+        "line": 279
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "48",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぽ",
+        "line": 280
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "49",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<MOM>",
+        "line": 16
+      }
+    ],
+    "reference_active": [
+      "<MOM>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "4A",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<PKMN>",
+        "line": 17
+      },
+      {
+        "symbol": "<GA>",
+        "line": 225
+      }
+    ],
+    "reference_active": [
+      "<PKMN>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "4B",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<_CONT>",
+        "line": 18
+      }
+    ],
+    "reference_active": [
+      "<_CONT>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "4C",
+    "kind": "原版未分配",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<SCROLL>",
+        "line": 19
+      }
+    ],
+    "reference_active": [
+      "<SCROLL>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "4D",
+    "kind": "缩写/动态插入",
+    "polished": [
+      {
+        "symbol": "#",
+        "line": 235
+      }
+    ],
+    "reference": [],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "4E",
+    "kind": "缩写/动态插入",
+    "polished": [
+      {
+        "symbol": "#mon",
+        "line": 236
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<NEXT>",
+        "line": 20
+      }
+    ],
+    "reference_active": [
+      "<NEXT>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "4F",
+    "kind": "缩写/动态插入",
+    "polished": [
+      {
+        "symbol": "<PLAYER>",
+        "line": 239
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<LINE>",
+        "line": 21
+      }
+    ],
+    "reference_active": [
+      "<LINE>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "50",
+    "kind": "缩写/动态插入",
+    "polished": [
+      {
+        "symbol": "<RIVAL>",
+        "line": 240
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "@",
+        "line": 22
+      }
+    ],
+    "reference_active": [
+      "@"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "51",
+    "kind": "缩写/动态插入",
+    "polished": [
+      {
+        "symbol": "<TRENDY>",
+        "line": 241
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<PARA>",
+        "line": 23
+      }
+    ],
+    "reference_active": [
+      "<PARA>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "52",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<DONE>",
+        "line": 26
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<PLAYER>",
+        "line": 24
+      }
+    ],
+    "reference_active": [
+      "<PLAYER>"
+    ],
+    "zh": "ZH DONE",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "53",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "@",
+        "line": 27
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<RIVAL>",
+        "line": 25
+      }
+    ],
+    "reference_active": [
+      "<RIVAL>"
+    ],
+    "zh": "ZH END",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "54",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<PROMPT>",
+        "line": 28
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "#",
+        "line": 26
+      }
+    ],
+    "reference_active": [
+      "#"
+    ],
+    "zh": "ZH PROMPT",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "55",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<LNBRK>",
+        "line": 29
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<CONT>",
+        "line": 27
+      }
+    ],
+    "reference_active": [
+      "<CONT>"
+    ],
+    "zh": "ZH CONT",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "56",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<NEXT>",
+        "line": 30
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<……>",
+        "line": 28
+      }
+    ],
+    "reference_active": [
+      "<……>"
+    ],
+    "zh": "ZH NEXT",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "57",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<LINE>",
+        "line": 31
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<DONE>",
+        "line": 29
+      }
+    ],
+    "reference_active": [
+      "<DONE>"
+    ],
+    "zh": "ZH LINE",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "58",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<CONT>",
+        "line": 32
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<PROMPT>",
+        "line": 30
+      }
+    ],
+    "reference_active": [
+      "<PROMPT>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "59",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<PARA>",
+        "line": 33
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<TARGET>",
+        "line": 31
+      }
+    ],
+    "reference_active": [
+      "<TARGET>"
+    ],
+    "zh": "ZH PARA",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "5A",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<TARGET>",
+        "line": 35
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<USER>",
+        "line": 32
+      }
+    ],
+    "reference_active": [
+      "<USER>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "5B",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<USER>",
+        "line": 36
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<PC>",
+        "line": 33
+      }
+    ],
+    "reference_active": [
+      "<PC>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "5C",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<ENEMY>",
+        "line": 37
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<TM>",
+        "line": 34
+      }
+    ],
+    "reference_active": [
+      "<TM>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "5D",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "<CTXT>",
+        "line": 39
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<TRAINER>",
+        "line": 35
+      }
+    ],
+    "reference_active": [
+      "<TRAINER>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "5E",
+    "kind": "字符串控制",
+    "polished": [
+      {
+        "symbol": "¯",
+        "line": 41
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<ROCKET>",
+        "line": 36
+      }
+    ],
+    "reference_active": [
+      "<ROCKET>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "5F",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<MALE>",
+        "line": 47
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<DEXEND>",
+        "line": 37
+      }
+    ],
+    "reference_active": [
+      "<DEXEND>"
+    ],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "60",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<FEMALE>",
+        "line": 48
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<BOLD_A>",
+        "line": 41
+      },
+      {
+        "symbol": "■",
+        "line": 88
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "61",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<SHINY>",
+        "line": 49
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<BOLD_B>",
+        "line": 42
+      },
+      {
+        "symbol": "▲",
+        "line": 89
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "62",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<BALL>",
+        "line": 50
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<BOLD_C>",
+        "line": 43
+      },
+      {
+        "symbol": "☎",
+        "line": 90
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "63",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<HP1>",
+        "line": 52
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<BOLD_D>",
+        "line": 44
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "64",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<HP2>",
+        "line": 53
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<BOLD_E>",
+        "line": 45
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "65",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<NOHP>",
+        "line": 54
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<BOLD_F>",
+        "line": 46
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "66",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_G>",
+        "line": 47
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "67",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_H>",
+        "line": 48
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "68",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_I>",
+        "line": 49
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "69",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_V>",
+        "line": 50
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "6A",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_S>",
+        "line": 51
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "6B",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_L>",
+        "line": 52
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "6C",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "<BOLD_M>",
+        "line": 53
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "6D",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<FULLHP>",
+        "line": 56
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<COLON>",
+        "line": 54
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "6E",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<HPEND>",
+        "line": 57
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ぃ",
+        "line": 55
+      },
+      {
+        "symbol": "<LV>",
+        "line": 77
+      },
+      {
+        "symbol": "′",
+        "line": 93
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "6F",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "◢",
+        "line": 59
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ぅ",
+        "line": 56
+      },
+      {
+        "symbol": "″",
+        "line": 94
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "70",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "—",
+        "line": 60
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<PO>",
+        "line": 57
+      },
+      {
+        "symbol": "<DO>",
+        "line": 79
+      },
+      {
+        "symbol": "<「>",
+        "line": 282
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "71",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "◣",
+        "line": 61
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<KE>",
+        "line": 58
+      },
+      {
+        "symbol": "◀",
+        "line": 80
+      },
+      {
+        "symbol": "<」>",
+        "line": 283
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "72",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<NONO>",
+        "line": 62
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<“>",
+        "line": 59
+      },
+      {
+        "symbol": "<『>",
+        "line": 81
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "73",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<XP1>",
+        "line": 64
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<”>",
+        "line": 60
+      },
+      {
+        "symbol": "<ID>",
+        "line": 82
+      },
+      {
+        "symbol": "<』>",
+        "line": 284
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "74",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<XP2>",
+        "line": 65
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<·>",
+        "line": 61
+      },
+      {
+        "symbol": "№",
+        "line": 83
+      },
+      {
+        "symbol": "・",
+        "line": 285
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "75",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<NOXP>",
+        "line": 66
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "…",
+        "line": 62
+      },
+      {
+        "symbol": "⋯",
+        "line": 286
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "76",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぁ",
+        "line": 63
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "77",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぇ",
+        "line": 64
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "78",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "ぉ",
+        "line": 65
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "79",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "┌",
+        "line": 67
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "7A",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "─",
+        "line": 68
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "7B",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "┐",
+        "line": 69
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "7C",
+    "kind": "字符/图块",
+    "polished": [],
+    "reference": [
+      {
+        "symbol": "│",
+        "line": 70
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "7D",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<FULLXP>",
+        "line": 68
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "└",
+        "line": 71
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "7E",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<XPEND>",
+        "line": 69
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "┘",
+        "line": 72
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "7F",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": " ",
+        "line": 77
+      }
+    ],
+    "reference": [
+      {
+        "symbol": " ",
+        "line": 73
+      },
+      {
+        "symbol": "<　>",
+        "line": 288
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "80",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "A",
+        "line": 81
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "A",
+        "line": 101
+      },
+      {
+        "symbol": "ア",
+        "line": 290
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "81",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "B",
+        "line": 82
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "B",
+        "line": 102
+      },
+      {
+        "symbol": "イ",
+        "line": 291
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "82",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "C",
+        "line": 83
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "C",
+        "line": 103
+      },
+      {
+        "symbol": "ウ",
+        "line": 292
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "83",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "D",
+        "line": 84
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "D",
+        "line": 104
+      },
+      {
+        "symbol": "エ",
+        "line": 293
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "84",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "E",
+        "line": 85
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "E",
+        "line": 105
+      },
+      {
+        "symbol": "オ",
+        "line": 294
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "85",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "F",
+        "line": 86
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "F",
+        "line": 106
+      },
+      {
+        "symbol": "カ",
+        "line": 295
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "86",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "G",
+        "line": 87
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "G",
+        "line": 107
+      },
+      {
+        "symbol": "キ",
+        "line": 296
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "87",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "H",
+        "line": 88
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "H",
+        "line": 108
+      },
+      {
+        "symbol": "ク",
+        "line": 297
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "88",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "I",
+        "line": 89
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "I",
+        "line": 109
+      },
+      {
+        "symbol": "ケ",
+        "line": 298
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "89",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "J",
+        "line": 90
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "J",
+        "line": 110
+      },
+      {
+        "symbol": "コ",
+        "line": 299
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "8A",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "K",
+        "line": 91
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "K",
+        "line": 111
+      },
+      {
+        "symbol": "サ",
+        "line": 300
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "8B",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "L",
+        "line": 92
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "L",
+        "line": 112
+      },
+      {
+        "symbol": "シ",
+        "line": 301
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "8C",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "M",
+        "line": 93
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "M",
+        "line": 113
+      },
+      {
+        "symbol": "ス",
+        "line": 302
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "8D",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "N",
+        "line": 94
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "N",
+        "line": 114
+      },
+      {
+        "symbol": "セ",
+        "line": 303
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "8E",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "O",
+        "line": 95
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "O",
+        "line": 115
+      },
+      {
+        "symbol": "ソ",
+        "line": 304
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "8F",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "P",
+        "line": 96
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "P",
+        "line": 116
+      },
+      {
+        "symbol": "タ",
+        "line": 305
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "90",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "Q",
+        "line": 97
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "Q",
+        "line": 117
+      },
+      {
+        "symbol": "チ",
+        "line": 306
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "91",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "R",
+        "line": 98
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "R",
+        "line": 118
+      },
+      {
+        "symbol": "ツ",
+        "line": 307
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "92",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "S",
+        "line": 99
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "S",
+        "line": 119
+      },
+      {
+        "symbol": "テ",
+        "line": 308
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "93",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "T",
+        "line": 100
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "T",
+        "line": 120
+      },
+      {
+        "symbol": "ト",
+        "line": 309
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "94",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "U",
+        "line": 101
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "U",
+        "line": 121
+      },
+      {
+        "symbol": "ナ",
+        "line": 310
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "95",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "V",
+        "line": 102
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "V",
+        "line": 122
+      },
+      {
+        "symbol": "ニ",
+        "line": 311
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "96",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "W",
+        "line": 103
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "W",
+        "line": 123
+      },
+      {
+        "symbol": "ヌ",
+        "line": 312
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "97",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "X",
+        "line": 104
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "X",
+        "line": 124
+      },
+      {
+        "symbol": "ネ",
+        "line": 313
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "98",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "Y",
+        "line": 105
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "Y",
+        "line": 125
+      },
+      {
+        "symbol": "ノ",
+        "line": 314
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "99",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "Z",
+        "line": 106
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "Z",
+        "line": 126
+      },
+      {
+        "symbol": "ハ",
+        "line": 315
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "9A",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "(",
+        "line": 108
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "(",
+        "line": 128
+      },
+      {
+        "symbol": "ヒ",
+        "line": 316
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "9B",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": ")",
+        "line": 109
+      }
+    ],
+    "reference": [
+      {
+        "symbol": ")",
+        "line": 129
+      },
+      {
+        "symbol": "フ",
+        "line": 317
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "9C",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": ".",
+        "line": 110
+      }
+    ],
+    "reference": [
+      {
+        "symbol": ":",
+        "line": 130
+      },
+      {
+        "symbol": "ホ",
+        "line": 318
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "9D",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": ",",
+        "line": 111
+      }
+    ],
+    "reference": [
+      {
+        "symbol": ";",
+        "line": 131
+      },
+      {
+        "symbol": "マ",
+        "line": 319
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "9E",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "?",
+        "line": 112
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "[",
+        "line": 132
+      },
+      {
+        "symbol": "ミ",
+        "line": 320
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "9F",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "!",
+        "line": 113
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "]",
+        "line": 133
+      },
+      {
+        "symbol": "ム",
+        "line": 321
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A0",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "a",
+        "line": 115
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "a",
+        "line": 135
+      },
+      {
+        "symbol": "メ",
+        "line": 322
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A1",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "b",
+        "line": 116
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "b",
+        "line": 136
+      },
+      {
+        "symbol": "モ",
+        "line": 323
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A2",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "c",
+        "line": 117
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "c",
+        "line": 137
+      },
+      {
+        "symbol": "ヤ",
+        "line": 324
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A3",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "d",
+        "line": 118
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "d",
+        "line": 138
+      },
+      {
+        "symbol": "ユ",
+        "line": 325
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A4",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "e",
+        "line": 119
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "e",
+        "line": 139
+      },
+      {
+        "symbol": "ヨ",
+        "line": 326
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A5",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "f",
+        "line": 120
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "f",
+        "line": 140
+      },
+      {
+        "symbol": "ラ",
+        "line": 327
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A6",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "g",
+        "line": 121
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "g",
+        "line": 141
+      },
+      {
+        "symbol": "ル",
+        "line": 328
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A7",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "h",
+        "line": 122
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "h",
+        "line": 142
+      },
+      {
+        "symbol": "レ",
+        "line": 329
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A8",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "i",
+        "line": 123
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "i",
+        "line": 143
+      },
+      {
+        "symbol": "ロ",
+        "line": 330
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "A9",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "j",
+        "line": 124
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "j",
+        "line": 144
+      },
+      {
+        "symbol": "ワ",
+        "line": 331
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "AA",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "k",
+        "line": 125
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "k",
+        "line": 145
+      },
+      {
+        "symbol": "ヲ",
+        "line": 332
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "AB",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "l",
+        "line": 126
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "l",
+        "line": 146
+      },
+      {
+        "symbol": "ン",
+        "line": 333
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "AC",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "m",
+        "line": 127
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "m",
+        "line": 147
+      },
+      {
+        "symbol": "ッ",
+        "line": 334
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "AD",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "n",
+        "line": 128
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "n",
+        "line": 148
+      },
+      {
+        "symbol": "ャ",
+        "line": 335
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "AE",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "o",
+        "line": 129
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "o",
+        "line": 149
+      },
+      {
+        "symbol": "ュ",
+        "line": 336
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "AF",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "p",
+        "line": 130
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "p",
+        "line": 150
+      },
+      {
+        "symbol": "ョ",
+        "line": 337
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B0",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "q",
+        "line": 131
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "q",
+        "line": 151
+      },
+      {
+        "symbol": "ィ",
+        "line": 338
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B1",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "r",
+        "line": 132
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "r",
+        "line": 152
+      },
+      {
+        "symbol": "あ",
+        "line": 340
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B2",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "s",
+        "line": 133
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "s",
+        "line": 153
+      },
+      {
+        "symbol": "い",
+        "line": 341
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B3",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "t",
+        "line": 134
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "t",
+        "line": 154
+      },
+      {
+        "symbol": "う",
+        "line": 342
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B4",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "u",
+        "line": 135
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "u",
+        "line": 155
+      },
+      {
+        "symbol": "え",
+        "line": 343
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B5",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "v",
+        "line": 136
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "v",
+        "line": 156
+      },
+      {
+        "symbol": "お",
+        "line": 344
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B6",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "w",
+        "line": 137
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "w",
+        "line": 157
+      },
+      {
+        "symbol": "か",
+        "line": 345
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B7",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "x",
+        "line": 138
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "x",
+        "line": 158
+      },
+      {
+        "symbol": "き",
+        "line": 346
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B8",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "y",
+        "line": 139
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "y",
+        "line": 159
+      },
+      {
+        "symbol": "く",
+        "line": 347
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "B9",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "z",
+        "line": 140
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "z",
+        "line": 160
+      },
+      {
+        "symbol": "け",
+        "line": 348
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "BA",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "“",
+        "line": 142
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "こ",
+        "line": 349
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "BB",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "”",
+        "line": 143
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "さ",
+        "line": 350
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "BC",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "-",
+        "line": 144
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "し",
+        "line": 351
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "BD",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": ":",
+        "line": 145
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "す",
+        "line": 352
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "BE",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "♂",
+        "line": 146
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "せ",
+        "line": 353
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "BF",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "♀",
+        "line": 147
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "そ",
+        "line": 354
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C0",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'",
+        "line": 149
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "Ä",
+        "line": 162
+      },
+      {
+        "symbol": "た",
+        "line": 355
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C1",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'d",
+        "line": 150
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "Ö",
+        "line": 163
+      },
+      {
+        "symbol": "ち",
+        "line": 356
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C2",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'l",
+        "line": 151
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "Ü",
+        "line": 164
+      },
+      {
+        "symbol": "つ",
+        "line": 357
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C3",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'m",
+        "line": 152
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ä",
+        "line": 165
+      },
+      {
+        "symbol": "て",
+        "line": 358
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C4",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'r",
+        "line": 153
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ö",
+        "line": 166
+      },
+      {
+        "symbol": "と",
+        "line": 359
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C5",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'s",
+        "line": 154
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ü",
+        "line": 167
+      },
+      {
+        "symbol": "な",
+        "line": 360
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C6",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'t",
+        "line": 155
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "に",
+        "line": 361
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C7",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "'v",
+        "line": 156
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ぬ",
+        "line": 362
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C8",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "é",
+        "line": 158
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ね",
+        "line": 363
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "C9",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "É",
+        "line": 159
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "の",
+        "line": 364
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "CA",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "á",
+        "line": 160
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "は",
+        "line": 365
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "CB",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<BOLDH>",
+        "line": 161
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ひ",
+        "line": 366
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "CC",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "í",
+        "line": 162
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ふ",
+        "line": 367
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "CD",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "ó",
+        "line": 163
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "へ",
+        "line": 368
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "CE",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "¿",
+        "line": 165
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ほ",
+        "line": 369
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "CF",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "¡",
+        "line": 166
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ま",
+        "line": 370
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D0",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<PO>",
+        "line": 168
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'d",
+        "line": 169
+      },
+      {
+        "symbol": "み",
+        "line": 371
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D1",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<KE>",
+        "line": 169
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'l",
+        "line": 170
+      },
+      {
+        "symbol": "む",
+        "line": 372
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D2",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<PK>",
+        "line": 170
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'m",
+        "line": 171
+      },
+      {
+        "symbol": "め",
+        "line": 373
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D3",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<MN>",
+        "line": 171
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'r",
+        "line": 172
+      },
+      {
+        "symbol": "も",
+        "line": 374
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D4",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<ID>",
+        "line": 173
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'s",
+        "line": 173
+      },
+      {
+        "symbol": "や",
+        "line": 375
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D5",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "№",
+        "line": 174
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'t",
+        "line": 174
+      },
+      {
+        "symbol": "ゆ",
+        "line": 376
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D6",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<LV>",
+        "line": 175
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'v",
+        "line": 175
+      },
+      {
+        "symbol": "よ",
+        "line": 377
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D7",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<BOLDP>",
+        "line": 176
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ら",
+        "line": 378
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D8",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "&",
+        "line": 178
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "り",
+        "line": 379
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "D9",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "♪",
+        "line": 180
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "る",
+        "line": 380
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "DA",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "♥",
+        "line": 181
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "れ",
+        "line": 381
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "DB",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "×",
+        "line": 183
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ろ",
+        "line": 382
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "DC",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "/",
+        "line": 184
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "わ",
+        "line": 383
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "DD",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "%",
+        "line": 185
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "を",
+        "line": 384
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "DE",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "+",
+        "line": 187
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ん",
+        "line": 385
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "DF",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<SHARP>",
+        "line": 188
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "←",
+        "line": 177
+      },
+      {
+        "symbol": "っ",
+        "line": 386
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E0",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "0",
+        "line": 190
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "'",
+        "line": 178
+      },
+      {
+        "symbol": "ゃ",
+        "line": 387
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E1",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "1",
+        "line": 191
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<PK>",
+        "line": 179
+      },
+      {
+        "symbol": "ゅ",
+        "line": 388
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E2",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "2",
+        "line": 192
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<MN>",
+        "line": 180
+      },
+      {
+        "symbol": "ょ",
+        "line": 389
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E3",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "3",
+        "line": 193
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "-",
+        "line": 181
+      },
+      {
+        "symbol": "ー",
+        "line": 391
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E4",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "4",
+        "line": 194
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ﾟ",
+        "line": 392
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E5",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "5",
+        "line": 195
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "ﾞ",
+        "line": 393
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E6",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "6",
+        "line": 196
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "?",
+        "line": 183
+      },
+      {
+        "symbol": "<？>",
+        "line": 395
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E7",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "7",
+        "line": 197
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "!",
+        "line": 184
+      },
+      {
+        "symbol": "<！>",
+        "line": 396
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E8",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "8",
+        "line": 198
+      }
+    ],
+    "reference": [
+      {
+        "symbol": ".",
+        "line": 185
+      },
+      {
+        "symbol": "<。>",
+        "line": 397
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "E9",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "9",
+        "line": 199
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "&",
+        "line": 186
+      },
+      {
+        "symbol": "ァ",
+        "line": 399
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "EA",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "¥",
+        "line": 201
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "é",
+        "line": 188
+      },
+      {
+        "symbol": "ゥ",
+        "line": 400
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "EB",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "…",
+        "line": 203
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "→",
+        "line": 189
+      },
+      {
+        "symbol": "ェ",
+        "line": 401
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "EC",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "★",
+        "line": 205
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "▷",
+        "line": 190
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "ED",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "▼",
+        "line": 207
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "▶",
+        "line": 191
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "EE",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "▲",
+        "line": 208
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "▼",
+        "line": 192
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "EF",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "◀",
+        "line": 209
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "♂",
+        "line": 193
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F0",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "▶",
+        "line": 210
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "¥",
+        "line": 194
+      },
+      {
+        "symbol": "円",
+        "line": 403
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F1",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "▷",
+        "line": 211
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "×",
+        "line": 195
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F2",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "↑",
+        "line": 214
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "<DOT>",
+        "line": 196
+      },
+      {
+        "symbol": "<．>",
+        "line": 405
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F3",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "↓",
+        "line": 215
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "/",
+        "line": 197
+      },
+      {
+        "symbol": "<／>",
+        "line": 406
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F4",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "′",
+        "line": 216
+      }
+    ],
+    "reference": [
+      {
+        "symbol": ",",
+        "line": 198
+      },
+      {
+        "symbol": "ォ",
+        "line": 408
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F5",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "″",
+        "line": 217
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "♀",
+        "line": 199
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F6",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<PHONE>",
+        "line": 218
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "0",
+        "line": 201
+      },
+      {
+        "symbol": "<０>",
+        "line": 410
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F7",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "<BLACK>",
+        "line": 219
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "1",
+        "line": 202
+      },
+      {
+        "symbol": "<１>",
+        "line": 411
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F8",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "┌",
+        "line": 222
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "2",
+        "line": 203
+      },
+      {
+        "symbol": "<２>",
+        "line": 412
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "F9",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "─",
+        "line": 223
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "3",
+        "line": 204
+      },
+      {
+        "symbol": "<３>",
+        "line": 413
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "FA",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "┐",
+        "line": 224
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "4",
+        "line": 205
+      },
+      {
+        "symbol": "<４>",
+        "line": 414
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "FB",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "│",
+        "line": 225
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "5",
+        "line": 206
+      },
+      {
+        "symbol": "<５>",
+        "line": 415
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "FC",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "┃",
+        "line": 226
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "6",
+        "line": 207
+      },
+      {
+        "symbol": "<６>",
+        "line": 416
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": true
+  },
+  {
+    "byte": "FD",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "└",
+        "line": 227
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "7",
+        "line": 208
+      },
+      {
+        "symbol": "<７>",
+        "line": 417
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "FE",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "━",
+        "line": 228
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "8",
+        "line": 209
+      },
+      {
+        "symbol": "<８>",
+        "line": 418
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  },
+  {
+    "byte": "FF",
+    "kind": "字符/图块",
+    "polished": [
+      {
+        "symbol": "┘",
+        "line": 229
+      }
+    ],
+    "reference": [
+      {
+        "symbol": "9",
+        "line": 210
+      },
+      {
+        "symbol": "<９>",
+        "line": 419
+      }
+    ],
+    "reference_active": [],
+    "zh": "—",
+    "dfs_lead": false,
+    "dfs_trail": false
+  }
+]

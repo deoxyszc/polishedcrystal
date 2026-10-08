@@ -58,6 +58,21 @@ SummaryScreen_BluePage:
 	hlbgcoord 11, 0, wSummaryScreenWindowBuffer
 	ld de, TILEMAP_WIDTH
 	call .CheckHyper ; HP
+if DEF(LOCALE_ZH)
+ hlbgcoord 4,2,wSummaryScreenWindowBuffer
+ call .CheckHyper
+ hlbgcoord 10,2,wSummaryScreenWindowBuffer
+ call .CheckHyper
+ rlca
+ hlbgcoord 4,3,wSummaryScreenWindowBuffer
+ call .CheckHyper
+ hlbgcoord 10,3,wSummaryScreenWindowBuffer
+ call .CheckHyper
+ rlca
+ swap a
+ hlbgcoord 4,4,wSummaryScreenWindowBuffer
+ call .CheckHyper
+else
 	add hl, de ; move past the HP bar
 	call .CheckHyper ; Attack
 	call .CheckHyper ; Defense
@@ -68,6 +83,12 @@ SummaryScreen_BluePage:
 	swap a
 	call .CheckHyper ; Spe
 
+endc
+if DEF(LOCALE_ZH)
+ call SummaryChineseBlueLabels
+ ld de,TextSummaryAbility
+ farcall DrawChineseSummaryTab
+endc
 	call SummaryScreen_ColorNatures
 
 	ld hl, .BluePalettes
@@ -121,19 +142,39 @@ INCLUDE "gfx/stats/blue_hp_bars.pal"
 
 SummaryScreen_ColorNatures:
 	ld c, STAT_ATK
+if DEF(LOCALE_ZH)
+ hlbgcoord 17,2,wSummaryScreenWindowBuffer
+else
 	hlbgcoord 16 + 8, 2, wSummaryScreenWindowBuffer
+endc
 	call .ColorNature
 	ld c, STAT_DEF
+if DEF(LOCALE_ZH)
+ hlbgcoord 23,2,wSummaryScreenWindowBuffer
+else
 	hlbgcoord 16 + 8, 3, wSummaryScreenWindowBuffer
+endc
 	call .ColorNature
 	ld c, STAT_SATK
+if DEF(LOCALE_ZH)
+ hlbgcoord 17,3,wSummaryScreenWindowBuffer
+else
 	hlbgcoord 16 + 8, 4, wSummaryScreenWindowBuffer
+endc
 	call .ColorNature
 	ld c, STAT_SDEF
+if DEF(LOCALE_ZH)
+ hlbgcoord 23,3,wSummaryScreenWindowBuffer
+else
 	hlbgcoord 16 + 8, 5, wSummaryScreenWindowBuffer
+endc
 	call .ColorNature
 	ld c, STAT_SPE
+if DEF(LOCALE_ZH)
+ hlbgcoord 17,4,wSummaryScreenWindowBuffer
+else
 	hlbgcoord 16 + 8, 6, wSummaryScreenWindowBuffer
+endc
 	; fallthrough
 ; c = stat
 ; hl = output attr coords
@@ -230,3 +271,38 @@ SummaryScreen_DrawPlayerHP:
 	pop hl
 	pop de
 	ret
+
+if DEF(LOCALE_ZH)
+SummaryChineseBlueLabels:
+ ld de,.labels
+ ld b,5
+.loop
+ push bc
+ ld a,[de]
+ inc de
+ ld l,a
+ ld a,[de]
+ inc de
+ ld h,a
+ ld a,[de]
+ inc de
+ ld c,a
+ ld a,[de]
+ inc de
+ push de
+ ld d,a
+ ld e,c
+ ld a,BANK(TextSummaryAttack)
+ call FarString
+ pop de
+ pop bc
+ dec b
+ jr nz,.loop
+ ret
+.labels
+ dw wTilemap+5*SCREEN_WIDTH+8,TextSummaryAttack
+ dw wTilemap+5*SCREEN_WIDTH+14,TextSummaryDefense
+ dw wTilemap+7*SCREEN_WIDTH+8,TextSummarySpAtk
+ dw wTilemap+7*SCREEN_WIDTH+14,TextSummarySpDef
+ dw wTilemap+10*SCREEN_WIDTH+8,TextSummarySpeed
+endc

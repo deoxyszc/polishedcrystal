@@ -1,0 +1,30 @@
+{
+  "note": "Local evidence archive; historical reports are not a substitute for final commit verification. Final build reports will be added separately.",
+  "files": [
+    {
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/data/zh/summary_layout_report.json",
+      "copy": "0-summary_layout_report.json",
+      "sha256": "1975540d7f299b7b32905538c25b69d1f24c315caa2d90e5f5dfcf5467a7729f"
+    },
+    {
+      "source": "/Users/zhaoc/source/polishedcrystal-party-pr/tools/zh/layout_configs/summary_pink.json",
+      "copy": "1-summary_pink.json",
+      "sha256": "f1eff70222a311a81e1e964da323749e611c91a0c20b774aa2c42f32df48a6cb"
+    },
+    {
+      "source": "/Users/zhaoc/source/summary-accepted-build/validation.json",
+      "copy": "2-validation.json",
+      "sha256": "a9b57881e81b66c7f0dd3a6e44e58f08ef8205a5d6d068aa52ccf1534d5c48be"
+    },
+    {
+      "source": "/Users/zhaoc/source/summary-stress-golem/report.json",
+      "copy": "3-report.json",
+      "sha256": "142aec0182a35ea036808e2e594d08f3588b0be7e6efa3dc4d94626d2f219c2e"
+    },
+    {
+      "source": "/Users/zhaoc/source/summary-memory-audit/report.json",
+      "copy": "4-report.json",
+      "sha256": "130630ae4d47a3473824f59f87b912fb148205e10b7635976f56044f4fe727e8"
+    }
+  ]
+}

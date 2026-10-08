@@ -252,58 +252,109 @@ _CGB_FinishBattleScreenLayout:
 	hlcoord 0, 0, wAttrmap
 	ld bc, SCREEN_AREA
 	ld a, PAL_BATTLE_BG_ENEMY_HP
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBytes
+else
 	rst ByteFill
+endc
 
 	hlcoord 0, 4, wAttrmap
 	lb bc, 8, 10
 	xor a ; PAL_BATTLE_BG_PLAYER
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 11, 0, wAttrmap
 	lb bc, 7, 9
 	ld a, PAL_BATTLE_BG_ENEMY
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 0, 0, wAttrmap
 	lb bc, 4, 11
 	ld a, PAL_BATTLE_BG_ENEMY_HP
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 10, 7, wAttrmap
 	lb bc, 5, 10
 	ld a, PAL_BATTLE_BG_PLAYER_HP
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 12, 11, wAttrmap
 	lb bc, 1, 7
 	ld a, PAL_BATTLE_BG_EXP_GENDER
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	ld a, PAL_BATTLE_BG_EXP_GENDER
 	ldcoord_a 0, 1, wAttrmap
-	ldcoord_a 1, 1, wAttrmap
-	ldcoord_a 8, 1, wAttrmap
+if DEF(LOCALE_ZH)
+ hlcoord 1,1,wAttrmap
+ set 2,[hl]
+ res 0,[hl]
+ res 1,[hl]
+else
+ ldcoord_a 1,1,wAttrmap
+endc
+if DEF(LOCALE_ZH)
+ ldcoord_a 9,1,wAttrmap
+else
+ ldcoord_a 8,1,wAttrmap
+endc
 	ldcoord_a 18, 8, wAttrmap
 
 	hlcoord 12, 8, wAttrmap
 	lb bc, 1, 2
 	ld a, PAL_BATTLE_BG_STATUS
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 2, 1, wAttrmap
 	lb bc, 1, 2
 	ld a, PAL_BATTLE_BG_STATUS
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 1, 9, wAttrmap
 	lb bc, 1, 6
 	ld a, PAL_BATTLE_BG_TYPE_CAT
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBox
+else
 	call FillBoxWithByte
+endc
 
 	hlcoord 0, 12, wAttrmap
 	ld bc, 6 * SCREEN_WIDTH
 	ld a, PAL_BATTLE_BG_TEXT
+if DEF(LOCALE_ZH)
+ farcall FillChinesePaletteBytes
+else
 	rst ByteFill
+endc
 
 	ld hl, BattleObjectPals
 	ld de, wOBPals1 palette PAL_BATTLE_OB_GRAY

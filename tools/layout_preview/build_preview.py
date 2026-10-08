@@ -38,7 +38,7 @@ def package(source,shot):
     return {'schema':1,'rgb':ppm(shot),'glyphs':glyphs,'provenance':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}}
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);p.add_argument('--shot',type=Path);p.add_argument('--rom',type=Path);p.add_argument('--save',type=Path);p.add_argument('--runner',type=Path);p.add_argument('--replay',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);p.add_argument('--shot',type=Path);p.add_argument('--rom',type=Path);p.add_argument('--save',type=Path);p.add_argument('--runner',type=Path);p.add_argument('--replay',type=Path);p.add_argument('--layout',type=Path,help='Recorded pink layout JSON');p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     a.out.mkdir(parents=True,exist_ok=False)
     if a.rom:
         if not a.runner or not a.replay:p.error('--rom requires --runner and --replay')
@@ -64,11 +64,25 @@ def main():
     import sys
     sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'zh'))
     from summary_layout_config import editor_constraints,load,DEFAULT
-    _,bound=load(DEFAULT)
+    layout_path=a.layout or DEFAULT
+    _,bound=load(layout_path)
     images={e['name']:e for e in data['elements']}
-    data['elements']=[dict(images.get(e['name'],{}),**e) for e in bound.values()]
+    aliases={'训练家ID':'训练家ID','图鉴编号':'图鉴编号'}
+    data['elements']=[dict(images.get(aliases.get(e['name'],e['name']),{}),**e) for e in bound.values()]
+    # Image dimensions/RGBA come from the extracted asset, not text placeholders.
+    for e in data['elements']:
+        if e['type']=='image':
+            asset=images.get(aliases.get(e['name'],e['name']))
+            if not asset:raise ValueError('No image asset for '+e['name'])
+            for key in ('w','h','rgba'):e[key]=asset[key]
     data['constraints']=editor_constraints()
-    data['layout_sha256']=hashlib.sha256(DEFAULT.read_bytes()).hexdigest()
+    data['layout_sha256']=hashlib.sha256(layout_path.read_bytes()).hexdigest()
+    (a.out/'layout.json').write_bytes(layout_path.read_bytes())
+    (a.out/'scene.json').write_text(json.dumps(data,ensure_ascii=False)+'\n')
+    from render_layout import render
+    preview_report=render(data,a.out/'preview.png')
+    preview_report['layout_sha256']=data['layout_sha256']
+    (a.out/'preview-report.json').write_text(json.dumps(preview_report,ensure_ascii=False,indent=2)+'\n')
     template=Path(__file__).with_name('editor.html').read_text()
     template=template.replace('/*TILE_GEOMETRY*/',Path(__file__).with_name('tile_geometry.js').read_text())
     template=template.replace('/*ROM_EXPORT*/',Path(__file__).with_name('rom_export.js').read_text())

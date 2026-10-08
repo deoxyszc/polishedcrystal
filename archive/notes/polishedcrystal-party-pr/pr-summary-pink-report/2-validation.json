@@ -1,0 +1,12 @@
+{
+  "hashes": {
+    "polishedcrystal-zh-3.2.3.sym": "5001488c7930cd5e6c83cff95a2c00efe4654d9b8753d36f964865c54216381f",
+    "polishedcrystal-zh-3.2.3.map": "033a6a799a8104162cbafa184826dec6cb9f54b7c88726c1c22ed55b6118448a",
+    "polishedcrystal-zh-3.2.3.gbc": "987dab2b5a65ba2b93c255c6df2b157155898f0ea86acd1def513ca8d67d1844"
+  },
+  "rom_bytes": 4194304,
+  "wram_symbol_changes": [],
+  "scope": "pink page entry, pink-blue-pink and return; live numbers",
+  "five_name": "RAM nickname only, not species; save untouched",
+  "note": "Final page-return attr reset fixes stale bank1 EXP bar; latest screenshots rerun"
+}

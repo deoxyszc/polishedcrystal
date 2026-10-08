@@ -6,6 +6,8 @@ from cache_text import load_charmap
 def encode(source,text):
  table=json.loads((source/'tools/zh/codec-v1/encoding.json').read_text())
  codes={e['char']:bytes.fromhex(e['code']) for e in table['mapping']}
+ extra=source/'data/zh/extra_codes.json'
+ if extra.exists():codes.update({c:bytes(v) for c,v in json.loads(extra.read_text()).items()})
  cm=load_charmap(source);out=bytearray()
  symbols={}
  for line in (source/'constants/charmap.asm').read_text().splitlines():

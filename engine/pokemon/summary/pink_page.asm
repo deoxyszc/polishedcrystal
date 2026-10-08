@@ -50,18 +50,40 @@ SummaryScreen_PinkPage:
 	; Place name
 	ld hl, wTempMonNickname
 	call CopyNickname
-	hlbgcoord 0, 1, wSummaryScreenWindowBuffer
-	rst PlaceString
-	hlbgcoord 1, 2, wSummaryScreenWindowBuffer
+	if DEF(LOCALE_ZH)
+ hlbgcoord 0, 2, wSummaryScreenWindowBuffer
+else
+ hlbgcoord 0, 1, wSummaryScreenWindowBuffer
+endc
+if DEF(LOCALE_ZH)
+ farcall PlaceChineseDefaultName
+ call c,_PlaceString
+else
+ rst PlaceString
+endc
+	if DEF(LOCALE_ZH)
+ hlbgcoord 0, 4, wSummaryScreenWindowBuffer
+else
+ hlbgcoord 1, 2, wSummaryScreenWindowBuffer
+endc
 	ld a, '/'
 	ld [hli], a
 	push hl
 	call GetPartyPokemonName
 	pop hl
-	rst PlaceString
+if DEF(LOCALE_ZH)
+ farcall PlaceChineseDefaultName
+ call c,_PlaceString
+else
+ rst PlaceString
+endc
 
 	; Place ball
-	hlbgcoord 8, 3, wSummaryScreenWindowBuffer
+	if DEF(LOCALE_ZH)
+ hlbgcoord 8, 1, wSummaryScreenWindowBuffer
+else
+ hlbgcoord 8, 3, wSummaryScreenWindowBuffer
+endc
 	ld a, SUMMARY_TILE_BALL_SIDE_BORDER
 	ld [hli], a
 	ld a, SUMMARY_TILE_BALL
@@ -69,11 +91,19 @@ SummaryScreen_PinkPage:
 	ld a, SUMMARY_TILE_BALL_SIDE_BORDER
 	ld [hli], a
 
-	hlbgcoord 25, 3, wSummaryScreenWindowBuffer
+	if DEF(LOCALE_ZH)
+ hlbgcoord 25, 1, wSummaryScreenWindowBuffer
+else
+ hlbgcoord 25, 3, wSummaryScreenWindowBuffer
+endc
 	ld a, SUMMARY_PAL_POKEBALL
 	ld [hli], a
 
-	hlbgcoord 26, 3, wSummaryScreenWindowBuffer
+	if DEF(LOCALE_ZH)
+ hlbgcoord 26, 1, wSummaryScreenWindowBuffer
+else
+ hlbgcoord 26, 3, wSummaryScreenWindowBuffer
+endc
 	ld [hl], OAM_XFLIP | SUMMARY_PAL_SIDE_WINDOW
 
 	ld hl, .BallSprites
@@ -91,10 +121,18 @@ SummaryScreen_PinkPage:
 
 	ld d, 0 | 8
 	ld a, [wBaseType1]
+if DEF(LOCALE_ZH)
+ lb bc,72,72
+else
 	lb bc, 72, 76
+endc
 	ld hl, wSummaryScreenOAMSprite04
 	call SummaryScreen_PlaceTypeOBJ
-	debgcoord 0, 3, wSummaryScreenWindowBuffer
+	if DEF(LOCALE_ZH)
+ debgcoord 0, 5, wSummaryScreenWindowBuffer
+else
+ debgcoord 0, 3, wSummaryScreenWindowBuffer
+endc
 	call SummaryScreen_PlaceTypeBG
 
 	; Place types
@@ -104,10 +142,18 @@ SummaryScreen_PinkPage:
 	cp e
 	jr z, .doneTypes
 	ld d, 1 | 8
+if DEF(LOCALE_ZH)
+ lb bc,104,72
+else
 	lb bc, 104, 76
+endc
 	ld hl, wSummaryScreenOAMSprite08
 	call SummaryScreen_PlaceTypeOBJ
-	debgcoord 4, 3, wSummaryScreenWindowBuffer
+	if DEF(LOCALE_ZH)
+ debgcoord 4, 5, wSummaryScreenWindowBuffer
+else
+ debgcoord 4, 3, wSummaryScreenWindowBuffer
+endc
 	call SummaryScreen_PlaceTypeBG
 
 .doneTypes
@@ -119,6 +165,10 @@ SummaryScreen_PinkPage:
 	ld de, SCREEN_WIDTH
 	ld b, 10
 
+if DEF(LOCALE_ZH)
+ call .CalcExpToNextLevel
+ call .ChineseExperience
+else
 	ld de, .ExpPointStr
 	hlcoord 1, 13
 	rst PlaceString
@@ -139,6 +189,7 @@ SummaryScreen_PinkPage:
 	rst PlaceString
 	hlcoord 16, 17
 	call .PrintNextLevel
+endc
 	hlcoord 3, 17
 	ld a, [wTempMonLevel]
 	ld b, a
@@ -150,6 +201,10 @@ SummaryScreen_PinkPage:
 	ld [hl], '<XP2>'
 	hlcoord 10, 17
 	ld [hl], '<XPEND>'
+if DEF(LOCALE_ZH)
+ ld de,TextSummaryExp
+ farcall DrawChineseSummaryTab
+endc
 
 	ld hl, .PinkPalettes
 	ld bc, 1 palettes
@@ -213,6 +268,30 @@ SummaryScreen_PinkPage:
 	ret
 
 .PlaceOTInfo:
+if DEF(LOCALE_ZH)
+ farcall BT_InRentalMode
+ jr nz,.chineseOT
+ hlbgcoord 0,7,wSummaryScreenWindowBuffer
+ ld de,.Rental_OT
+ rst PlaceString
+ ret
+.chineseOT
+ hlbgcoord 0,7,wSummaryScreenWindowBuffer
+ ld de,TextSummaryOT
+ ld a,BANK(TextSummaryOT)
+ call FarString
+ ld hl,wTempMonOT
+ call CopyNickname
+ hlbgcoord 5,7,wSummaryScreenWindowBuffer
+ rst PlaceString
+ hlbgcoord 1,8,wSummaryScreenWindowBuffer
+ ld de,.IDStr
+ rst PlaceString
+ hlbgcoord 4,8,wSummaryScreenWindowBuffer
+ lb bc,PRINTNUM_LEADINGZEROS | 2,5
+ ld de,wTempMonID
+ jp PrintNum
+else
 	; for rental mons, replace the whole thing with "Rental #mon"
 	farcall BT_InRentalMode
 	hlbgcoord 0, 4, wSummaryScreenWindowBuffer
@@ -236,14 +315,20 @@ SummaryScreen_PinkPage:
 	hlbgcoord 4, 4, wSummaryScreenWindowBuffer
 	rst PlaceString
 	ret
+endc
 
 .PinkPalettes:
 INCLUDE "gfx/stats/pink_page.pal"
 
 .BallSprites:
+if DEF(LOCALE_ZH)
+ db 32, 144, SUMMARY_TILE_OAM_BALL_TOP_BORDER, OAM_YFLIP
+ db 48, 144, SUMMARY_TILE_OAM_BALL_TOP_BORDER, 0
+else
 	db 68, 144, SUMMARY_TILE_OAM_BALL_TOP_BORDER, OAM_YFLIP
 	db 84, 144, SUMMARY_TILE_OAM_BALL_TOP_BORDER, 0
 
+endc
 .StatusSprites:
 	db 31, 120, SUMMARY_TILE_OAM_STATUS + 0, 5
 	db 31, 128, SUMMARY_TILE_OAM_STATUS + 1, 5
@@ -253,13 +338,21 @@ INCLUDE "gfx/stats/pink_page.pal"
 	done
 
 .IDStr
+if DEF(LOCALE_ZH)
+ db "<ID>№.@"
+else
 	text "<ID>№."
 	done
+endc
 
 .Rental_OT:
+if DEF(LOCALE_ZH)
+ db "Rental<NEXT>  #mon@"
+else
 	text  "Rental"
 	next1 "  #mon"
 	done
+endc
 
 .ExpPointStr:
 	db "Exp.Points@"
@@ -269,6 +362,60 @@ INCLUDE "gfx/stats/pink_page.pal"
 
 .ToStr:
 	db "to@"
+
+if DEF(LOCALE_ZH)
+.ChineseExperience:
+ hlcoord 1,14
+ ld de,TextSummaryExp
+ ld a,BANK(TextSummaryExp)
+ call FarString
+ hlcoord 4,14
+ ld de,wTempMonExp
+ lb bc,PRINTNUM_LEFTALIGN | 3,7
+ call PrintNum
+ ld a,[wTempMonLevel]
+ cp MAX_LEVEL
+ jr z,.maximum
+ hlcoord 1,16
+ ld de,TextSummaryNeed
+ ld a,BANK(TextSummaryNeed)
+ call FarString
+ hlcoord 4,16
+ ld de,wExpToNextLevel
+ lb bc,PRINTNUM_LEFTALIGN | 3,7
+ call PrintNum
+ ld de,TextSummaryExp
+ ld a,BANK(TextSummaryExp)
+ call FarString
+ hlcoord 13,17
+ ld a,[wTempMonLevel]
+ cp 99
+ jr c,.prefix
+ dec hl
+.prefix
+ ld de,TextSummaryLevelUp
+ ld a,BANK(TextSummaryLevelUp)
+ call FarString
+ ld a,[wTempMonLevel]
+ inc a
+ ld [wTextDecimalByte],a
+ hlcoord 16,17
+ cp 100
+ jr c,.number
+ dec hl
+.number
+ ld de,wTextDecimalByte
+ lb bc,PRINTNUM_LEFTALIGN | 1,3
+ call PrintNum
+ ld de,TextSummaryLevel
+ ld a,BANK(TextSummaryLevel)
+ jp FarString
+.maximum
+ hlcoord 13,17
+ ld de,TextSummaryMax
+ ld a,BANK(TextSummaryMax)
+ jp FarString
+endc
 
 CopyNickname:
 	ld de, wStringBuffer1

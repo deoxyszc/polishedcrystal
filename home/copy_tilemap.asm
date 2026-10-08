@@ -1,3 +1,9 @@
+if DEF(LOCALE_ZH)
+LoadTileMapToTempTileMap::
+ farjp CopyChineseTempScreen
+LoadTempTileMapToTileMap::
+ farjp RestoreChineseTempScreen
+else
 LoadTileMapToTempTileMap::
 ; Load wTilemap into wTempTileMap
 	hlcoord 0, 0
@@ -18,3 +24,4 @@ _ContinueLoadTileMap::
 	pop af
 	ldh [rWBK], a
 	ret
+endc

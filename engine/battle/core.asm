@@ -4020,7 +4020,12 @@ PrintPlayerHUD:
 	jr z, .short_name
 	dec hl ; hlcoord 10, 7
 .short_name
-	rst PlaceString
+if DEF(LOCALE_ZH)
+ farcall PlaceChineseDefaultName
+ call c,_PlaceString
+else
+ rst PlaceString
+endc
 
 	push bc
 
@@ -4115,7 +4120,12 @@ DrawEnemyHUD:
 	ld de, wEnemyMonNickname
 .got_nickname
 	hlcoord 1, 0
-	rst PlaceString
+if DEF(LOCALE_ZH)
+ farcall PlaceChineseBattleEnemyName
+ call c,_PlaceString
+else
+ rst PlaceString
+endc
 	ld h, b
 	ld l, c
 	dec hl
@@ -4153,10 +4163,18 @@ endr
 	inc a ; "<FEMALE>"
 
 .got_gender
-	hlcoord 8, 1
+if DEF(LOCALE_ZH)
+ hlcoord 9,1
+else
+ hlcoord 8,1
+endc
 	ld [hl], a
 
-	hlcoord 5, 1
+if DEF(LOCALE_ZH)
+ hlcoord 6,1
+else
+ hlcoord 5,1
+endc
 	ld a, [wEnemyMonLevel]
 	ld [wTempMonLevel], a
 	call PrintLevel
@@ -4628,7 +4646,11 @@ BattleMenuPKMN_Loop:
 
 .MenuHeader:
 	db $00 ; flags
-	menu_coords 10, 11, 19, 17
+	if DEF(LOCALE_ZH)
+ menu_coords 13, 10, 19, 17
+else
+ menu_coords 10, 11, 19, 17
+endc
 	dw .MenuData
 	db 1 ; default option
 

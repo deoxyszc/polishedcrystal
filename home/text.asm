@@ -5,6 +5,12 @@ else
 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
 	lb bc, TEXTBOX_INNERH - 1, TEXTBOX_INNERW
 endc
+if DEF(LOCALE_ZH)
+ClearBox::
+ ld a,' '
+FillBoxWithByte::
+ farjp FillChineseBox
+else
 ClearBox::
 ; Fill a c*b box at hl with blank tiles.
 	ld a, ' '
@@ -23,12 +29,17 @@ FillBoxWithByte::
 	dec b
 	jr nz, .row
 	ret
+endc
 
 ClearScreen::
+if DEF(LOCALE_ZH)
+ farcall ClearChineseScreenAttributes
+else
 	ld a, PAL_BG_TEXT
 	hlcoord 0, 0, wAttrmap
 	ld bc, SCREEN_AREA
 	rst ByteFill
+endc
 ClearTileMap::
 ; Fill wTilemap with blank tiles.
 	ld a, ' '
@@ -168,12 +179,18 @@ SetUpTextbox::
 	ret
 
 PlaceSubstring:
+if DEF(LOCALE_ZH)
+ farcall BeginChineseString
+endc
 ; input: de = string, hl = current coords, bc = starting coords
 ; output: de = advanced string, hl = starting coords advanced by "<NEXT>"/"<LNBRK>", bc = advanced coords
 	push bc
 	jr PlaceNextChar
 
 _PlaceString::
+if DEF(LOCALE_ZH)
+ farcall BeginChineseString
+endc
 ; input: de = string, hl = coords
 ; output: de = advanced string, hl = starting coords advanced by "<NEXT>"/"<LNBRK>", bc = advanced coords
 	push hl
@@ -267,6 +284,9 @@ LineBreak:
 	ld b, 1 << NO_LINE_SPACING_F
 	; fallthrough
 HandleLineBreak:
+if DEF(LOCALE_ZH)
+ farcall FlushChineseStringHalf
+endc
 	ld a, [wTextboxFlags]
 	or b
 	bit USE_BG_MAP_WIDTH_F, a
@@ -290,6 +310,9 @@ else
 endc
 
 LineChar::
+if DEF(LOCALE_ZH)
+ farcall FlushChineseStringHalf
+endc
 	pop hl
 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
 	push hl
@@ -300,6 +323,9 @@ else
 endc
 
 ContText::
+if DEF(LOCALE_ZH)
+ farcall FlushChineseStringHalf
+endc
 	ld a, [wTextboxFlags]
 	bit NO_TEXT_PAUSE_F, a
 	jr nz, StopAtNonblockingTextPause
@@ -319,6 +345,9 @@ ContText::
 	jmp NextChar
 
 StopAtNonblockingTextPause::
+if DEF(LOCALE_ZH)
+ farcall EndChineseString
+endc
 	ld a, TRUE
 	ldh [hStopPrintingString], a
 	pop hl
@@ -326,6 +355,9 @@ StopAtNonblockingTextPause::
 	ret
 
 Paragraph::
+if DEF(LOCALE_ZH)
+ farcall FlushChineseStringHalf
+endc
 	ld a, [wTextboxFlags]
 	bit NO_TEXT_PAUSE_F, a
 	jr nz, StopAtNonblockingTextPause
@@ -375,6 +407,9 @@ PromptText::
 	; fallthrough
 
 DoneText::
+if DEF(LOCALE_ZH)
+ farcall EndChineseString
+endc
 	pop hl
 	dec de
 	ret
@@ -723,7 +758,17 @@ TextCommand_DECIMAL::
 	or PRINTNUM_DELAY | PRINTNUM_LEFTALIGN
 	ld b, a
 	call PrintNum
+if DEF(LOCALE_ZH)
+ ; DECIMAL is a script command, not a PlaceString invocation.
+ ld b,h
+ ld c,l
+ pop hl
+ ret
+endc
 FinishString:
+if DEF(LOCALE_ZH)
+ farcall EndChineseString
+endc
 	ld b, h
 	ld c, l
 	pop hl
@@ -881,6 +926,15 @@ DecompressString::
 	ldh [hStopPrintingString], a
 
 .end
+if DEF(LOCALE_ZH)
+ push hl
+ ld h,d
+ ld l,e
+ farcall EndChineseString
+ ld d,h
+ ld e,l
+ pop hl
+endc
 	pop bc ; pop starting coords
 
 	; update current coords

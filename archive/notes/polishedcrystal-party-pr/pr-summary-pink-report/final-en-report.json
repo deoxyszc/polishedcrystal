@@ -1,0 +1,11 @@
+{
+  "language": "en",
+  "glyph_count": 0,
+  "rom": "/Users/zhaoc/source/summary-pr-final-en/source/polishedcrystal-3.2.3.gbc",
+  "sha256": "469d08907d0ef474d174d87d84d25e108b86ca481131b41fa291bd8aae97c29b",
+  "modules": [
+    "legacy"
+  ],
+  "text_insertion": false,
+  "imported_records": 0
+}
